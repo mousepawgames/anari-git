@@ -1,0 +1,928 @@
+NAME
+      arc - arcanist, a code review and revision management utility
+
+SYNOPSIS
+      arc command [options] [args]
+      This help file provides a detailed command reference.
+
+COMMAND REFERENCE
+
+      alias
+      alias command
+      alias command target -- [options]
+          Supports: cli
+          Create an alias from command to target (optionally, with
+          options). For example:
+
+            arc alias fpatch patch -- --force
+
+          ...will create a new 'arc' command, 'arc fpatch', which invokes
+          'arc patch --force ...' when run. NOTE: use "--" before specifying
+          options!
+
+          If you start an alias with "!", the remainder of the alias will be
+          invoked as a shell command. For example, if you want to implement
+          'arc ls', you can do so like this:
+
+            arc alias ls '!ls'
+
+          You can now run "arc ls" and it will behave like "ls". Of course, this
+          example is silly and would make your life worse.
+
+          You can not overwrite builtins, including 'alias' itself. The builtin
+          will always execute, even if it was added after your alias.
+
+          To remove an alias, run:
+
+            arc alias fpatch
+
+          Without any arguments, 'arc alias' will list aliases.
+
+
+      amend [--revision revision_id] [--show]
+          Supports: git, hg
+          Amend the working copy, synchronizing the local commit message from
+          Differential.
+
+          Supported in Mercurial 2.2 and newer.
+
+          --revision revision_id
+              Use the message from a specific revision. If you do not specify
+              a revision, arc will guess which revision is in the working
+              copy.
+
+          --show
+              Show the amended commit message, without modifying the working
+              copy.
+
+
+      anoid
+          There's only one way to find out...
+
+
+      backout
+          Reverts/backouts on a previous commit. Supports: git, hg
+   Command is used like this: arc backout <commithash> | <diff revision>
+   Entering a differential revision will only work if there is only one commit
+   associated with the revision. This requires your working copy is up to date
+   and that the commit exists in the working copy.
+
+
+      bookmark [options]
+      bookmark name [start]
+          Supports: hg
+          Alias for arc feature.
+
+          --by-status
+              Sort branches by status instead of time.
+
+          --output format
+              With 'json', show features in machine-readable JSON format.
+
+          --view-all
+              Include closed and abandoned revisions.
+
+
+      branch [options]
+      branch name [start]
+          Supports: git
+          Alias for arc feature.
+
+          --by-status
+              Sort branches by status instead of time.
+
+          --output format
+              With 'json', show features in machine-readable JSON format.
+
+          --view-all
+              Include closed and abandoned revisions.
+
+
+      browse [options] path ...
+      browse [options] object ...
+          Supports: git, hg, svn
+          Open a file or object (like a task or revision) in your web browser.
+
+            $ arc browse README   # Open a file in Diffusion.
+            $ arc browse T123     # View a task.
+            $ arc browse HEAD     # View a symbolic commit.
+
+          Set the 'browser' value using 'arc set-config' to select a browser. If
+          no browser is set, the command will try to guess which browser to use.
+
+          --branch branch_name
+              Default branch name to view on server. Defaults to "master".
+
+          --force
+              Open arguments as paths, even if they do not exist in the
+              working copy.
+
+
+      call-conduit method
+          Supports: http, https
+          Allows you to make a raw Conduit method call:
+
+            - Run this command from a working directory.
+            - Call parameters are REQUIRED and read as a JSON blob from stdin.
+            - Results are written to stdout as a JSON blob.
+
+          This workflow is primarily useful for writing scripts which integrate
+          with Phabricator. Examples:
+
+            $ echo '{}' | arc call-conduit conduit.ping
+            $ echo '{"phid":"PHID-FILE-xxxx"}' | arc call-conduit file.download
+
+
+      close task_id [options]
+        Close a task or otherwise update its status.
+
+          --list-statuses
+              Show available status options and exit.
+
+          --message comment, -m comment
+              Provide a comment with your status change.
+
+          --status status, -s status
+              Specify a new status. Valid status options can be seen with the
+              `list-statuses` argument.
+
+
+      close-revision [options] revision
+          Supports: git, hg, svn
+          Close a revision which has been committed (svn) or pushed (git, hg).
+          You should not normally need to do this: arc commit (svn), arc amend
+          (git, hg), arc land (git, hg), or repository tracking on the master
+          remote repository should do it for you. However, if these mechanisms
+          have failed for some reason you can use this command to manually
+          change a revision status from "Accepted" to "Closed".
+
+          --finalize
+              Close only if the repository is untracked and the revision is
+              accepted. Continue even if the close can't happen. This is a
+              soft version of '' used by other workflows.
+
+          --quiet
+              Do not print a success message.
+
+
+      commit [--revision revision_id] [--show]
+          Supports: svn
+          Commit a revision which has been accepted by a reviewer.
+
+          --revision revision_id
+              Commit a specific revision. If you do not specify a revision,
+              arc will look for committable revisions.
+
+          --show
+              Show the command which would be issued, but do not actually
+              commit anything.
+
+
+      cover [--rev revision] [path ...]
+          Supports: svn, git, hg
+          Cover your... professional reputation. Show blame for the lines you
+          changed in your working copy (svn) or since some commit (hg, git).
+          This will take a minute because blame takes a minute, especially under
+          SVN.
+
+          --rev revision
+              Supports: git, hg
+              Cover changes since a specific revision.
+
+
+      diff [paths] (svn)
+      diff [commit] (git, hg)
+          Supports: git, svn, hg
+          Generate a Differential diff or revision from local changes.
+
+          Under git and mercurial, you can specify a commit (like HEAD^^^
+          or master) and Differential will generate a diff against the
+          merge base of that commit and your current working directory parent.
+
+          Under svn, you can choose to include only some of the modified files
+          in the working copy in the diff by specifying their paths. If you
+          omit paths, all changes are included in the diff.
+
+          --add-all, -a
+              Automatically add all unstaged and uncommitted files to the
+              commit.
+
+          --advice
+              Require excuse for lint advice in addition to lint warnings and
+              errors.
+
+          --allow-untracked
+              Skip checks for untracked files in the working copy.
+
+          --amend-all
+              When linting git repositories, amend HEAD with all patches
+              suggested by lint without prompting.
+
+          --amend-autofixes
+              When linting git repositories, amend HEAD with autofix patches
+              suggested by lint without prompting.
+
+          --apply-patches
+              Apply patches suggested by lint to the working copy without
+              prompting.
+
+          --base rules
+              Supports: git, hg
+              Additional rules for determining base revision.
+
+          --browse
+              After creating a diff or revision, open it in a web browser.
+
+          --cache bool
+              0 to disable lint cache, 1 to enable (default).
+
+          --cc usernames
+              When creating a revision, add CCs.
+
+          --coverage
+              Always enable coverage information.
+
+          --create
+              Always create a new revision.
+
+          --edit
+              Supports: git, hg
+              When updating a revision under git, edit revision information
+              before updating.
+
+          --encoding encoding
+              Attempt to convert non UTF-8 hunks into specified encoding.
+
+          --excuse excuse
+              Provide a prepared in advance excuse for any lints/tests shall
+              they fail.
+
+          --head commit
+              Supports: git
+              Specify the end of the commit range. This disables many
+              Arcanist/Phabricator features which depend on having access to
+              the working copy.
+
+          --ignore-unsound-tests
+              Ignore unsound test failures without prompting.
+
+          --json
+              Emit machine-readable JSON. EXPERIMENTAL! Probably does not
+              work!
+
+          --less-context
+              Normally, files are diffed with full context: the entire file
+              is sent to Differential so reviewers can 'show more' and see
+              it. If you are making changes to very large files with tens of
+              thousands of lines, this may not work well. With this flag, a
+              diff will be created that has only a few lines of context.
+
+          --lintall
+              Raise all lint warnings, not just those on lines you changed.
+
+          --message message, -m message
+              When updating a revision, use the specified message instead of
+              prompting.
+
+          --message-file file, -F file
+              When creating a revision, read revision information from this
+              file.
+
+          --never-apply-patches
+              Never apply patches suggested by lint.
+
+          --no-amend
+              Never amend commits in the working copy with lint patches.
+
+          --no-coverage
+              Always disable coverage information.
+
+          --no-diff
+              Only run lint and unit tests. Intended for internal use.
+
+          --nolint
+              Do not run lint.
+
+          --nounit
+              Do not run unit tests.
+
+          --only
+              Only generate a diff, without running lint, unit tests, or
+              other auxiliary steps. See also --preview.
+
+          --only-new bool
+              Display only lint messages not present in the original code.
+
+          --plan-changes
+              Create or update a revision without requesting a code review.
+
+          --preview
+              Instead of creating or updating a revision, only create a diff,
+              which you may later attach to a revision. This still runs lint
+              unit tests. See also --only.
+
+          --raw
+              Read diff from stdin, not from the working copy. This disables
+              many Arcanist/Phabricator features which depend on having
+              access to the working copy.
+
+          --raw-command command
+              Generate diff by executing a specified command, not from the
+              working copy. This disables many Arcanist/Phabricator features
+              which depend on having access to the working copy.
+
+          --reviewers usernames
+              When creating a revision, add reviewers.
+
+          --skip-binaries
+              Do not upload binaries (like images).
+
+          --skip-staging
+              Do not copy changes to the staging area.
+
+          --uncommitted
+              Supports: hg
+              Suppress warning about uncommitted changes.
+
+          --update revision_id
+              Always update a specific revision.
+
+          --use-commit-message commit, -C commit
+              Supports: git
+              Read revision information from a specific commit.
+
+          --verbatim
+              Supports: hg, git
+              When creating a revision, try to use the working copy commit
+              message verbatim, without prompting to edit it. When updating a
+              revision, update some fields from the local commit message.
+
+
+      download file [--as name] [--show]
+          Supports: filesystems
+          Download a file to local disk, e.g.:
+
+            $ arc download F33              # Download file 'F33'
+
+          --as name
+              Save the file with a specific name rather than the default.
+
+          --show
+              Write file to stdout instead of to disk.
+
+
+      export [paths] format (svn)
+      export [commit_range] format (git, hg)
+      export --revision revision_id format
+      export --diff diff_id format
+          Supports: svn, git, hg
+          Export the local changeset (or a Differential changeset) to a file,
+          in some format: git diff (--git), unified diff
+          (--unified), or arc bundle (--arcbundle path) format.
+
+          --arcbundle file
+              Export change as an arc bundle. This format can represent all
+              changes. These bundles can be applied with 'arc patch'.
+
+          --diff diff_id
+              Instead of exporting changes from the working copy, export them
+              from a Differential diff.
+
+          --encoding encoding
+              Attempt to convert non UTF-8 patch into specified encoding.
+
+          --git
+              Export change as a git patch. This format is more complete than
+              unified, but less complete than arc bundles. These patches can
+              be applied with 'git apply' or 'arc patch'.
+
+          --revision revision_id
+              Instead of exporting changes from the working copy, export them
+              from a Differential revision.
+
+          --unified
+              Export change as a unified patch. This format is less complete
+              than git patches or arc bundles. These patches can be applied
+              with 'patch' or 'arc patch'.
+
+
+      feature [options]
+      feature name [start]
+          Supports: git, hg
+          A wrapper on 'git branch' or 'hg bookmark'.
+
+          Without name, it lists the available branches and their revision
+          status.
+
+          With name, it creates or checks out a branch. If the branch
+          name doesn't exist and is in format D123 then the branch of
+          revision D123 is checked out. Use start to specify where the new
+          branch will start. Use 'arc.feature.start.default' to set the default
+          feature start location.
+
+          --by-status
+              Sort branches by status instead of time.
+
+          --output format
+              With 'json', show features in machine-readable JSON format.
+
+          --view-all
+              Include closed and abandoned revisions.
+
+
+      flag [object ...]
+      flag object --clear
+      flag object [--edit] [--color color] [--note note]
+          In the first form, list objects you've flagged. You can provide the
+          names of one or more objects (Maniphest tasks T#, Differential
+          revisions D#, Diffusion references rXXX???, or PHIDs PHID-XXX-???)
+          to print only flags for those objects.
+
+          In the second form, clear an existing flag on one object.
+
+          In the third form, create or update a flag on one object. Color
+          defaults to blue and note to empty, but if you omit both you must
+          pass --edit.
+
+          --clear
+              Delete the flag on an object.
+
+          --color color
+              Set the color of a flag.
+
+          --edit
+              Edit the flag on an object.
+
+          --note note
+              Set the note on a flag.
+
+
+      get-config [options] -- [name ...]
+          Supports: cli
+          Reads an arc configuration option. With no argument, reads all
+          options.
+
+          With --verbose, shows detailed information about one or more
+          options.
+
+          --verbose
+              Show detailed information about options.
+
+
+      help [command]
+      help --full
+          Supports: english
+          Shows this help. With command, shows help about a specific
+          command.
+
+          --full
+              Print detailed information about each command.
+
+
+      install-certificate [uri]
+          Supports: http, https
+          Installs Conduit credentials into your ~/.arcrc for the given install
+          of Phabricator. You need to do this before you can use 'arc', as it
+          enables 'arc' to link your command-line activity with your account on
+          the web. Run this command from within a project directory to install
+          that project's certificate, or specify an explicit URI (like
+          "https://phabricator.example.com/").
+
+
+      land [options] [branch] [--onto master]
+          Supports: git, hg
+
+          Land an accepted change (currently sitting in local feature branch
+          branch) onto master and push it to the remote. Then, delete
+          the feature branch. If you omit branch, the current branch will
+          be used.
+
+          In mutable repositories, this will perform a --squash merge (the
+          entire branch will be represented by one commit on master). In
+          immutable repositories (or when --merge is provided), it will perform
+          a --no-ff merge (the branch will always be merged into master with
+          a merge commit).
+
+          Under hg, bookmarks can be landed the same way as branches.
+
+          --delete-remote
+              Delete the feature branch in the remote after landing it.
+
+          --hold
+              Prepare the change to be pushed, but do not actually push it.
+
+          --keep-branch
+              Keep the feature branch after pushing changes to the remote (by
+              default, it is deleted).
+
+          --merge
+              Supports: git
+              Perform a --no-ff merge, not a --squash merge. If the project
+              is marked as having an immutable history, this is the default
+              behavior.
+
+          --onto master
+              Land feature branch onto a branch other than the default
+              ('master' in git, 'default' in hg). You can change the default
+              by setting 'arc.land.onto.default' with `arc set-config` or for
+              the entire project in .arcconfig.
+
+          --preview
+              Prints the commits that would be landed. Does not actually
+              modify or land the commits.
+
+          --remote origin
+              Push to a remote other than the default ('origin' in git).
+
+          --revision id
+              Use the message from a specific revision, rather than inferring
+              the revision based on branch content.
+
+          --squash
+              Perform a --squash merge, not a --no-ff merge. If the project
+              is marked as having a mutable history, this is the default
+              behavior.
+
+          --update-with-merge
+              Supports: git
+              When updating the feature branch, use merge instead of rebase.
+              This is the default behavior. Setting arc.land.update.default
+              to 'merge' can also be used to make this the default.
+
+          --update-with-rebase
+              Supports: git
+              When updating the feature branch, use rebase instead of merge.
+              This might make things work better in some cases. Set
+              arc.land.update.default to 'rebase' to make this the default.
+
+
+      liberate [path]
+          Supports: libphutil
+          Create or update a libphutil library, generating required metadata
+          files like init.php.
+
+          --all
+              Drop the module cache before liberating. This will completely
+              reanalyze the entire library. Thorough, but slow!
+
+          --force-update
+              Force the library map to be updated, even in the presence of
+              lint errors.
+
+          --library-name name
+              Use a flag for library name rather than awaiting user input.
+
+
+      lint [options] [paths]
+      lint [options] --rev [rev]
+          Supports: git, svn, hg
+          Run static analysis on changes to check for mistakes. If no files
+          are specified, lint will be run on all files which have been modified.
+
+          --amend-all
+              When linting git repositories, amend HEAD with all patches
+              suggested by lint without prompting.
+
+          --amend-autofixes
+              When linting git repositories, amend HEAD with autofix patches
+              suggested by lint without prompting.
+
+          --apply-patches
+              Apply patches suggested by lint to the working copy without
+              prompting.
+
+          --cache bool
+              0 to disable cache, 1 to enable. The default value is
+              determined by 'arc.lint.cache' in configuration, which defaults
+              to off. See notes in 'arc.lint.cache'.
+
+          --engine classname
+              Override configured lint engine for this project.
+
+          --everything
+              Lint all files in the project.
+
+          --lintall
+              Show all lint warnings, not just those on changed lines. When
+              paths are specified, this is the default behavior.
+
+          --never-apply-patches
+              Never apply patches suggested by lint.
+
+          --only-changed
+              Show lint warnings just on changed lines. When no paths are
+              specified, this is the default. This differs from only-new in
+              cases where line modifications introduce lint on other
+              unmodified lines.
+
+          --only-new bool
+              Supports: git, hg
+              Display only messages not present in the original code.
+
+          --output format
+              With 'summary', show lint warnings in a more compact format.
+              With 'json', show lint warnings in machine-readable JSON
+              format. With 'none', show no lint warnings. With 'compiler',
+              show lint warnings in suitable for your editor. With 'xml',
+              show lint warnings in the Checkstyle XML format.
+
+          --rev revision
+              Supports: git, hg
+              Lint changes since a specific revision.
+
+          --severity string
+              Set minimum message severity. One of: 'advice', 'autofix',
+              'warning', 'error', 'disabled'. Defaults to 'advice'.
+
+
+      linters [options]
+          Supports: cli
+          List the available and configured linters, with information about
+          what they do and which versions are installed.
+
+          --verbose
+              Show detailed information, including options.
+
+
+      list
+          Supports: git, svn, hg
+          List your open Differential revisions.
+
+
+      paste [--title title] [--lang language] [--json]
+      paste id [--json]
+          Supports: text
+          Share and grab text using the Paste application. To create a paste,
+          use stdin to provide the text:
+
+            $ cat list_of_ducks.txt | arc paste
+
+          To retrieve a paste, specify the paste ID:
+
+            $ arc paste P123
+
+          --json
+              Output in JSON format.
+
+          --lang language
+              Language for syntax highlighting.
+
+          --title title
+              Title for the paste.
+
+
+      patch D12345
+      patch --revision revision_id
+      patch --diff diff_id
+      patch --patch file
+      patch --arcbundle bundlefile
+          Supports: git, svn, hg
+          Apply the changes in a Differential revision, patchfile, or arc
+          bundle to the working copy.
+
+          --arcbundle bundlefile
+              Apply changes from an arc bundle generated with 'arc export'.
+
+          --diff diff_id
+              Apply changes from a Differential diff. Normally you want to
+              use --revision to get the most recent changes, but you can
+              specifically apply an out-of-date diff or a diff which was
+              never attached to a revision by using this flag.
+
+          --encoding encoding
+              Attempt to convert non UTF-8 patch into specified encoding.
+
+          --force
+              Do not run any sanity checks.
+
+          --nobranch
+              Supports: git, hg
+              Normally, a new branch (git) or bookmark (hg) is created and
+              then the patch is applied and committed in the new
+              branch/bookmark. This flag cherry-picks the resultant commit
+              onto the original branch and deletes the temporary branch.
+
+          --nocommit
+              Supports: git, hg
+              Normally under git/hg, if the patch is successful, the changes
+              are committed to the working copy. This flag prevents the
+              commit.
+
+          --patch patchfile
+              Apply changes from a git patchfile or unified patchfile.
+
+          --revision revision_id
+              Apply changes from a Differential revision, using the most
+              recent diff that has been attached to it. You can run 'arc
+              patch D12345' as a shorthand.
+
+          --skip-dependencies
+              Supports: git, hg
+              Normally, if a patch has dependencies that are not present in
+              the working copy, arc tries to apply them as well. This flag
+              prevents such work.
+
+          --update
+              Supports: git, svn, hg
+              Update the local working copy before applying the patch.
+
+
+      revert
+    Please use arc backout instead
+
+
+      set-config [options] -- name value
+          Supports: cli
+          Sets an arc configuration option.
+
+          Options are either user (apply to all arc commands you invoke
+          from the current user) or local (apply only to the current working
+          copy). By default, user configuration is written. Use --local
+          to write local configuration.
+
+          User values are written to '~/.arcrc' on Linux and Mac OS X, and an
+          undisclosed location on Windows. Local values are written to an arc
+          directory under either .git, .hg, or .svn as appropriate.
+
+          --local
+              Set a local config value instead of a user one.
+
+
+      shell-complete --current N -- [argv]
+          Supports: bash, etc.
+          Implements shell completion. To use shell completion, source the
+          appropriate script from 'resources/shell/' in your .shellrc.
+
+          --current cursor_position
+              Current term in the argument list being completed.
+
+
+      start object
+          Start tracking work in Phrequent.
+
+
+      stop [--note note] [objects]
+          Start tracking work in Phrequent.
+
+          --note note
+              A note to attach to the tracked time.
+
+
+      tasks [options]
+        View all assigned tasks.
+
+          --limit n
+              Limit the amount of tasks outputted, default is all.
+
+          --order task_order
+              Arrange tasks based on priority, created, or modified, default
+              is priority.
+
+          --owner username
+              Only show tasks assigned to the given username, also accepts
+              @all to show all, default is you.
+
+          --status task_status
+              Show tasks that or open or closed, default is open.
+
+          --unassigned
+              Only show tasks that are not assigned (upforgrabs).
+
+
+      time
+          Show what you're currently tracking in Phrequent.
+
+
+      todo summary [options]
+        Quickly create a task for yourself.
+
+          --browse
+              After creating the task, open it in a web browser.
+
+          --cc cc, -C cc
+              Other users to CC on the new task.
+
+          --project project
+              Projects to assign to the task.
+
+
+      unit [options] [paths]
+      unit [options] --rev [rev]
+          Supports: git, svn, hg
+          Run unit tests that cover specified paths. If no paths are specified,
+          unit tests covering all modified files will be run.
+
+          --coverage
+              Always enable coverage information.
+
+          --detailed-coverage
+              Show a detailed coverage report on the CLI. Implies --coverage.
+
+          --engine classname
+              Override configured unit engine for this project.
+
+          --everything
+              Run every test.
+
+          --json
+              Report results in JSON format.
+
+          --no-coverage
+              Always disable coverage information.
+
+          --output format
+              With 'full', show full pretty report (Default). With 'json',
+              report results in JSON format. With 'ugly', use uglier (but
+              more efficient) JSON formatting. With 'none', don't print
+              results.
+
+          --rev revision
+              Supports: git, hg
+              Run unit tests covering changes since a specific revision.
+
+          --ugly
+              With --json, use uglier (but more efficient) formatting.
+
+
+      upgrade
+          Supports: cli
+          Upgrade arcanist and libphutil to the latest versions.
+
+
+      upload file [file ...] [--json]
+          Supports: filesystems
+          Upload a file from local disk.
+
+          --json
+              Output upload information in JSON format.
+
+
+      version [options]
+          Supports: cli
+          Shows the current version of arcanist.
+
+
+      which [options] (svn)
+      which [options] [commit] (hg, git)
+          Supports: svn, git, hg
+          Shows which repository the current working copy corresponds to,
+          which commits 'arc diff' will select, and which revision is in
+          the working copy (or which revisions, if more than one matches).
+
+          --any-status
+              Show committed and abandoned revisions.
+
+          --base rules
+              Supports: git, hg
+              Additional rules for determining base revision.
+
+          --head commit
+              Supports: git
+              Specify the end of the commit range to select.
+
+          --show-base
+              Supports: git, hg
+              Print base commit only and exit.
+
+
+OPTION REFERENCE
+
+      --trace
+          Debugging command. Shows underlying commands as they are executed,
+          and full stack traces when exceptions are thrown.
+
+      --no-ansi
+          Output in plain ASCII text only, without color or style.
+
+      --ansi
+          Use formatting even in environments which probably don't support it.
+          Example: arc --ansi unit | less -r
+
+      --load-phutil-library=/path/to/library
+          Ignore libraries listed in .arcconfig and explicitly load specified
+          libraries instead. Mostly useful for Arcanist development.
+
+      --conduit-uri uri
+          Ignore configured Conduit URI and use an explicit one instead. Mostly
+          useful for Arcanist development.
+
+      --conduit-token token
+          Ignore configured credentials and use an explicit API token instead.
+
+      --conduit-version version
+          Ignore software version and claim to be running some other version
+          instead. Mostly useful for Arcanist development. May cause bad things
+          to happen.
+
+      --conduit-timeout timeout
+          Override the default Conduit timeout. Specified in seconds.
+
+      --config key=value
+          Specify a runtime configuration value. This will take precedence
+          over static values, and only affect the current arcanist invocation.
+
+      --skip-arcconfig
+          Skip the working copy configuration file
+
+      --arcrc-file filename
+          Use provided file instead of ~/.arcrc.
