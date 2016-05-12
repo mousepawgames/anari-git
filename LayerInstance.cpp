@@ -2,7 +2,7 @@
 *Anari Graphics System, version 0.1
 *LayerInstance Class
 *This class defines the layers for the LayerInstance class
-*Last Updated: 18 February 2016
+*Last Updated: 17 April 2016
 *
 *Copyright (C) MousePaw Games
 *Licensing:
@@ -62,60 +62,60 @@ Matrix LayerInstance::getMatrix()
 
 void LayerInstance::setZPreference(int newPref)
 {
-    this->zPreference = newPref;
+    zPreference = newPref;
 }
 
 
 int LayerInstance::getZPreference()
 {
-    return this->zPreference;
+    return zPreference;
 }
 
 void LayerInstance::setXMaxPart(int newX)
 {
-    this->maxPart[0] = newX;
+    maxPart[0] = newX;
 }
 
 ///Set Y Max Partition
 void LayerInstance::setYMaxPart(int newY)
 {
-    this->maxPart[1] = newY;
+    maxPart[1] = newY;
 }
 
 ///Set X Min Partition
 void LayerInstance::setXMinPart(int newX)
 {
-    this->minPart[0] = newX;
+    minPart[0] = newX;
 }
 
 ///Set Y Min Partition
 void LayerInstance::setYMinPart(int newY)
 {
-    this->minPart[1] = newY;
+    minPart[1] = newY;
 }
 
 ///Get X Max Partition
 int LayerInstance::getXMaxPart()
 {
-    return this->maxPart[0];
+    return maxPart[0];
 }
 
 ///Get Y Max Partition
 int LayerInstance::getYMaxPart()
 {
-    return this->maxPart[1];
+    return maxPart[1];
 }
 
 ///Get X Min Partition
 int LayerInstance::getXMinPart()
 {
-    return this->minPart[0];
+    return minPart[0];
 }
 
 ///Get Y Min Partition
 int LayerInstance::getYMinPart()
 {
-    return this->minPart[1];
+    return minPart[1];
 }
 
 /*This method returns the x coordinate of the LayerInstance's center/origin
@@ -127,13 +127,13 @@ int LayerInstance::getOriginX()
 {
     /*TODO:Multiply base Layer's origin coordinates by this LayerInstance's
     *transformation matrix.*/
-    return this->layer->getOriginX();
+    return layer->getOriginX();
 }
 //Get the y coordinate of the LayerInstance's center point
 int LayerInstance::getOriginY()
 {
     //TODO:Insert Matrix math here
-    return this->layer->getOriginY();
+    return layer->getOriginY();
 }
 
 //Render method that displays the LayerInstance to the screen.
@@ -142,7 +142,8 @@ void LayerInstance::render()
     //LayerInstance will not render if it's not visible
     if(layer->isVisible())
     {
-        //Tells its Layer* object to render.
+        /*Tells its Layer pointer to render (passing in the matrix as a
+        *parameter.)*/
         (*layer).render(matrix);
     }
 }
@@ -167,7 +168,7 @@ void LayerInstance::addObserver(Observer* newObs)
     //If the Observer wasn't in the list, add it at the end.
     if(!alreadySubscribed)
     {
-        this->observers.push_back(newObs);
+        observers.push_back(newObs);
     }
 }
 
@@ -195,12 +196,12 @@ void LayerInstance::update()
     it != observers.end(); ++it)
     {
         //Call the update method for each Observer
-        (*it)->update(this->zPreference);
+        (*it)->update(zPreference);
     }
 }
 
 /*This method is overidden from Observer class. It's called by the
-*LayerInstance's Layer* on dimension/property change. It does
+*LayerInstance's Layer pointer on dimension/property change. It does
 *the same thing as the function above*/
 void LayerInstance::update(int zPref)
 {
@@ -209,14 +210,14 @@ void LayerInstance::update(int zPref)
     it != observers.end(); ++it)
     {
         //Update the current Observer object
-        (*it)->update(this->zPreference);
+        (*it)->update(zPreference);
     }
 }
 
 //Method that returns the number of Observers subscribed to the object
 int LayerInstance::getNumOfObservers()
 {
-    return (int)this->observers.size();
+    return (int)observers.size();
 }
 
 
@@ -224,12 +225,12 @@ int LayerInstance::getNumOfObservers()
 *not currently in use.*/
 void LayerInstance::copyContentsFrom(LayerInstance that)
 {
-    this->zPreference = that.zPreference;
-    this->layer = that.layer;
-    this->maxPart[0] = that.maxPart[0];
-    this->maxPart[1] = that.maxPart[1];
-    this->minPart[0] = that.minPart[0];
-    this->minPart[1] = that.minPart[1];
-    this->observers = that.observers;
-    this->matrix = that.matrix;
+    zPreference = that.zPreference;
+    layer = that.layer;
+    maxPart[0] = that.maxPart[0];
+    maxPart[1] = that.maxPart[1];
+    minPart[0] = that.minPart[0];
+    minPart[1] = that.minPart[1];
+    observers = that.observers;
+    matrix = that.matrix;
 }

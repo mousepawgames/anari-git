@@ -1,8 +1,9 @@
 /**
 *Anari Graphics System, version 0.1
 *Observer Class
-*This is the .cpp file for Observer.
-*Last Updated: 16 February 2016
+*The Observer class is an abstract class that will be inherited
+*by the Frame and LayerInstance classes.
+*Last Updated: 07 May 2016
 *
 *Copyright (C) MousePaw Games
 *Licensing:

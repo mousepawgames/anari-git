@@ -3,7 +3,7 @@
 *Timeline Class
 *This file defines the Timeline class. It's basically a vector of Frames
 *that's iterated through and rendered in order to display the animation.
-*Last Updated: 18 February 2016
+*Last Updated: 16 April 2016
 *
 *Copyright (C) MousePaw Games
 *Licensing:
@@ -58,48 +58,47 @@ int Timeline::getNumberOfLayers()
 
 void Timeline::setXPartDim(int newDim)
 {
-    this->xPartDim = newDim;
+    xPartDim = newDim;
 }
 
 void Timeline::setYPartDim(int newDim)
 {
-    this->yPartDim = newDim;
+    yPartDim = newDim;
 }
 
 int Timeline::getXPartDim()
 {
-    return this->xPartDim;
+    return xPartDim;
 }
 
 int Timeline::getYPartDim()
 {
-    return this->yPartDim;
+    return yPartDim;
 }
 
 
 void Timeline::setXDim(int newDim)
 {
-    this->xDim = newDim;
+    xDim = newDim;
 }
 
 void Timeline::setYDim(int newDim)
 {
-    this->yDim = newDim;
+    yDim = newDim;
 }
 
 int Timeline::getXDim()
 {
-    return this->xDim;
+    return xDim;
 }
 
 int Timeline::getYDim()
 {
-    return this->yDim;
+    return yDim;
 }
 
 //Basic functions to edit vector "frames"
 
-//I totally forgot that I used memory allocation for this, will reevaluate.
 Frame* Timeline::getNewFrame()
 {
     Frame* newFrame = new Frame(xDim, yDim, xPartDim, yPartDim);
@@ -110,9 +109,9 @@ Frame* Timeline::getNewFrame()
 //This method inserts a new Frame at the given index
 void Timeline::addFrame(int index)
 {
-    int listSize = (int)this->frames.size();
+    int listSize = (int)frames.size();
     //Check for valid index value
-    if(index >= 0 && (index < listSize || index == 0))
+    if(index >= 0 && index <= listSize)
     {
         //Create new Frame
         Frame* newFrame = getNewFrame();
@@ -123,27 +122,27 @@ void Timeline::addFrame(int index)
             newFrame->addLayerLast(layers.at(i));
         }
         //Test for edgecase, where we add it at the end
-        if(index == listSize-1)
+        if(index == listSize)
         {
-            this->frames.push_back(newFrame);
+            frames.push_back(newFrame);
         }
         //Otherwise, just insert it at the given index
         else
         {
-            this->frames.insert(this->frames.begin() + index, newFrame);
+            frames.insert(frames.begin() + index, newFrame);
         }
     }
 }
 
 
 //Method that adds a new Layer to the Timeline with an initial Matrix value
-void Timeline::addLayer(Layer* newLayer, int index, Matrix newMatrix)
+void Timeline::addLayer(shared_ptr<Layer> newLayer, int index, Matrix newMatrix)
 {
     //Check for valid index
     if(index >= 0 && index <= getNumberOfLayers())
     {
         //Insert new Layer in the Timeline's Layers vector
-        this->layers.insert(this->layers.begin() + index, newLayer);
+        layers.insert(layers.begin() + index, newLayer);
         //Loop through all of the Frames and add the new Layer to each
         for(int i = 0; i < getNumberOfFrames(); i++)
         {
@@ -165,13 +164,13 @@ void Timeline::addLayer(Layer* newLayer, int index, Matrix newMatrix)
     }
 }*/
 
-//Method that returns the Layer* at the given index
-Layer* Timeline::getLayerAt(int index)
+//Method that returns the Layer pointer at the given index
+shared_ptr<Layer> Timeline::getLayerAt(int index)
 {
     //Check for valid index
     if(index >= 0 && index < getNumberOfLayers())
     {
-        return this->layers.at(index);
+        return layers.at(index);
     }
     //Handle invalid index
     else
@@ -180,13 +179,13 @@ Layer* Timeline::getLayerAt(int index)
     }
 }
 
-//Method that returns the Frame* at the given index
+//Method that returns the Frame pointer at the given index
 Frame* Timeline::getFrameAt(int index)
 {
     //Check for valid index
     if(index >= 0 && index < getNumberOfFrames())
     {
-        return this->frames.at(index);
+        return frames.at(index);
     }
     //Handle invalid index
     else
@@ -205,10 +204,10 @@ void Timeline::deleteLayer(int deleteIndex)
         in the animation*/
         for(int i = 0; i < getNumberOfFrames(); i++)
         {
-            this->frames.at(i)->removeLayer(deleteIndex);
+            frames.at(i)->removeLayer(&(*layers.at(deleteIndex)));
         }
-        //Remove the layer from the vector of Layer*s
-        this->layers.erase(this->layers.begin() + deleteIndex);
+        //Remove the layer from the vector of Layer pointers
+        layers.erase(layers.begin() + deleteIndex);
     }
 }
 
@@ -220,11 +219,25 @@ void Timeline::deleteFrame(int deleteIndex)
     {
         //Remove frame from the vector
         delete(*(frames.begin() + deleteIndex));
-        this->frames.erase(this->frames.begin() + deleteIndex);
+        frames.erase(frames.begin() + deleteIndex);
     }
 }
 
-//Method that moves a Frame from the first index to the second
+//This method allows the user to edit a Frame in the Timeline
+void Timeline::editFrame(int frameIndex)
+{
+    if(frameIndex < 0 || frameIndex >= (int)frames.size())
+    {
+        cout << "Error: The requested index was out of bounds." << endl;
+    }
+    else
+    {
+        frames.at(frameIndex)->editMode();
+    }
+}
+
+/*Method that moves a Frame from the index in the first argument to the
+index in the second.*/
 void Timeline::reorderFrame(int indexFrom, int indexTo)
 {
     //Check to make sure that both indexes are valid
@@ -234,77 +247,9 @@ void Timeline::reorderFrame(int indexFrom, int indexTo)
         Frame* tempFrame = frames.at(indexFrom);
         frames.erase(frames.begin() + indexFrom);
         frames.insert(frames.begin() + indexTo, tempFrame);
-        /*NOTE: The following code was the old, inefficient version of the
-        *reorderFrame method. I'm keeping it here for the moment, just to
-        *be safe.*/
-        //Calculate the number of swaps it would take to move
-        /*int numberOfSwaps = indexTo - indexFrom;
-        //If the numberOfSwaps is negative, we're moving backwards
-        if(numberOfSwaps < 0)
-        {
-            //Iterate through vector backwards and swap Frames
-            for(int i = indexFrom; i > indexTo; i--)
-            {
-                swapFrame(i, i-1);
-            }
-
-        }
-        else
-        {
-            //Iterate through vector forwards while swapping Frames
-            for(int i = indexFrom; i < indexTo; i++)
-            {
-                swapFrame(i, i+1);
-            }
-        }*/
     }
     //Handle invalid indexes
     else if (indexTo != indexFrom)
-    {
-        cout << "Error: Invalid Index" << endl;
-    }
-}
-
-//Method that moves a Layer in the Timeline from one index to the other
-void Timeline::reorderLayer(int indexFrom, int indexTo)
-{
-    //Check for valid indexes
-    if((indexFrom >= 0) && (indexFrom < getNumberOfLayers()) && (indexTo >= 0)
-        && (indexTo < getNumberOfLayers()) && (indexTo != indexFrom))
-    {
-        Layer* tempLayer = layers.at(indexFrom);
-        layers.erase(layers.begin() + indexFrom);
-        layers.insert(layers.begin() + indexTo, tempLayer);
-        /*NOTE: The following section of commented out code is the old method
-        *of reordering the Layers. I'll keep it in the method for the moment.*/
-        //Calculate the numberOfSwaps it would take to move the Layer
-        /*int numberOfSwaps = indexTo - indexFrom;
-        //Test to see whether we're moving backwards or forwards
-        if(numberOfSwaps < 0)
-        {
-            //Iterate through the vector backwards, swapping frames
-            for(int i = indexFrom; i > indexTo; i--)
-            {
-                swapLayer(i, i-1);
-            }
-        }
-        else
-        {
-            //Iterate through the vector forwards, swapping frames
-            for(int i = indexFrom; i < indexTo; i++)
-            {
-                swapLayer(i, i+1);
-            }
-        }*/
-        /*Loop through the frames, calling their move method so that all of
-        *the LayerInstances have the right zPreferences.*/
-        for(int i = 0; i < getNumberOfFrames(); i++)
-        {
-            this->frames.at(i)->reorderLayer(indexFrom, indexTo);
-        }
-    }
-    //Handle invalid input
-    else if(indexTo != indexFrom)
     {
         cout << "Error: Invalid Index" << endl;
     }
@@ -319,7 +264,7 @@ void Timeline::play()
         //Loop through the Frames in the animation, rendering each one in order
         for(int i = 0; i < getNumberOfFrames(); i++)
         {
-            this->frames.at(i)->render();
+            frames.at(i)->render();
             cout << endl;
         }
         cout << "-----------------------------------\nAnimation End" << endl;
@@ -342,11 +287,22 @@ void Timeline::playBackwards()
         for(int i = (getNumberOfFrames() - 1); i >=0; i--)
         {
             //Render each Frame
-            this->frames.at(i)->render();
+            frames.at(i)->render();
             cout << endl;
         }
         cout << "-----------------------------------\nAnimation End" << endl;
     }
+}
+
+void Timeline::displayInfo()
+{
+    cout << "Timeline Info\n==============\n" << endl;
+    cout << "Number of Frames: " << getNumberOfFrames() << endl;
+    cout << "Number of Layers: " << getNumberOfLayers() << endl;
+    cout << "X Dimension: " << getXDim() << endl;
+    cout << "Y Dimension: " << getYDim() << endl;
+    cout << "X Partition Dimension: " << getXPartDim() << endl;
+    cout << "Y Partition Dimension: " << getYPartDim() << endl;
 }
 
 //Helper Methods
@@ -386,7 +342,7 @@ void Timeline::swapLayer(int fromIndex, int toIndex)
       && toIndex >= 0 && toIndex < (int)layers.size())
    {
        //Swap the Layers
-       Layer* temp = layers.at(toIndex);
+       shared_ptr<Layer> temp = layers.at(toIndex);
        layers.at(toIndex) = layers.at(fromIndex);
        layers.at(fromIndex) = temp;
    }

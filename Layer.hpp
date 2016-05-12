@@ -57,17 +57,14 @@ class Layer : public Observable
         virtual bool isVisible() = 0;
 
         /**Method that sets the visibility of the Layer
-        *\param a bool value that sets whether the Layer is visible or not.*/
+        *\param a boolean value that sets whether the Layer is visible or not.*/
         virtual void setVisible(bool newVisibility) = 0;
-
-        /**Method that returns a pointer to a new LayerInstance created from
-        the layer*/
 
         /**Method that returns a pointer to a new LayerInstance that references
         *the current Layer.
         *\param an optional transformation matrix that will be applied to the
-        *   new LayerInstance*.
-        *\return a new LayerInstance* that references the current Layer*/
+        *   new LayerInstance pointer.
+        *\return a new LayerInstance pointer that references the current Layer*/
         virtual LayerInstance* newLayerInstance(Matrix mtx=-1) = 0;
 
         ///Methods to get and set the Layer's dimensions on the canvas
@@ -82,8 +79,7 @@ class Layer : public Observable
         virtual int getOriginY() = 0;
 
         ///Set methods for origin coordinates.
-        virtual void setOriginX(int newX) = 0;
-        virtual void setOriginY(int newY) = 0;
+        virtual void setOriginCoord(int newX, int newY) = 0;
 
         /**The editMode layer allows derived classes to interface with users
         depending on their unique features. */

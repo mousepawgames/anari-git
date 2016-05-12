@@ -6,7 +6,7 @@
 *currently contains a vector of Frame*s and a Vector of Layer*s. The vector
 *of Layer*s contains all of the Layers that will be used in the animation.
 *The vector of Frame*s contains all of the Frames in the animation.
-*Last Updated: 18 February 2016
+*Last Updated: 9 April 2016
 *
 *Copyright (C) MousePaw Games
 *Licensing:
@@ -16,6 +16,7 @@
 #define TIMELINE_HPP_INCLUDED
 
 #include <vector>
+#include <memory>
 #include "Frame.hpp"
 
 using std::vector;
@@ -40,7 +41,7 @@ private:
     std::vector<Frame*> frames;
 
     ///The container that stores references to all of the layers
-    std::vector<Layer*> layers;
+    std::vector<shared_ptr<Layer>> layers;
 
     /**Helper method I defined to handle frame swapping
     *\param index of the first frame in the timeline's frame vector to
@@ -49,16 +50,16 @@ private:
     *   with the first*/
     void swapFrame(int fromIndex, int toIndex);
 
-    /**Helper method I defined to handle layer swapping. It swaps Layer*s
-    *in the Timeline's Layer* vector. After the two Layer*s are swapped, the
-    *method will then go through all of the Frames in the Timeline and swap
-    *the corresponding LayerInstances for each one.
+    /**Helper method I defined to handle layer swapping. It swaps Layer
+    *pointers in the Timeline's vector of Layer pointers. After the two Layer
+    *pointers are swapped, the method will then go through all of the Frames
+    *in the Timeline and swap the corresponding LayerInstances for each one.
     *\param the index of the first Layer to be swapped
     *\param the index of the second Layer to be swapped*/
     void swapLayer(int fromIndex, int toIndex);
 
     /**Creates a new frame based on the Timeline settings. This method
-    *initializes a new Frame* with the appropriate grid and partition
+    *initializes a new Frame pointer with the appropriate grid and partition
     *dimensions.*/
     Frame* getNewFrame();
 
@@ -105,52 +106,49 @@ public:
     /**A method that inserts a new Layer, taking a transformation matrix
     *as an optional parameter.
     *\param a pointer to the Layer we want to add to the Timeline
-    *\param the index in the Timeline's Layer* vector where the new
-    *   Layer* will be inserted.
+    *\param the index in the Timeline's Layer pointer vector where the new
+    *   Layer will be inserted.
     *\param an optional parameter that specifies the transformation matrix
     *   value of the new LayerInstances that will be created for each Frame.*/
-    void addLayer(Layer* newLayer, int index, Matrix newMatrix=-1);
+    void addLayer(shared_ptr<Layer> newLayer, int index, Matrix newMatrix=-1);
 
     ///A method that inserts an SOL into the timeline, with starting indexes
     //void insertSOL(SOL* newSOL, int layerIndex, int frameIndex);
 
-    /**Returns the Layer* at the given index
-    *\param the index in the Timeline's Layer* vector where the requested
-    *   Layer* is located.*/
-    Layer* getLayerAt(int index);
+    /**Returns the Layer pointer at the given index
+    *\param the index in the Timeline's vector of Layer pointers where the
+    *   requested Layer is located.*/
+    shared_ptr<Layer> getLayerAt(int index);
 
-    /**Retrieves the Frame* at the given index
-    *\param the index in the Timeline's Frame* vector where the requested
-    *   Frame* is located.*/
+    /**Retrieves the Frame pointer at the given index
+    *\param the index in the Timeline's vector of Frame pointers where the
+    *   requested Frame is located.*/
     Frame* getFrameAt(int index);
 
     /**Deletes a Layer from the Timeline at the given index. It will delete the
-    *Layer* in the Timeline's Layer* vector, then it will loop through the
-    *Timeline's Frames and delete the corresponding LayerInstance from each.
-    *\param The index in the Timeline's Layer* vector that contains the Layer*
-    *   to be deleted.*/
+    *Layer in the Timeline's vector of Layer pointers, then it will loop
+    *through the Timeline's Frames and delete the corresponding LayerInstance
+    *from each.
+    *\param The index in the Timeline's vector of Layer pointers that contains
+    *   the Layer to be deleted.*/
     void deleteLayer(int deleteIndex);
 
     /**Deletes a Frame from the animation at the given index
-    *\param the index in the Timeline's Frame* vector that contains the Frame*
-    *   to be deleted.*/
+    *\param the index in the Timeline's vector of Frame pointers that contains
+    *   the Frame pointer to be deleted.*/
     void deleteFrame(int deleteIndex);
 
-    /**Moves a Frame from one index location to another in the Timeline's
-    *Frame* vector.
-    *\param the index in the Timeline's Frame* vector that contains the
-    *   Frame* to be moved.
-    *\param the destination index in the Timeline's Frame* vector where we
-    *   want to move the Frame*.*/
-    void reorderFrame(int indexFrom, int indexTo);
+    /**This method allows the user to access and edit a Frame in the Timeline.
+    *\param the index of the Frame contained within the Timeline.*/
+    void editFrame(int frameIndex);
 
-    /**Moves a Layer from one index location to another in the Timeline's
-    *Layer* vector
-    *\param the index in the Timeline's Layer* vector that contains the Layer*
-    *   that will be moved.
-    *\param the destination index in the Timeline's Layer* vector where the
-    *   specified Layer* will be relocated.*/
-    void reorderLayer(int indexFrom, int indexTo);
+    /**Moves a Frame from one index location to another in the Timeline's
+    *vector of Frame pointers.
+    *\param the index in the Timeline's Frame pointer vector that contains the
+    *   Frame to be moved.
+    *\param the destination index in the Timeline's Frame pointer vector
+    *   where we want to move the Frame.*/
+    void reorderFrame(int indexFrom, int indexTo);
 
     /**Renders the animation on the screen. It will loop through all of the
     *Frames in the Timeline and render each one in order.*/
@@ -162,6 +160,8 @@ public:
     *particularly useful at this stage, and we may find a better way to
     *achieve this functionality in the future.*/
     void playBackwards();
+
+    void displayInfo();
 
 };
 

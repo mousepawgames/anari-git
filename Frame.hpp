@@ -9,7 +9,7 @@
 *in the foreground. LayerInstance images can appear differently on different
 *Frames. When Frames are rendered one after the other, it gives the illusion
 *of movement, animation.
-*Last Updated: 17 February 2016
+*Last Updated: 10 May 2016
 *
 *Copyright (C) MousePaw Games
 *Licensing:
@@ -22,6 +22,7 @@
 #include <iostream>
 #include <vector>
 #include <utility>
+#include <memory>
 #include "LayerInstance.hpp"
 
 
@@ -48,6 +49,7 @@ class Frame: public Observer
         ///Sets and gets
         void setDesc(string);
         string getDesc();
+        int getNumLayerInstances();
 
         int getXDim();
         int getYDim();
@@ -80,7 +82,7 @@ class Frame: public Observer
         *\param an optional parameter that sets the transformation matrix
         *   for the new LayerInstance.
         */
-        void addLayer(Layer* newLayer, int index, Matrix newMatrix=-1);
+        void addLayer(shared_ptr<Layer> newLayer, int index, Matrix newMatrix=-1);
 
         /**Add a layer to the end of the Frame's LayerInstance vector. It will
         *essentially add a new LayerInstance to the background.
@@ -88,7 +90,7 @@ class Frame: public Observer
         *   a new LayerInstance and add that LayerInstance at the back.
         *NOTE: This method functions properly, but I have no use for it at
         *present.*/
-        void addLayerLast(Layer* newLayer);
+        void addLayerLast(shared_ptr<Layer> newLayer);
 
         /**Add a layer to the front of the Frame's LayerInstance vector.
         *The new LayerInstance will be added to the foreground of the scene.
@@ -97,56 +99,74 @@ class Frame: public Observer
         *    LayerInstance vector.
         *NOTE: This method functions properly, but I have no use for it at
         *present.*/
-        void addLayerFirst(Layer* newLayer);
+        void addLayerFirst(shared_ptr<Layer> newLayer);
 
 
         /**This function returns the Frame's LayerInstance at the given
         *index.
-        *\param the index of the desired LayerInstance* in the Frame's
-        *   LayerInstance* vector.
-        *\return the LayerInstance* found at the given index*/
+        *\param the index of the desired LayerInstance pointer in the Frame's
+        *   LayerInstance pointer vector.
+        *\return the LayerInstance pointer found at the given index*/
         LayerInstance* getLayerInstanceAt(int index);
 
-        /**Reorder LayerInstances in the Frame's LayerInstance* vector based
-        *on index.
-        *\param the index of the LayerInstance* that will be moved
-        *\param the index that the selected LayerInstance* will be moved to*/
+        /**Reorder LayerInstances in the Frame's LayerInstance pointer vector
+        *based on index.
+        *\param the index of the LayerInstance pointer that will be moved
+        *\param the index that the selected LayerInstance pointer will be
+        *moved to*/
         void reorderLayer(int fromIndex, int toIndex);
 
         /**Method used to update the grid after changes are made to the
         *Layer's dimensions.
-        *\param The index of the LayerInstance* in the LayerInstance* vector
-        *   that will be moved.
-        *\param the new x-coordinate on the screen where the LayerInstance*s
-        *   origin is now located.
-        *\param the new y-coordinate on the screen where the LayerInstance*s
-        *   origin is now located.
-        *NOTE: Not completely working yet.*/
+        *\param The index of the LayerInstance pointer in the LayerInstance
+        *   pointer vector that will be moved.
+        *\param the new x-coordinate on the screen where the LayerInstance
+        *   pointer's origin is now located.
+        *\param the new y-coordinate on the screen where the LayerInstance
+        *   pointer's origin is now located.*/
         void moveLayerOnCanvas(int index, int newX, int newY);
 
         /**removeLayer method removes a layerInstance from the Frame's
         *layerInstances object by index.
-        *\param the index of the LayerInstance* in the LayerInstance* vector
-        *   to be deleted.*/
+        *\param the index of the LayerInstance pointer in the LayerInstance
+        *   pointer vector to be deleted.*/
         void removeLayer(int deleteIndex);
+
+        /**removeLayer method that takes in a Layer pointer as input. The
+        *purpose of this method is to allow users to delete all LayerInstances
+        *that point so a particular Layer in the Timeline.
+        *\param the Layer pointer that is being removed. All LayerInstances in
+        *   the Frame that point to this Layer pointer will be removed.*/
+        void removeLayer(Layer* deleteLayer);
 
         ///clearFrame empties out the Frame's layerInstance* vector.
         void clearFrame();
 
         /**The render method calls the render method on all of the
-        *LayerInstance* objects in the Frame. It will display the
-        *LayerInstance* images from the background to the foreground.*/
+        *LayerInstances in the Frame. It will display the
+        *LayerInstance images from the background to the foreground.*/
         void render();
 
         /**Update method inherited from Observer class. Used to update grid
         *based on Layer property changes.
-        *\param the zPreference of the LayerInstance* in the Frame that will
-        *   be updated*/
+        *\param the zPreference of the LayerInstance pointer in the Frame
+        *   that will be updated*/
         void update(int zPref);
+
+        /**Method that determines whether or not there is a LayerInstance
+        *for the specified Layer in the Frame.
+        *\param the Layer we want to test the Frame for.
+        *\return a boolean that indicates whether or not the Frame already
+        *   contains a LayerInstance for the given Layer.*/
+        bool containsLayer(Layer* testLayer);
 
         /**Test method, not to be used in actual implementation.
         *It prints the contents of each grid partition to the screen.*/
         void test_printGridContents();
+
+        /**This method allows the user to interact with and edit the Frame at
+        *runtime.*/
+        void editMode();
 
     private:
         ///String variable that describes the Frame
@@ -195,11 +215,11 @@ class Frame: public Observer
 
         /**Method that inserts a LayerInstance into the appropriate grid
         *partition
-        *\param The LayerInstance* that will be added to the grid.*/
+        *\param The LayerInstance pointer that will be added to the grid.*/
         void addLayerToGrid(LayerInstance* newLayer);
 
         /**Method that removes a particular LayerInstance from the grid
-        *\param The LayerInstance* that will be removed from the grid*/
+        *\param The LayerInstance pointer that will be removed from the grid*/
         void removeLayerFromGrid(LayerInstance* deleteMe);
 
         /**Method that determines whether the LayerInstance's dimensions
@@ -210,37 +230,31 @@ class Frame: public Observer
         bool validPartitions(LayerInstance newLayer);
 
         /**Methods used to calculate where a Layer falls on the grid.
-        *\param The LayerInstance whose grid location we are calculating
+        *\param The coordinate we are trying to determine which partition
+        *   it falls in
         *\return an int that represents the X or Y coordinate of the grid
         *   that was calculated.*/
-        int calcTopLeftXPart(LayerInstance instance);
-        int calcTopLeftYPart(LayerInstance instance);
-        int calcBottomRightXPart(LayerInstance instance);
-        int calcBottomRightYPart(LayerInstance instance);
+        int calcBottomLeftXPart(int bottomLeftXCoord);
+        int calcBottomLeftYPart(int bottomLeftYCoord);
+        int calcTopRightXPart(int topRightXCoord);
+        int calcTopRightYPart(int topRightYCoord);
 
-        /**Methods to set the partitions that the LayerInstance
-        *falls under.
-        *\param the LayerInstance* that will have its partition information
-        *   updated*/
-        void setMaxPart(LayerInstance* instance);
-        void setMinPart(LayerInstance* instance);
-
-        /**Helper method I defined to swap LayerInstance*s in the Frame's
-        *vector of LayerInstance*s.
-        *\param an int that represents the index of the first LayerInstance*
-        *   we want to swap
-        *\param an int that represents the index of the second LayerInstance*
-        *   we are going to swap*/
+        /**Helper method I defined to swap LayerInstance pointers in the
+        *Frame's vector of LayerInstance pointers.
+        *\param an int that represents the index of the first LayerInstance
+        *   pointer we want to swap
+        *\param an int that represents the index of the second LayerInstance
+        *   pointer we are going to swap*/
         void swapLayerInstance(int fromIndex, int toIndex);
 
         /**Helper method to ensure ZPrefs are set properly. It loops through
-        *the vector of LayerInstance*s and sets each LayerInstance*s
-        *z preference to its index in the vector.*/
-        void resetZPrefs();
+        *the vector of LayerInstance pointers and sets each LayerInstance
+        *pointer's z preference to its corresponding index in the vector.*/
+        void updateZPrefs();
 
         /**Helper method that sorts a vector of ints. Currently it sorts the
         *vector using the insertion sort algorithm.
-        *\param a vector* of ints that will be sorted*/
+        *\param a pointer to a vector of ints that will be sorted*/
         void sortInts(std::vector<int>* thisVector);
 
         /**Method that inserts an int into a vector. This is a helper method
@@ -256,9 +270,20 @@ class Frame: public Observer
         *\param the z preference of the Layer that will be removed from the
         *   vector
         *\param the vector of ints that we will remove the z preference from*/
-        void deleteFromVector(int deleteMe,
-     std::vector<int>* thisVector);
+        void deleteFromVector(int deleteMe, std::vector<int>* thisVector);
 
+        /**Method that determines whether or not a LayerInstance's image
+        *falls within the canvas boundaries. If it determines that the
+        *LayerInstance does fall within the canvas limits, then it will set
+        *the LayerInstance's min and max partitions accordingly. Otherwise,
+        *the min and max partition values will be set to -1.
+        *\param the LayerInstance whose dimensions will be tested*/
+        void setLayerPartitions(LayerInstance* testLayer);
+
+        //Private helper editMode methods
+        void editMode_displayMenu();
+        void editMode_setLayerInstanceMatrix();
+        void editMode_moveLayerInstance();
 };
 
 #endif // FRAME_H

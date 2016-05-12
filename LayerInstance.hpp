@@ -10,7 +10,7 @@
 *Layer changes properties (like dimensions), and it also wants to update
 *the Frame that it's stored in, so that the Frame can update its grid
 *appropriately.
-*Last Updated: 17 February 2016
+*Last Updated: 17 April 2016
 *
 *Copyright (C) MousePaw Games
 *Licensing:
@@ -19,18 +19,20 @@
 #ifndef LAYERINSTANCE_H
 #define LAYERINSTANCE_H
 
+#include <memory>
 #include "Layer.hpp"
 #include "Observable.hpp"
 
 
 //NOTE: Temp typedef to represent matrix
 typedef int Matrix;
+using std::shared_ptr;
 
 class LayerInstance : public Observable, public Observer
 {
     public:
-        /**Constructor with optional Layer* and Matrix parameters
-        *\param a Layer* that the new LayerInstance will point to.
+        /**Constructor with optional Layer pointer and Matrix parameters
+        *\param a Layer pointer that the new LayerInstance will point to.
         *\param a Matrix that the new LayerInstance will implement as a
         *   transformation matrix*/
         LayerInstance(Layer* newLayer=nullptr, Matrix newMatrix=-1);
@@ -85,7 +87,7 @@ class LayerInstance : public Observable, public Observer
         int getOriginY();
 
 
-        /**The render method calls the render method of Layer* that the
+        /**The render method calls the render method of the Layer that the
         *LayerInstance points to, and passes the LayerInstance's transformation
         *matrix as a parameter.*/
         void render();

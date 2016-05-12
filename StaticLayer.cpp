@@ -21,14 +21,15 @@ using std::list;
 typedef int Matrix;
 
 //Constructor
-StaticLayer::StaticLayer(string newImage)
+StaticLayer::StaticLayer(string newImage, int xDim, int yDim, int xOrigin,
+                         int yOrigin)
 {
-    this->image = newImage;
-    this->visibility = true;
-    this->dim[0] = 250;
-    this->dim[1] = 250;
-    this->originCoords[0] = 0;
-    this->originCoords[1] = 0;
+    image = newImage;
+    visibility = true;
+    dim[0] = xDim;
+    dim[1] = yDim;
+    originCoords[0] = xOrigin;
+    originCoords[1] = yOrigin;
 }
 
 //Default destructor
@@ -47,31 +48,31 @@ void StaticLayer::render(Matrix transformMtx)
 //Sets and gets
 string StaticLayer::getImage()
 {
-    return this->image;
+    return image;
 }
 
 void StaticLayer::setImage(string newImage)
 {
-    this->image = newImage;
+    image = newImage;
 }
 
 bool StaticLayer::isVisible()
 {
-    return this->visibility;
+    return visibility;
 }
 
 void StaticLayer::setVisible(bool newVisibility)
 {
-    this->visibility = newVisibility;
+    visibility = newVisibility;
 }
 
 int StaticLayer::getXDimension()
 {
-    return this->dim[0];
+    return dim[0];
 }
 int StaticLayer::getYDimension()
 {
-    return this->dim[1];
+    return dim[1];
 }
 
 //Method that sets both the x and y dimensions of the Layer
@@ -79,8 +80,8 @@ void StaticLayer::setDimensions(int x, int y)
 {
     if(x >= 0 && y >= 0)
     {
-        this->dim[0] = x;
-        this->dim[1] = y;
+        dim[0] = x;
+        dim[1] = y;
         //Method that updates all of the Layer's subscribers(LayerInstances)
         update();
     }
@@ -89,20 +90,18 @@ void StaticLayer::setDimensions(int x, int y)
 //Overridden methods from Layer class to set/get origin coordinates
 int StaticLayer::getOriginX()
 {
-    return this->originCoords[0];
+    return originCoords[0];
 }
 int StaticLayer::getOriginY()
 {
-    return this->originCoords[1];
+    return originCoords[1];
 }
 
-void StaticLayer::setOriginX(int newX)
+void StaticLayer::setOriginCoord(int newX, int newY)
 {
-    this->originCoords[0] = newX;
-}
-void StaticLayer::setOriginY(int newY)
-{
-    this->originCoords[1] = newY;
+    originCoords[0] = newX;
+    originCoords[1] = newY;
+    update();
 }
 
 
@@ -110,15 +109,15 @@ void StaticLayer::setOriginY(int newY)
 LayerInstance* StaticLayer::newLayerInstance(Matrix mtx)
 {
     LayerInstance* newInstance = new LayerInstance(this, mtx);
-    this->observers.push_back(newInstance);
+    observers.push_back(newInstance);
     return newInstance;
 }
 
 //Overidden Methods from Layer inherited from Observable
-//This method adds a new Observer to the Observer* list
+//This method adds a new Observer to the list of Observer pointers.
 void StaticLayer::addObserver(Observer* newObs)
 {
-    /*Create a bool variable to track whether or not the Observer is already
+    /*Create a boolean variable to track whether or not the Observer is already
     in the list.*/
     bool alreadySubscribed = false;
     //Loop through and look for the given Observer
@@ -135,14 +134,14 @@ void StaticLayer::addObserver(Observer* newObs)
     //If the Observer isn't already in the list, push it back
     if(!alreadySubscribed)
     {
-        this->observers.push_back(newObs);
+        observers.push_back(newObs);
     }
 }
 
-//Method that removes an Observer from the list of Observer*s
+//Method that removes an Observer from the list of Observer pointers
 void StaticLayer::removeObserver(Observer* newObs)
 {
-    //Iterate through the list looking for the given Observer*
+    //Iterate through the list looking for the given Observer pointer
     for(list<Observer*>::iterator it = observers.begin();
     it != observers.end(); ++it)
     {
@@ -172,7 +171,7 @@ void StaticLayer::update()
 *to this particular Layer.*/
 int StaticLayer::getNumOfObservers()
 {
-    return (int)this->observers.size();
+    return (int)observers.size();
 }
 
 /*Ambitious function that will allow the user to interface with the
@@ -182,7 +181,7 @@ void StaticLayer::editMode()
 {
     string input = "";
     int option = -1;
-    while(option != 7)
+    while(option != 9)
     {
         cout << "\nStatic Layer Edit Mode \n-------------------------\n"
         << endl;
@@ -220,15 +219,23 @@ void StaticLayer::editMode()
         }
         else if(option == 5)
         {
-            editMode_isVisible();
+            editMode_getOrigin();
         }
         else if(option == 6)
+        {
+            editMode_setOrigin();
+        }
+        else if(option == 7)
+        {
+            editMode_isVisible();
+        }
+        else if(option == 8)
         {
             editMode_setVisibility();
         }
         /*If the input wasn't any of the available commands, and it's not
         *the exit value, inform the user that the input was invalid.*/
-        else if(option != 7)
+        else if(option != 9)
         {
             cout << "Error: Unrecognized command." << endl;
         }
@@ -251,11 +258,15 @@ void StaticLayer::editMode_help()
     cout << "4. Set Dimensions: Command to change the image dimensions."
     << " Prompts for X and Y dimensions, must be positive whole numbers."
     << endl;
-    cout << "5. Is Visible: Displays whether or not the layer is currently "
+    cout << "5. Get Origin Coordinates: Command to display the current "
+    << "origin coordinates of the Layer." << endl;
+    cout << "6. Set Origin Coordinates: Command to set the origin coordinates"
+    << " of the Layer." << endl;
+    cout << "7. Is Visible: Displays whether or not the layer is currently "
     << "visible. " << endl;
-    cout << "6. Set Visibility: Command to set the visibility of the Layer. "
+    cout << "8. Set Visibility: Command to set the visibility of the Layer. "
     << "Input must either be \"true\" or \"false\"" << endl;
-    cout << "7. Exit: Exits out of editMode.\n" << endl;
+    cout << "9. Exit: Exits out of editMode.\n" << endl;
 }
 
 //This method displays the Layer's image to the user
@@ -269,15 +280,15 @@ void StaticLayer::editMode_setImage()
 {
     //Prompt for input
     cout << "Enter new Layer Image:";
-    getline(cin, this->image);
+    getline(cin, image);
 }
 
 //This method allows the user to set the Layer's base dimensions
 void StaticLayer::editMode_setDim()
 {
     //Print out the old values for user reference
-    cout << "Old X Dimension: " << this->dim[0] << endl;
-    cout << "Old Y Dimension: " << this->dim[1] << endl;
+    cout << "Old X Dimension: " << dim[0] << endl;
+    cout << "Old Y Dimension: " << dim[1] << endl;
     //String that will handle console input
     string input;
     //Int that holds the new x dimension
@@ -295,11 +306,6 @@ void StaticLayer::editMode_setDim()
         //Try to parse the input as an int
         try
         {
-            /*The stoi method attempts to parse a string to an int.
-            *it's new in c++11. It does convert any input that starts
-            *with a number into an integer, ignoring any anything
-            *past the first non-numeric character. e.g. "45rk73b"
-            *becomes 45.*/
             newXDim = stoi(input);
             validInput = true;
         }
@@ -329,7 +335,7 @@ void StaticLayer::editMode_setDim()
     if(newXDim >= 0 && newYDim >= 0)
     {
         //If they are, update the Layer's dimensions
-        this->setDimensions(newXDim, newYDim);
+        setDimensions(newXDim, newYDim);
     }
     //Otherwise, let the user know the input was invalid
     else
@@ -341,8 +347,65 @@ void StaticLayer::editMode_setDim()
 //This method displays the Layer dimensions to the user
 void StaticLayer::editMode_getDim()
 {
-    cout << "X Dimension: " << this->dim[0] << endl;
-    cout << "Y Dimension: " << this->dim[1] << endl;
+    cout << "X Dimension: " << dim[0] << endl;
+    cout << "Y Dimension: " << dim[1] << endl;
+}
+
+void StaticLayer::editMode_setOrigin()
+{
+    //Print out the old values for user reference
+    cout << "Old X Coordinate: " << originCoords[0] << endl;
+    cout << "Old Y Coordinate: " << originCoords[1] << endl;
+    //String that will handle console input
+    string input;
+    //Int that holds the new x coordinate
+    int newXCoord = 0;
+    //Int that holds the new y coordinate
+    int newYCoord = 0;
+    //Bool that determines whether or not the input is valid
+    bool validInput = false;
+    //This while loop will execute until the user enters valid input
+    while(!validInput)
+    {
+        //Prompt for new x origin coordinate
+        cout << "Enter new X Coordinate: ";
+        getline(cin, input);
+        //Try to parse the input as an int
+        try
+        {
+            newXCoord = stoi(input);
+            validInput = true;
+        }
+        //Display an error message
+        catch(...)
+        {
+            cout << "Error: Input must be an integer." << endl;
+        }
+    }
+    //Perform the same method as above to get a new y dimension
+    validInput = false;
+    while(!validInput)
+    {
+        cout << "Enter new Y Coordinate: ";
+        getline(cin, input);
+        try
+        {
+            newYCoord = stoi(input);
+            validInput = true;
+        }
+        catch(...)
+        {
+            cout << "Error: Input must be an integer." << endl;
+        }
+    }
+    //If they are, update the Layer's dimensions
+    setOriginCoord(newXCoord, newYCoord);
+}
+
+void StaticLayer::editMode_getOrigin()
+{
+    cout << "X Origin Coord: " << originCoords[0] << endl;
+    cout << "Y Origin Coord: " << originCoords[1] << endl;
 }
 
 //This method tells the user whether or not the Layer is visible
@@ -361,11 +424,11 @@ void StaticLayer::editMode_setVisibility()
     getline(cin, newVisibility);
     if(newVisibility == "true")
     {
-        this->visibility = true;
+        visibility = true;
     }
     else if(newVisibility == "false")
     {
-        this->visibility = false;
+        visibility = false;
     }
     //Handle invalid option
     else

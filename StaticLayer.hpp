@@ -2,7 +2,7 @@
 *Anari Graphics System, version 0.1
 *StaticLayer Class
 *This is the most basic Layer type, representing a static image on the canvas.
-*Last Updated: 24 February 2016
+*Last Updated: 30 April 2016
 *
 *Copyright (C) MousePaw Games
 *Licensing:
@@ -25,9 +25,18 @@ class StaticLayer : public Layer
     public:
 
         /**Constructor
-        *\param an optional parameter that represents the StaticLayer's image*/
+        *\param an optional parameter that represents the StaticLayer's image
+        *\param an optional parameter that represents the x dimension of the
+        *   Layer image in pixels.
+        *\param an optional parameter that represents the y dimension of the
+        *   layer image in pixels.
+        *\param an optional parameter that represents the x coordinate of the
+        *   origin point.
+        *\param an optional parameter that represents the y coordinate of the
+        *   origin point.*/
         //NOTE: We are currently storing the image as a string for testing
-        StaticLayer(string image="");
+        StaticLayer(string image="", int xDim=250, int yDim=250, int xOrigin=960,
+                    int yOrigin=540);
 
         ///Destructor
         virtual ~StaticLayer();
@@ -47,7 +56,7 @@ class StaticLayer : public Layer
         bool isVisible();
         void setVisible(bool newVisibility);
 
-        /**Overidden method from Layer class that creates a new LayerInstance*
+        /**Overidden method from Layer class that creates a new LayerInstance pointer
         *\param the transformation matrix that will be applied to the new
         *   LayerInstance.*/
         LayerInstance* newLayerInstance(Matrix mtx=-1);
@@ -64,8 +73,7 @@ class StaticLayer : public Layer
         int getOriginY();
 
         ///Set methods for origin coordinates.
-        void setOriginX(int newX);
-        void setOriginY(int newY);
+        void setOriginCoord(int newX, int newY);
 
         ///Overidden Observable methods
         void addObserver(Observer* newObs);
@@ -86,7 +94,7 @@ class StaticLayer : public Layer
         ///Base image that the Layer renders to the screen
         string image;
 
-        ///bool that determines whether or not the Layer is visible
+        ///boolean that determines whether or not the Layer is visible
         bool visibility;
 
         ///Array containing the dimensions of the image in pixels
@@ -106,6 +114,8 @@ class StaticLayer : public Layer
         void editMode_setImage();
         void editMode_setDim();
         void editMode_getDim();
+        void editMode_setOrigin();
+        void editMode_getOrigin();
         bool editMode_isVisible();
         void editMode_setVisibility();
 };

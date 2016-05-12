@@ -2,7 +2,7 @@
 *Anari Graphics System, version 0.1
 *Frame Class
 *This is the definition of the methods for Frame.hpp
-*Last Updated: 19 February 2016
+*Last Updated: 10 May 2016
 *
 *Copyright (C) MousePaw Games
 *Licensing:
@@ -14,16 +14,17 @@ using std::vector;
 using std::string;
 using std::cout;
 using std::endl;
+using std::cin;
 
 //Constructor
 Frame::Frame(int newXDim, int newYDim, int newXPartDim, int newYPartDim,
              string newDesc)
 {
-    this->desc = newDesc;
-    this->xDim = newXDim;
-    this->yDim = newYDim;
-    this->xPartDim = newXPartDim;
-    this->yPartDim = newYPartDim;
+    desc = newDesc;
+    xDim = newXDim;
+    yDim = newYDim;
+    xPartDim = newXPartDim;
+    yPartDim = newYPartDim;
 
     //Determine the number of partitions in the grid
     int xParts = xDim/xPartDim;
@@ -73,71 +74,75 @@ string Frame::getDesc()
     return desc;
 }
 
+int Frame::getNumLayerInstances()
+{
+    return (int)layerInstances.size();
+}
+
 void Frame::setXDim(int newXDim)
 {
-    this->xDim = newXDim;
+    xDim = newXDim;
 }
 
 void Frame::setYDim(int newYDim)
 {
-    this->yDim = newYDim;
+    yDim = newYDim;
 }
 
-//Consider having pointer to timeline value
 void Frame::setXPartDim(int newDim)
 {
-    this->xPartDim = newDim;
+    xPartDim = newDim;
 }
 
 void Frame::setYPartDim(int newDim)
 {
 
-    this->yPartDim = newDim;
+    yPartDim = newDim;
 }
 
 int Frame::getXDim()
 {
-    return this->xDim;
+    return xDim;
 }
 
 int Frame::getYDim()
 {
-    return this->yDim;
+    return yDim;
 }
 
 int Frame::getXPartDim()
 {
-    return this->xPartDim;
+    return xPartDim;
 }
 
 int Frame::getYPartDim()
 {
-    return this->yPartDim;
+    return yPartDim;
 }
 
 int Frame::getNumXParts()
 {
-    return (int)this->grid.size();
+    return (int)grid.size();
 }
 int Frame::getNumYParts()
 {
-    return (int)this->grid.at(0).size();
+    return (int)grid.at(0).size();
 }
 
 //Here we have to handle adding the new Layer to the grid
 //Because we were not given center coordinates, we will have the object
-//centered at the origin (0,0)
-/*AddLayer method that takes in a Layer* and uses it to create a new
+//located at the origin (0,0)
+/*AddLayer method that takes in a Layer pointer and uses it to create a new
 *LayerInstance that will be added to the Frame. It adds the LayerInstance
 *to the Frame's LayerInstance vector, and inserts the LayerInstance's
 *z preference into the Frame's grid structure.*/
-void Frame::addLayer(Layer* newLayer, int index, Matrix newMatrix)
+void Frame::addLayer(shared_ptr<Layer> newLayer, int index, Matrix newMatrix)
 {
-    int listSize = (int)this->layerInstances.size();
+    int listSize = (int)layerInstances.size();
     //Check for valid insertion index
     if(index >= 0 && index <= listSize)
     {
-        //Get Layer* to give us new LayerInstance*
+        //Get Layer pointer to give us new LayerInstance pointer
         LayerInstance* temp = newLayer->newLayerInstance(newMatrix);
         //Initialize new LayerInstance attributes
         temp->setZPreference(index);
@@ -145,72 +150,69 @@ void Frame::addLayer(Layer* newLayer, int index, Matrix newMatrix)
         //Insert LayerInstance into Frame's LayerInstance vector
         if(index != listSize)
         {
-            this->layerInstances.insert(this->layerInstances.begin() + index,
+            layerInstances.insert(layerInstances.begin() + index,
                 temp);
         }
         /*This logic is different than that in the function above, will
         *reevaluate when I get the chance.*/
         else
         {
-            this->layerInstances.insert(this->layerInstances.end(), temp);
+            layerInstances.insert(layerInstances.end(), temp);
         }
-        //Reset LayerInstance zPrefs
-        resetZPrefs();
+        //Update the LayerInstance zPrefs
+        updateZPrefs();
         /*Check whether or not the new LayerInstance's dimensions fall in
         *the canvas.*/
         if(newLayer->getXDimension() > 0 && newLayer->getYDimension() > 0)
         {
             //Set the min and max partitions where the LayerInstance falls in
-            setMaxPart(this->layerInstances.at(index));
-            setMinPart(this->layerInstances.at(index));
+            setLayerPartitions(layerInstances.at(index));
             //Add the LayerInstance to the Frame's grid structure
-            addLayerToGrid(this->layerInstances.at(index));
+            addLayerToGrid(layerInstances.at(index));
         }
     }
 }
 
-/*Inserts a new LayerInstance at the back of the Frame's LayerInstance*
-*vector*/
-void Frame::addLayerLast(Layer* newLayer)
+/*Inserts a new LayerInstance at the back of the Frame's LayerInstance
+*pointer vector*/
+void Frame::addLayerLast(shared_ptr<Layer> newLayer)
 {
-    //Get the Layer* to give us a new LayerInstance*
+    //Get the Layer pointer to give us a new LayerInstance pointer
     LayerInstance* temp = newLayer->newLayerInstance();
-    int zPref = (int)this->layerInstances.size();
-    //Set the new LayerInstance*'s attributes
+    int zPref = (int)layerInstances.size();
+    //Set the new LayerInstance pointer's attributes
     temp->setZPreference(zPref);
     temp->addObserver(this);
-    /*Add the new LayerInstance* to the back of the Frame's
+    /*Add the new LayerInstance pointer to the back of the Frame's
     LayerInstance vector */
-    this->layerInstances.push_back(temp);
+    layerInstances.push_back(temp);
     //Test whether or not the LayerInstance falls in the canvas dimensions
     if(newLayer->getXDimension() > 0 && newLayer->getYDimension() > 0)
     {
         //Set the LayerInstance's min and max partitions
-        setMaxPart(layerInstances.at(zPref));
-        setMinPart(layerInstances.at(zPref));
+        setLayerPartitions(layerInstances.at(zPref));
         //Add the LayerInstance to the Frame's grid
         addLayerToGrid(layerInstances.at(zPref));
     }
 }
 
 //Like the above method, only adding the LayerInstance at the beginning
-void Frame::addLayerFirst(Layer* newLayer)
+void Frame::addLayerFirst(shared_ptr<Layer> newLayer)
 {
-    //Get the Layer* to give us a new LayerInstance*
+    //Get the Layer pointer to give us a new LayerInstance pointer
     LayerInstance* temp = newLayer->newLayerInstance();
     //Add the Frame as a subscriber
     temp->addObserver(this);
-    //Insert the LayerInstance* in the Frame's LayerInstance vector
-    this->layerInstances.insert(this->layerInstances.begin(), temp);
-    //Reset the LayerInstance sPrefs
-    resetZPrefs();
+    //Insert the LayerInstance pointer in the Frame's LayerInstance vector
+    layerInstances.insert(layerInstances.begin(), temp);
+    //Update the LayerInstance zPrefs
+    updateZPrefs();
     //Test if the LayerInstance falls in the Canvas dimensions
     if(newLayer->getXDimension() > 0 && newLayer->getYDimension() > 0)
     {
         //Set the LayerInstance's min and max partitions
-        setMaxPart(layerInstances.at(0));
-        setMinPart(layerInstances.at(0));
-        //Add the LayerInstance* to the grid
+        setLayerPartitions(layerInstances.at(0));
+        //Add the LayerInstance pointer to the grid
         addLayerToGrid(layerInstances.at(0));
     }
 }
@@ -225,6 +227,8 @@ void Frame::addLayerToGrid(LayerInstance* newLayer)
         *LayerInstance appears in and inserts the LayerInstance's zPreference.*/
         for(int i = newLayer->getXMinPart(); i <= newLayer->getXMaxPart(); i++)
         {
+            /*NOTE: Because the partition origin begins at the bottom right
+            *corner, the y value increases as it moves up.*/
             for(int j = newLayer->getYMinPart(); j <= newLayer->getYMaxPart();
              j++)
             {
@@ -251,7 +255,7 @@ void Frame::removeLayerFromGrid(LayerInstance* deleteMe)
     }
 }
 
-/*This function accepts a vector<int> and a new int to insert into the
+/*This function accepts a vector of ints and a new int to insert into the
 *vector. This function is used to insert the new ZPreference into a grid
 *partition.*/
 void Frame::insertIntoVector(int newLayer,
@@ -262,28 +266,27 @@ void Frame::insertIntoVector(int newLayer,
     {
         //Loop through and account for layer insertion
         /*Because of the design change where we need to use ints representing
-        *the zPreferences rather than LayerInstance*s, we need to update the
-        *zPreferences that come after the new layer. I will need to reevaluate
-        *my design here.*/
+        *the zPreferences rather than LayerInstance pointers, we need to
+        *update the zPreferences that come after the new layer.*/
         for(int i = 0; i < (int)thisVector->size(); i++)
         {
             //Test for LayerInstances that come after the new layer
-          if(thisVector->at(i) >= newLayer)
-          {
-              //Increment values occurring after new Layer
-              thisVector->at(i)++;
-          }
+            if(thisVector->at(i) >= newLayer)
+            {
+                //Increment values occurring after new Layer
+                thisVector->at(i)++;
+            }
         }
         //Iterate through the vector and insert in order
         for(int i = 0; i < (int)thisVector->size(); i++)
         {
             /*Because we're inserting into an ordered list, if we come across
             *a larger value, we know this is where we need to stop.*/
-          if(thisVector->at(i) > newLayer)
-          {
-              thisVector->insert(thisVector->begin() + i, newLayer);
-              return;
-          }
+            if(thisVector->at(i) > newLayer)
+            {
+                thisVector->insert(thisVector->begin() + i, newLayer);
+                return;
+            }
         }
         //The layer had a greater z preference than all of the others
         thisVector->push_back(newLayer);
@@ -295,7 +298,7 @@ void Frame::insertIntoVector(int newLayer,
     }
 }
 
-/*This method takes in a vector<int> and an int representing a new Layer's
+/*This method takes in a vector of ints and an int representing a new Layer's
 *z Preference. The goal is to remove that int from the given vector. It's
 *how the grid handles deletion for each partition.*/
 void Frame::deleteFromVector(int deleteMe,
@@ -330,12 +333,12 @@ void Frame::deleteFromVector(int deleteMe,
 //Simple method that returns the LayerInstance at the given index
 LayerInstance* Frame::getLayerInstanceAt(int index)
 {
-    int listSize = (int)this->layerInstances.size();
+    int listSize = (int)layerInstances.size();
     //Make sure the index is valid
     if(index >=0 && (index < listSize || index == 0))
     {
         //Return the LayerInstance at the given index
-        return this->layerInstances.at(index);
+        return layerInstances.at(index);
     }
     //Handle exceptions
     else
@@ -350,7 +353,7 @@ LayerInstance* Frame::getLayerInstanceAt(int index)
 void Frame::reorderLayer(int fromIndex, int toIndex)
 {
 
-    int listSize = (int)this->layerInstances.size();
+    int listSize = (int)layerInstances.size();
     //Check that both indexes are valid
     if((fromIndex >= 0 && fromIndex < listSize) &&
        (toIndex >= 0 && toIndex < listSize))
@@ -362,28 +365,7 @@ void Frame::reorderLayer(int fromIndex, int toIndex)
         LayerInstance* tempInstance = layerInstances.at(fromIndex);
         layerInstances.erase(layerInstances.begin() + fromIndex);
         layerInstances.insert(layerInstances.begin() + toIndex, tempInstance);
-        resetZPrefs();
-        /*NOTE: the following code was the old version of the reorderLayer
-        method. I'm keeping it here for the moment.*/
-        /*//Determine how many swaps it will take to move the Layer
-        int numberOfSwaps = toIndex - fromIndex;
-        //Determine in which direction we need to swap the Layers
-        if(numberOfSwaps < 0)
-        {
-            //If numberOfSwaps is negative, we swap Layer backwards
-            for(int i = fromIndex; i > toIndex; i--)
-            {
-                swapLayerInstance(i, i-1);
-            }
-        }
-        //Else, we're moving the Layer forward
-        else
-        {
-            for(int i = fromIndex; i < toIndex; i++)
-            {
-                swapLayerInstance(i, i+1);
-            }
-        }*/
+        updateZPrefs();
     }
     //Handle invalid indexes
     else
@@ -396,26 +378,35 @@ void Frame::reorderLayer(int fromIndex, int toIndex)
 //This method removes a LayerInstance from the Frame
 void Frame::removeLayer(int deleteIndex)
 {
-    /*Here I cast the layerInstances.size() variable to a signed int,
-    *so there would be no issues comparing the two values.*/
     int listSize = (int)layerInstances.size();
     if(deleteIndex < listSize && deleteIndex >= 0)
     {
         //Remove the LayerInstance from the grid
-        removeLayerFromGrid(*(layerInstances.begin() + deleteIndex));
-        std::cout << "1" << std::endl;
+        removeLayerFromGrid(layerInstances.at(deleteIndex));
         //Remove the LayerInstance from the Frame's vector of LayerInstances
-        delete(*(layerInstances.begin() + deleteIndex));
-        std::cout << "2" << std::endl;
+        delete(layerInstances.at(deleteIndex));
         layerInstances.erase(layerInstances.begin() + deleteIndex);
-        std::cout << "3" << std::endl;
-        //Reset the zPreferences
-        resetZPrefs();
+        //Update the zPreferences
+        updateZPrefs();
     }
     //Handle the invalid index
     else
     {
         cout << "Error: invalid index." << endl;
+    }
+}
+
+void Frame::removeLayer(Layer* deleteLayer)
+{
+    for(int i = 0; i < (int)layerInstances.size(); i++)
+    {
+        if(layerInstances.at(i)->getLayer() == deleteLayer)
+        {
+            removeLayerFromGrid(layerInstances.at(i));
+            delete(layerInstances.at(i));
+            layerInstances.erase(layerInstances.begin() + i);
+            updateZPrefs();
+        }
     }
 }
 
@@ -449,8 +440,8 @@ void Frame::swapLayerInstance(int fromIndex, int toIndex)
        LayerInstance* temp = layerInstances.at(fromIndex);
        layerInstances.at(fromIndex) = layerInstances.at(toIndex);
        layerInstances.at(toIndex) = temp;
-       //Reset the LayerInstances' zPreferences
-       resetZPrefs();
+       //Update the LayerInstances' zPreferences
+       updateZPrefs();
    }
    //Handle invalid indexes
    else
@@ -469,12 +460,12 @@ void Frame::swapLayerInstance(int fromIndex, int toIndex)
 }
 
 //Method that loops through the LayerInstances and updates the zPreferences
-void Frame::resetZPrefs()
+void Frame::updateZPrefs()
 {
     //Loop through the LayerInstances and set the zPreferences
-    for(int i = 0; i < (int)this->layerInstances.size(); i++)
+    for(int i = 0; i < (int)layerInstances.size(); i++)
     {
-        this->layerInstances.at(i)->setZPreference(i);
+        layerInstances.at(i)->setZPreference(i);
     }
     //Go through grid and account for changes
     for(int i = 0; i < (int)grid.size(); i++)
@@ -493,7 +484,7 @@ void Frame::render()
     {
         vector<LayerInstance*>::iterator curr;
         //Loop through the Frame's layerInstances and render each one
-        for(curr = this->layerInstances.begin(); curr != layerInstances.end();
+        for(curr = layerInstances.begin(); curr != layerInstances.end();
          ++curr)
         {
             (*curr)->render();
@@ -503,33 +494,15 @@ void Frame::render()
 
 /*Method that calculates which partition the LayerInstance's top left corner
 *falls in*/
-int Frame::calcTopLeftXPart(LayerInstance instance)
+int Frame::calcBottomLeftXPart(int bottomLeftXCoord)
 {
-    /*In order to calculate the x coordinate of the top left corner of the
-    *Layer, take the x coordinate of the Layer's center and subtract half
-    *of the Layer's x dimension.*/
-    int topLeftXCoord = instance.getOriginX() -
-    (instance.getLayer()->getXDimension() / 2);
-    //Test whether or not the coordinates fall out of the scene
-    if(topLeftXCoord < -(getXDim()/2))
-    {
-        //If the x coordinate falls outside of the canvas, set to min value
-        topLeftXCoord = -(getXDim()/2);
-    }
-    else if(topLeftXCoord > getXDim()/2)
-    {
-        //Set to max if off canvas' right side
-        topLeftXCoord = getXDim()/2;
-    }
-    //Now that we know the coordinates of the top left corner,
-    //we need to figure out which partition that falls under.
     //Calculate X Partition
     //Set the tempX variable to the lowest x value possible
-    int tempX = -(getXDim()/2);
+    int tempX = 0;
     int minXPart = 0;
     /*Then loop through the different partition ranges in order to find
     *the x partition that the x coordinate falls in.*/
-    while(topLeftXCoord > tempX + getXPartDim())
+    while(bottomLeftXCoord > tempX + getXPartDim())
     {
         minXPart++;
         tempX += getXPartDim();
@@ -539,21 +512,11 @@ int Frame::calcTopLeftXPart(LayerInstance instance)
 }
 
 //See above
-int Frame::calcTopLeftYPart(LayerInstance instance)
+int Frame::calcBottomLeftYPart(int bottomLeftYCoord)
 {
-    int topLeftYCoord = instance.getOriginY() -
-    (instance.getLayer()->getYDimension() / 2);
-    if(topLeftYCoord  < -(getYDim()/2))
-    {
-        topLeftYCoord = -(getYDim()/2);
-    }
-    else if (topLeftYCoord > (getYDim()/2))
-    {
-        topLeftYCoord = getYDim()/2;
-    }
-    int tempY = -(getYDim()/2);
+    int tempY = 0;
     int minYPart = 0;
-    while(topLeftYCoord > tempY + getYPartDim())
+    while(bottomLeftYCoord > tempY + getYPartDim())
     {
         minYPart++;
         tempY += getYPartDim();
@@ -562,26 +525,15 @@ int Frame::calcTopLeftYPart(LayerInstance instance)
 }
 
 //See above
-int Frame::calcBottomRightXPart(LayerInstance instance)
+int Frame::calcTopRightXPart(int topRightXCoord)
 {
     /*This function is similar to the one above, except it calculates
     the partition of the bottom right corner of the LayerInstance.*/
-    //Calculate the coordinates of the bottom right coordinate of the Layer
-    int bottomRightXCoord = instance.getOriginX() +
-    (instance.getLayer()->getXDimension() / 2);
-    if(bottomRightXCoord < -(getXDim()/2))
-    {
-        bottomRightXCoord = -(getXDim()/2);
-    }
-    else if(bottomRightXCoord > getXDim()/2)
-    {
-        bottomRightXCoord = getXDim()/2;
-    }
     //Calculate X Partition
     //Set the tempX variable to the lowest x value possible
-    int tempX = -(getXDim()/2);
+    int tempX = 0;
     int maxXPart = 0;
-    while(bottomRightXCoord > tempX + getXPartDim())
+    while(topRightXCoord > tempX + getXPartDim())
     {
         maxXPart++;
         tempX += getXPartDim();
@@ -590,21 +542,11 @@ int Frame::calcBottomRightXPart(LayerInstance instance)
 }
 
 //See above
-int Frame::calcBottomRightYPart(LayerInstance instance)
+int Frame::calcTopRightYPart(int topRightYCoord)
 {
-    int bottomRightYCoord = instance.getOriginY() +
-    (instance.getLayer()->getYDimension() / 2);
-    if(bottomRightYCoord  < -(getYDim()/2))
-    {
-        bottomRightYCoord = -(getYDim()/2);
-    }
-    else if (bottomRightYCoord > (getYDim()/2))
-    {
-        bottomRightYCoord = getYDim()/2;
-    }
-    int tempY = -(getYDim()/2);
+    int tempY = 0;
     int maxYPart = 0;
-    while(bottomRightYCoord > tempY + getYPartDim())
+    while(topRightYCoord > tempY + getYPartDim())
     {
         maxYPart++;
         tempY += getYPartDim();
@@ -612,23 +554,7 @@ int Frame::calcBottomRightYPart(LayerInstance instance)
     return maxYPart;
 }
 
-/*This method calculates the partitions that the top left corner of the
-*layer falls in and sets the minPart values accordingly.*/
-void Frame::setMinPart(LayerInstance *instance)
-{
-    //Set the value for this particular LayerInstance
-    instance->setXMinPart(calcTopLeftXPart(*instance));
-    instance->setYMinPart(calcTopLeftYPart(*instance));
-}
 
-/*This method calculates the partitions that the bottom right corner of
-*the layer falls in and sets the maxPart values accordingly.*/
-void Frame::setMaxPart(LayerInstance *instance)
-{
-    //Set the value for this particular LayerInstance
-    instance->setXMaxPart(calcBottomRightXPart(*instance));
-    instance->setYMaxPart(calcBottomRightYPart(*instance));
-}
 
 /*This method determines whether or not the LayerInstance's coordinates
 *fall within the limits of the canvas. With the way the calcPart methods
@@ -636,15 +562,56 @@ void Frame::setMaxPart(LayerInstance *instance)
 bool Frame::validPartitions(LayerInstance newLayer)
 {
     if(newLayer.getXMaxPart() >= 0 && newLayer.getXMaxPart() <
-       (int)this->grid.size() && newLayer.getYMaxPart() >= 0 &&
-       newLayer.getYMaxPart() < (int)this->grid.at(0).size() &&
+       (int)grid.size() && newLayer.getYMaxPart() >= 0 &&
+       newLayer.getYMaxPart() < (int)grid.at(0).size() &&
        newLayer.getXMinPart() >= 0 && newLayer.getXMinPart() <
-       (int)this->grid.size() && newLayer.getYMinPart() >= 0 &&
-       newLayer.getYMinPart() < (int)this->grid.at(0).size())
+       (int)grid.size() && newLayer.getYMinPart() >= 0 &&
+       newLayer.getYMinPart() < (int)grid.at(0).size())
     {
         return true;
     }
     return false;
+}
+
+/*This method determines whether or not the given LayerInstance falls within
+*the Canvas boundaries. */
+void Frame::setLayerPartitions(LayerInstance* testLayer)
+{
+    //Calculate the min and max coordinate values on the canvas
+    int canvasMinX = 0;
+    int canvasMinY = 0;
+    int canvasMaxX = xDim;
+    int canvasMaxY = yDim;
+    //Calculate the min and max coordinate values for the LayerInstance
+    int layerMinX = testLayer->getOriginX() -
+        (testLayer->getLayer()->getXDimension() / 2);
+    int layerMinY = testLayer->getOriginY() -
+        (testLayer->getLayer()->getYDimension() / 2);
+    int layerMaxX = testLayer->getOriginX() +
+        (testLayer->getLayer()->getXDimension() / 2);
+    int layerMaxY = testLayer->getOriginY() +
+        (testLayer->getLayer()->getYDimension() / 2);
+
+    /*This logic statement will weed out any LayerInstances that do not fall
+    *within the canvas limits.*/
+    if((canvasMinX > layerMaxX) || (canvasMinY > layerMaxY) ||
+       (canvasMaxX < layerMinX) || (canvasMaxY < layerMinY))
+    {
+        testLayer->setXMaxPart(-1);
+        testLayer->setYMaxPart(-1);
+        testLayer->setXMinPart(-1);
+        testLayer->setYMinPart(-1);
+    }
+    /*Now that we've determined that the Layer and the canvas do intersect,
+    *calculate the resulting rectangle and set the LayerInstance's partitions
+    *accordingly.*/
+    else
+    {
+        testLayer->setXMinPart(calcBottomLeftXPart(std::max(canvasMinX, layerMinX)));
+        testLayer->setYMinPart(calcBottomLeftYPart(std::max(canvasMinY, layerMinY)));
+        testLayer->setXMaxPart(calcTopRightXPart(std::min(canvasMaxX, layerMaxX)));
+        testLayer->setYMaxPart(calcTopRightYPart(std::min(canvasMaxY, layerMaxY)));
+    }
 }
 
 /*This is the method where we check to see whether or not the LayerInstance
@@ -654,10 +621,14 @@ void Frame::update(int zPref)
 {
     LayerInstance* updateMe = layerInstances.at(zPref);
     //Calculate the partitions
-    int minX = calcTopLeftXPart(*updateMe);
-    int minY = calcTopLeftYPart(*updateMe);
-    int maxX = calcBottomRightXPart(*updateMe);
-    int maxY = calcBottomRightYPart(*updateMe);
+    int minX = calcBottomLeftXPart(updateMe->getOriginX() -
+                                   (updateMe->getLayer()->getXDimension()/2));
+    int minY = calcBottomLeftYPart(updateMe->getOriginY() -
+                                   (updateMe->getLayer()->getYDimension()/2));
+    int maxX = calcTopRightXPart(updateMe->getOriginX() +
+                                 (updateMe->getLayer()->getXDimension()/2));
+    int maxY = calcTopRightYPart(updateMe->getOriginY() +
+                                 (updateMe->getLayer()->getYDimension()/2));
     //Test to see if the new partitions are equal to the current ones
     if(minX != updateMe->getXMinPart() || minY != updateMe->getYMinPart() ||
        maxX != updateMe->getXMaxPart() || maxY != updateMe->getYMaxPart())
@@ -665,14 +636,13 @@ void Frame::update(int zPref)
         /*if it did jump partitions, remove from grid, update partitions,
         *then add to new partitions*/
         removeLayerFromGrid(layerInstances.at(zPref));
-        setMinPart(layerInstances.at(zPref));
-        setMaxPart(layerInstances.at(zPref));
+        setLayerPartitions(layerInstances.at(zPref));
         addLayerToGrid(layerInstances.at(zPref));
     }
 }
 
-/*This method accepts a vector<int>* as input and sorts the elements
-*in the vector. It's a helper method to sort grid partitions.*/
+/*This method accepts a pointer to a vector of ints as input and sorts the
+*elements in the vector. It's a helper method to sort grid partitions.*/
 void Frame::sortInts(std::vector<int>* thisVector)
 {
     //The following logic implements the insertion sort algorithm
@@ -692,6 +662,72 @@ void Frame::sortInts(std::vector<int>* thisVector)
     }
 }
 
+bool Frame::containsLayer(Layer* testLayer)
+{
+    for(int i = 0; i < (int)layerInstances.size(); i++)
+    {
+        if(layerInstances.at(i)->getLayer() == testLayer)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+void Frame::editMode()
+{
+    string choiceString = "";
+    int choice = -1;
+    while(choice != 5)
+    {
+        editMode_displayMenu();
+        getline(cin, choiceString);
+        try
+        {
+            choice = stoi(choiceString);
+        }
+        catch(...)
+        {
+            choice = -1;
+        }
+        //Display all of the LayerInstances
+        if(choice == 1)
+        {
+            for(int i = 0; i < (int)layerInstances.size(); i++)
+            {
+                cout << i << ". ";
+                layerInstances.at(i)->render();
+            }
+        }
+        //Move a LayerInstance in the Frame
+        else if(choice == 2)
+        {
+            editMode_moveLayerInstance();
+        }
+        //Set a LayerInstance Matrix
+        else if (choice == 3)
+        {
+            editMode_setLayerInstanceMatrix();
+        }
+        //Display the grid
+        else if (choice == 4)
+        {
+            test_printGridContents();
+        }
+        //Exit
+        else if(choice == 5)
+        {
+            //Do nothing
+        }
+        else
+        {
+            cout << "Error: Choice must be a valid option from the menu."
+            << endl;
+        }
+    }
+}
+
+
 //Test method that renders the contents of the grid
 void Frame::test_printGridContents()
 {
@@ -709,5 +745,91 @@ void Frame::test_printGridContents()
                 std::cout << std::endl;
             }
         }
+    }
+}
+
+void Frame::editMode_displayMenu()
+{
+    cout << "Frame Edit Mode\n------------------------\n" << endl;
+    cout << "1. Display the LayerInstances in the Frame" << endl;
+    cout << "2. Move a LayerInstance" << endl;
+    cout << "3. Edit a LayerInstance Transformation Matrix" << endl;
+    cout << "4. Display the Frame grid" << endl;
+    cout << "5. Exit Edit Mode" << endl;
+    cout << "Choice: ";
+}
+
+void Frame::editMode_setLayerInstanceMatrix()
+{
+    string choice = "";
+    cout << "Enter the index of the LayerInstance you would like to edit: ";
+    getline(cin, choice);
+    try
+    {
+        int layerInstanceIndex = stoi(choice);
+        if(layerInstanceIndex < 0 || layerInstanceIndex >=
+           (int)layerInstances.size())
+        {
+            cout << "Error: Index out of bounds." << endl;
+        }
+        else
+        {
+            cout << "Enter the new matrix for the LayerInstance: ";
+            getline(cin, choice);
+            try
+            {
+                Matrix newMatrix = stoi(choice);
+                layerInstances.at(layerInstanceIndex)->setMatrix(newMatrix);
+            }
+            catch(...)
+            {
+                cout << "Error: Input must be a valid integer." << endl;
+            }
+        }
+    }
+    catch(...)
+    {
+        cout << "Error: Input must be a valid index." << endl;
+    }
+}
+
+void Frame::editMode_moveLayerInstance()
+{
+    string choice = "";
+    cout << "Enter the index of the LayerInstance you would like to move: ";
+    getline(cin, choice);
+    try
+    {
+        int indexA = stoi(choice);
+        if(indexA < 0 || indexA >= (int)layerInstances.size())
+        {
+            cout << "Error: Index out of bounds." << endl;
+        }
+        else
+        {
+            cout << "Enter the index that you would like to move the "
+            << "LayerInstance to: ";
+            getline(cin, choice);
+            try
+            {
+                int indexB = stoi(choice);
+                if(indexB < 0 || indexB >= (int)layerInstances.size())
+                {
+                    cout << "Error: Index out of bounds." << endl;
+                }
+                else
+                {
+                    reorderLayer(indexA, indexB);
+                }
+            }
+            catch(...)
+            {
+                cout << "Error: Input must be a valid integer." << endl;
+            }
+        }
+    }
+    catch(...)
+    {
+        cout << "Error: Input must be a valid integer." << endl;
     }
 }

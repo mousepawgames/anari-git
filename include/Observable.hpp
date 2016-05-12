@@ -6,7 +6,7 @@
 *Layer both inherit from this class. A class that inherits the Observable
 *class will have a list of subscribers (objects that inherit the Observer
 *interface). When the Observable object wants to update its subscribers,
-*it can loop through all of its stored Observer*s and call their "update"
+*it can loop through all of its stored Observers and call their "update"
 *method.
 *Last Updated: 17 February 2016
 *

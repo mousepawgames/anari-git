@@ -1,8 +1,9 @@
 /**
 *Anari Graphics System, version 0.1
 *Observable Class
-*This is the .cpp file for Observable.
-*Last Updated: 18 February 2016
+*The Observable class is an abstract class that will be inherited
+*by the Layer and LayerInstance classes.
+*Last Updated: 07 May 2016
 *
 *Copyright (C) MousePaw Games
 *Licensing:
