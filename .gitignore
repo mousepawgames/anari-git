@@ -4,3 +4,4 @@
 *.layout
 **/bin
 **/obj
+build/
