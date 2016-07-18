@@ -1,13 +1,3 @@
-/**
-*Anari Graphics System, version 0.1
-*LayerInstance Class
-*This class defines the layers for the LayerInstance class
-*Last Updated: 17 April 2016
-*
-*Copyright (C) MousePaw Games
-*Licensing:
-*/
-
 #include "LayerInstance.hpp"
 using std::string;
 using std::list;
@@ -15,11 +5,11 @@ using std::cout;
 using std::endl;
 
 //Constructor
-LayerInstance::LayerInstance(Layer* newLayer, Matrix newMatrix)
+LayerInstance::LayerInstance(Layer* newLayer, Matrix newMatrix):
+    zPreference(-1)
 {
     layer = newLayer;
     matrix = newMatrix;
-    zPreference = -1;
     maxPart[0] = -1;
     maxPart[1] = -1;
     minPart[0] = -1;
@@ -215,9 +205,9 @@ void LayerInstance::update(int zPref)
 }
 
 //Method that returns the number of Observers subscribed to the object
-int LayerInstance::getNumOfObservers()
+unsigned int LayerInstance::getNumOfObservers()
 {
-    return (int)observers.size();
+    return observers.size();
 }
 
 

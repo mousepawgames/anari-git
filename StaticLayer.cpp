@@ -1,15 +1,3 @@
-/**
-*Anari Graphics System, version 0.1
-*StaticLayer Class
-*This class defines all of the methods declared in the StaticLayer.hpp class.
-*A StaticLayer is very simple, one layer with no moving parts.
-*Last Updated: 24 February 2016
-*
-*Copyright (C) MousePaw Games
-*Licensing:
-*/
-
-
 #include "StaticLayer.hpp"
 
 using std::cout;
@@ -22,10 +10,9 @@ typedef int Matrix;
 
 //Constructor
 StaticLayer::StaticLayer(string newImage, int xDim, int yDim, int xOrigin,
-                         int yOrigin)
+                         int yOrigin): visibility(true)
 {
     image = newImage;
-    visibility = true;
     dim[0] = xDim;
     dim[1] = yDim;
     originCoords[0] = xOrigin;
@@ -40,7 +27,7 @@ StaticLayer::~StaticLayer()
 
 /*Method that displays the StaticLayer to the screen. It is given a
 *transformation matrix as input to help render.*/
-void StaticLayer::render(Matrix transformMtx)
+void StaticLayer::render(Matrix transformMtx, int frameIndex)
 {
     cout << image << "(" << transformMtx << ")";
 }
@@ -149,8 +136,6 @@ void StaticLayer::removeObserver(Observer* newObs)
         if((*it) == newObs)
         {
             observers.erase(it);
-            //Test output, will remove once we confirm it works
-            cout << "Successful deletion from Layer's observers." << endl;
             return;
         }
     }
@@ -163,15 +148,15 @@ void StaticLayer::update()
     for(list<Observer*>::const_iterator it = observers.begin(); it != observers.end(); ++it)
     {
         //Update each individual observer
-        (*it)->update(0);
+        (*it)->update();
     }
 }
 
 /*Method that returns the number of Observers, or LayerInstances connected
 *to this particular Layer.*/
-int StaticLayer::getNumOfObservers()
+unsigned int StaticLayer::getNumOfObservers()
 {
-    return (int)observers.size();
+    return observers.size();
 }
 
 /*Ambitious function that will allow the user to interface with the
@@ -227,7 +212,14 @@ void StaticLayer::editMode()
         }
         else if(option == 7)
         {
-            editMode_isVisible();
+            if(editMode_isVisible())
+            {
+                cout << "true" << endl;
+            }
+            else
+            {
+                cout << "false" << endl;
+            }
         }
         else if(option == 8)
         {

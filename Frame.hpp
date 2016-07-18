@@ -1,6 +1,6 @@
-/**
-*Anari Graphics System, version 0.1
-*Frame Class
+/** Frame [Anari Graphics System]
+* Version: 0.1
+*
 *This file defines the Frame class, which contains multiple
 *LayerInstance objects. When a Frame is rendered, it displays
 *each LayerInstance object to the screen in the order they are stored.
@@ -9,10 +9,26 @@
 *in the foreground. LayerInstance images can appear differently on different
 *Frames. When Frames are rendered one after the other, it gives the illusion
 *of movement, animation.
-*Last Updated: 10 May 2016
 *
-*Copyright (C) MousePaw Games
-*Licensing:
+* Last Updated: 14 May 2016
+* Author: Audrey Henry
+*/
+
+/* LICENSE
+* Copyright (C) 2016 MousePaw Games.
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef FRAME_H
@@ -69,7 +85,7 @@ class Frame: public Observer
         *\param an int that represents the number of partitions tall the grid
             will be.
         */
-        void initializeGrid(int xParts, int yParts);
+        void initializeGrid(unsigned int xParts, unsigned int yParts);
 
         /**addLayer method that accepts a Matrix as an optional parameter.
         *\param a pointer to the Layer we will be adding to the Frame.
@@ -107,14 +123,14 @@ class Frame: public Observer
         *\param the index of the desired LayerInstance pointer in the Frame's
         *   LayerInstance pointer vector.
         *\return the LayerInstance pointer found at the given index*/
-        LayerInstance* getLayerInstanceAt(int index);
+        LayerInstance* getLayerInstanceAt(unsigned int index);
 
         /**Reorder LayerInstances in the Frame's LayerInstance pointer vector
         *based on index.
         *\param the index of the LayerInstance pointer that will be moved
         *\param the index that the selected LayerInstance pointer will be
         *moved to*/
-        void reorderLayer(int fromIndex, int toIndex);
+        void reorderLayer(unsigned int fromIndex, unsigned int toIndex);
 
         /**Method used to update the grid after changes are made to the
         *Layer's dimensions.
@@ -130,7 +146,7 @@ class Frame: public Observer
         *layerInstances object by index.
         *\param the index of the LayerInstance pointer in the LayerInstance
         *   pointer vector to be deleted.*/
-        void removeLayer(int deleteIndex);
+        void removeLayer(unsigned int deleteIndex);
 
         /**removeLayer method that takes in a Layer pointer as input. The
         *purpose of this method is to allow users to delete all LayerInstances
@@ -189,7 +205,7 @@ class Frame: public Observer
         allocating memory for new LayerInstances, so this could change in the
         future. For the moment the 3D grid functions as we need it to.*/
         ///3D Vector structure to represent spatial partitioning
-        std::vector< std::vector< std::vector<int> > > grid;
+        std::vector< std::vector< std::vector<unsigned int> > > grid;
 
         ///Int representing x dimension of canvas in pixels
         int xDim;
@@ -245,32 +261,58 @@ class Frame: public Observer
         *   pointer we want to swap
         *\param an int that represents the index of the second LayerInstance
         *   pointer we are going to swap*/
-        void swapLayerInstance(int fromIndex, int toIndex);
+        void swapLayerInstance(unsigned int fromIndex, unsigned int toIndex);
 
-        /**Helper method to ensure ZPrefs are set properly. It loops through
-        *the vector of LayerInstance pointers and sets each LayerInstance
-        *pointer's z preference to its corresponding index in the vector.*/
-        void updateZPrefs();
+        /**Helper method made to ensure ZPrefs are set properly when a new
+        *LayerInstance is added to the Frame. It loops through the vector of
+        *LayerInstance pointers and sets each LayerInstance pointer's z
+        *preference to its corresponding index in the vector. It will also
+        *go through the Grid and update the Z Preference values appropriately.
+        *\param an unsigned int that represents the index where the new
+        *   LayerInstance was added.*/
+        void updateZPrefs_Add(unsigned int newLayerIndex);
+
+        /**Helper method made to ensure ZPrefs are set properly when a
+        *LayerInstance is removed from the Frame. It loops through the vector
+        *of LayerInstance pointers and sets each LayerInstance pointer's z
+        *preference to its corresponding index in the vector. It will also
+        *go through the Grid and update the Z Preference values appropriately.
+        *\param an unsigned int that represents the index where the
+        *   LayerInstance was deleted from.*/
+        void updateZPrefs_Delete(unsigned int deletedIndex);
+
+        /**Helper method made to ensure ZPrefs are set properly when a
+        *LayerInstance is reordered in the Frame. It loops through the vector
+        *of LayerInstance pointers and sets each LayerInstance pointer's z
+        *preference to its corresponding index in the vector. It will also
+        *go through the Grid and update the Z Preference values appropriately.
+        *\param an unsigned int that represents the index of the LayerInstance
+        *   that was moved.
+        *\param an unsigned int that represents the index of where the
+        *   LayerInstance was moved to.*/
+        void updateZPrefs_Reorder(unsigned int fromIndex,
+                                  unsigned int toIndex);
 
         /**Helper method that sorts a vector of ints. Currently it sorts the
         *vector using the insertion sort algorithm.
         *\param a pointer to a vector of ints that will be sorted*/
-        void sortInts(std::vector<int>* thisVector);
+        void sortInts(std::vector<unsigned int>* thisVector);
 
         /**Method that inserts an int into a vector. This is a helper method
         *for the "addLayerToGrid" method.
         *\param an int that represents the z preference of the Layer that we
         *   will add to the grid.
         *\param the vector of ints that we will insert the z preference into*/
-        void insertIntoVector(int newLayer,
-                              std::vector<int>* thisVector);
+        void insertIntoVector(unsigned int newLayer,
+                              std::vector<unsigned int>* thisVector);
 
         /**Method that removes an int from a vector. This is a helper method
         *for the "removeLayerFromGrid" method.
         *\param the z preference of the Layer that will be removed from the
         *   vector
         *\param the vector of ints that we will remove the z preference from*/
-        void deleteFromVector(int deleteMe, std::vector<int>* thisVector);
+        void deleteFromVector(unsigned int deleteMe,
+                              std::vector<unsigned int>* thisVector);
 
         /**Method that determines whether or not a LayerInstance's image
         *falls within the canvas boundaries. If it determines that the

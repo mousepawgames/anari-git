@@ -1,6 +1,6 @@
-/**
-*Anari Graphics System, version 0.1
-*Observable Class
+/** Observable [Anari Graphics System]
+* Version: 0.1
+*
 *This is the header file for the abstract class Observable. It provides an
 *interface for objects to implement the Observer pattern. LayerInstance and
 *Layer both inherit from this class. A class that inherits the Observable
@@ -8,10 +8,26 @@
 *interface). When the Observable object wants to update its subscribers,
 *it can loop through all of its stored Observers and call their "update"
 *method.
-*Last Updated: 17 February 2016
 *
-*Copyright (C) MousePaw Games
-*Licensing:
+* Last Updated: 14 May 2016
+* Author: Audrey Henry
+*/
+
+/* LICENSE
+* Copyright (C) 2016 MousePaw Games.
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef OBSERVABLE_HPP
@@ -46,7 +62,7 @@ class Observable
 
         /*Virtual method that will return the number of subscribers to a given
         *Observable object. */
-        virtual int getNumOfObservers() = 0;
+        virtual unsigned int getNumOfObservers() = 0;
     protected:
     private:
 };

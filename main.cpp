@@ -12,22 +12,18 @@
 
 #include <iostream>
 #include "StaticLayer.hpp"
+#include "IOL.hpp"
 #include "Frame.hpp"
 #include "Timeline.hpp"
 
 
-using namespace std;
+using std::cout;
+using std::endl;
+using std::cin;
+using std::make_shared;
 
-void menu_editLayer(Timeline* master);
 void displayMenu();
-void menu_addLayer(Timeline* master);
-void menu_addFrame(Timeline* master);
-void menu_deleteLayer(Timeline* master);
-void menu_deleteFrame(Timeline* master);
-void menu_displayGrid(Timeline* master);
-void menu_editFrame(Timeline* master);
-void menu_deleteLayerInstance(Timeline* master);
-void menu_insertLayerInstance(Timeline* master);
+void menu_addIOL(Timeline* master);
 
 int main()
 {
@@ -55,15 +51,15 @@ int main()
         //Get the input from the user
         getline(cin, choice);
         //Test the user input against all of the available commands
-        if(choice == "editlayer")
+        if(choice == "edittimeline")
         {
-            menu_editLayer(&master);
+            master.editMode();
         }
-        else if(choice == "addlayer")
+        else if(choice == "addiol")
         {
-            menu_addLayer(&master);
+            menu_addIOL(&master);
         }
-        else if(choice == "addframe")
+        /*else if(choice == "addframe")
         {
             menu_addFrame(&master);
         }
@@ -74,12 +70,12 @@ int main()
         else if(choice == "deleteframe")
         {
             menu_deleteFrame(&master);
-        }
+        }*/
         else if(choice == "play")
         {
             master.play();
         }
-        else if(choice == "displaytimelineinfo")
+        /*else if(choice == "displaytimelineinfo")
         {
             master.displayInfo();
         }
@@ -98,7 +94,7 @@ int main()
         else if(choice == "editframe")
         {
             menu_editFrame(&master);
-        }
+        }*/
         else if(choice == "exit")
         {
             cout << "Goodbye! =)" << endl;
@@ -211,38 +207,23 @@ void displayMenu()
 {
     cout << "Main Menu" << endl;
     cout << "=====================" << endl;
-    cout << "editlayer - Allows the user to edit a layer" << endl;
-    cout << "addlayer - Allows the user to add a new Layer" << endl;
-    cout << "addframe - Allows the user to add a new Frame" << endl;
-    cout << "editframe - Allows the user to edit a Frame in the Timeline"
+    cout << "edittimeline - Allows the user to edit the master Timeline"
     << endl;
-    cout << "deletelayer - Allows the user to delete a Layer from " <<
-    "the timeline" << endl;
-    cout << "deleteframe - Allows the user to delete a Frame from the "
-    << "timeline" << endl;
+    cout << "addiol - Allows the user to add a new IOL Layer to the master"
+    << " Timeline" << endl;
     cout << "play - plays the current animation." << endl;
-    cout << "displaytimelineinfo - Displays the info about the current"
-    << " timeline" << endl;
-    cout << "displayframegrid - Displays the grid partitions of a specified"
-    << " frame" << endl;
-    cout << "deletelayerinstance - Allows the user to delete a LayerInstance"
-    << " object from a specified Frame in the Timeline." << endl;
-    cout << "insertlayerinstance - Allows the user to insert a LayerInstance"
-    << " into a specified Frame. It will not insert a LayerInstance for a "
-    << "Layer that is already in the Frame." << endl;
     cout << "exit - Exit the main menu\n" << endl;
-
 }
 
 //Allows the user to add a new Layer to the timeline and edit its contents.
-void menu_addLayer(Timeline* master)
+void menu_addIOL(Timeline* master)
 {
     //Prompt for the insertion index of the Layer
     string indexString = "";
     /*Right now we're allowing the user to hit enter and have the insertion
     *index default to the end of the Timeline's vector of Layers.*/
     cout << "Enter the index where you would like to insert the new layer. If"
-    << "you would like to add the Layer at the end, just hit enter." << endl;
+    << " you would like to add the Layer at the end, just hit enter." << endl;
     getline(cin, indexString);
     int index = -1;
     /*If the user just hit enter, set the insertion index to the end
@@ -267,15 +248,10 @@ void menu_addLayer(Timeline* master)
         }
     }
     //Test to see if the index is within the bounds of the vector
-    if(index >= 0 && index <= master->getNumberOfLayers())
+    if(index >= 0 && index <= (int)master->getNumberOfLayers())
     {
-        /*If the insertion index is legitimate, prompt for a new image
-        *for the Layer.*/
-        string newImage = "";
-        cout << "Enter a new image for the Layer: ";
-        getline(cin, newImage);
         //Create a new Layer and add it to the Timeline
-        master->addLayer(make_shared<StaticLayer>(newImage), index);
+        master->addLayer(make_shared<IOL>(), index);
         /*Once we've created the new Layer, call that Layer's editMode,
         *so the user can continue customizing it.*/
         master->getLayerAt(index)->editMode();
@@ -287,329 +263,3 @@ void menu_addLayer(Timeline* master)
     }
 }
 
-//Allows a user to edit a Layer in the timeline
-void menu_editLayer(Timeline* master)
-{
-    //Prompt for the index of the Layer to edit
-    string layerChoice = "";
-    cout << "Enter the index of the layer you would like to edit: ";
-    getline(cin, layerChoice);
-    //Attempt to parse the input to an int
-    try
-    {
-        int layerIndex = stoi(layerChoice);
-        //Test to see that the input index is within the bounds of the vector
-        if(layerIndex >= 0 && layerIndex < master->getNumberOfLayers())
-        {
-            //Call the requested Layer's editMode function.
-            master->getLayerAt(layerIndex)->editMode();
-        }
-        //Handle out-of-bounds index
-        else
-        {
-            cout << "Error: Input was not a valid Layer index." << endl;
-        }
-    }
-    //Handle invalid input
-    catch(...)
-    {
-        cout << "Error: Input must be a valid integer." << endl;
-    }
-
-}
-
-//Allows a user to add a new frame to the given timeline.
-void menu_addFrame(Timeline* master)
-{
-    //Prompt the user for an index where they would like to insert a new Frame
-    string indexChoice = "";
-    //For user's reference, provide them with the current number of Frames.
-    cout << "The current number of Frames in the timeline is " <<
-    master->getNumberOfFrames() << "." << endl;
-
-    /*Right now we'll allow users to just hit "enter" which will add a new
-    *Frame to the end of the Timeline's Frame vector by default.*/
-    cout << "Enter the index that you would like to insert a new Frame into,"
-    << " or just hit \"enter\" to add the Frame at the end of the Timeline."
-    << endl;
-
-    //Get the input from the user
-    getline(cin, indexChoice);
-    //Test for the default case
-    if(indexChoice == "")
-    {
-        //Add the Frame at the end
-        master->addFrame(master->getNumberOfFrames());
-    }
-    else
-    {
-        //Attempt to parse the user input to an integer
-        try
-        {
-            int frameIndex = stoi(indexChoice);
-            //Test the index to make sure it's in the vector's bounds
-            if(frameIndex >= 0 && frameIndex <= master->getNumberOfFrames())
-            {
-                //Insert the new Frame
-                master->addFrame(frameIndex);
-            }
-            //If the index was out of bounds, display an error message.
-            else
-            {
-                cout << "Error: An invalid index was entered." << endl;
-            }
-        }
-        //Handle invalid input
-        catch(...)
-        {
-            cout << "Error: Input must be a valid integer." << endl;
-        }
-    }
-}
-
-//This method allows users to delete a Layer from the Timeline.
-void menu_deleteLayer(Timeline* master)
-{
-    //Prompt the user for the index of the Layer they would like to delete
-    string layerChoice = "";
-    cout << "Enter the index of the Layer you would like to delete: ";
-    getline(cin, layerChoice);
-    //Attempt to parse the input to an integer
-    try
-    {
-        int index = stoi(layerChoice);
-        //Test to make sure that the index is within the vector's bounds
-        if(index >= 0 && index < master->getNumberOfLayers())
-        {
-            //Delete the Layer from the Timeline
-            master->deleteLayer(index);
-        }
-        //If the index was out-of-bounds, display an error
-        else
-        {
-            cout << "Error: Specified index was out of range for the timeline."
-            << endl;
-        }
-    }
-    //Handle invalid input
-    catch(...)
-    {
-        cout << "Error: Input must be a valid integer." << endl;
-    }
-}
-
-//This method allows the user to select and delete a Frame from a Timeline
-void menu_deleteFrame(Timeline* master)
-{
-    //Prompt for the index of the Frame they would like to delete
-    string indexString = "";
-    cout << "Enter the index of the Frame you would like to delete: ";
-    getline(cin, indexString);
-    //Attempt to parse the input to an integer
-    try
-    {
-        int index = stoi(indexString);
-        //Check to see if the index is within the vector's bounds
-        if(index >= 0 && index < master->getNumberOfFrames())
-        {
-            //Delete the Frame from the Timeline
-            master->deleteFrame(index);
-        }
-        //If the index was out-of-bounds, display an error.
-        else
-        {
-            cout << "Error: Specified index was out of range for the timeline."
-            << endl;
-        }
-    }
-    //Handle invalid input
-    catch(...)
-    {
-        cout << "Error: Input must be a valid integer." << endl;
-    }
-}
-
-
-void menu_displayGrid(Timeline* master)
-{
-    string frameString = "";
-    cout << "Enter the index of the Frame whose grid you would like to be"
-    << " displayed." << endl;
-    getline(cin, frameString);
-    try
-    {
-        int frameIndex = stoi(frameString);
-        if(frameIndex >= 0 && frameIndex < master->getNumberOfFrames())
-        {
-            master->getFrameAt(frameIndex)->test_printGridContents();
-        }
-        else
-        {
-            cout << "Error: The requested Frame is out of range." << endl;
-        }
-    }
-    catch(...)
-    {
-        cout << "Error: Input must be a valid integer." << endl;
-    }
-}
-
-//This method allows the user to delete a LayerInstance from a Frame
-void menu_deleteLayerInstance(Timeline* master)
-{
-   string choice = "";
-   cout << "Enter the index of the Frame you would like to delete the "
-   << "LayerInstance from: ";
-   getline(cin, choice);
-   int frameIndex = -1;
-   int layerInstanceIndex = -1;
-   try
-   {
-       frameIndex = stoi(choice);
-   }
-   catch(...)
-   {
-       cout << "Error: Input must be a valid integer." << endl;
-       return;
-   }
-   if(frameIndex < 0 || frameIndex >= master->getNumberOfFrames())
-   {
-       cout << "Error: Index out of bounds." << endl;
-       return;
-   }
-   cout << "There are currently " << master->getFrameAt(frameIndex)
-   ->getNumLayerInstances() << " LayerInstances in the Frame." << endl;
-   cout << "Enter the index of the LayerInstance you would like to delete "
-   << "from the Frame: ";
-   getline(cin, choice);
-   try
-   {
-       layerInstanceIndex = stoi(choice);
-   }
-   catch(...)
-   {
-       cout << "Error: Input must be a valid integer." << endl;
-       return;
-   }
-   if(layerInstanceIndex < 0 || layerInstanceIndex >=
-      master->getFrameAt(frameIndex)->getNumLayerInstances())
-   {
-       cout << "Error: Index out of bounds." << endl;
-       return;
-   }
-   master->getFrameAt(frameIndex)->removeLayer(layerInstanceIndex);
-}
-
-/*The purpose of this method is to insert a LayerInstance that points to an
-*existing Layer in the Timeline into a specified Frame. For example, a user
-*might have deleted a LayerInstance from this Frame, and want to reinsert it.
-*Right now I'm running into the problem where we don't know WHERE in the Frame
-*to reinsert the LayerInstance. The order of the LayerInstances in the Frame
-*can be entirely independent of the order of the Layers in the Timeline. For
-*now I'll prompt the user for an index in the Frame's vector of LayerInstances
-*that we can insert the new LayerInstance into. I'm not sure how we'll want
-*to do this in the future. (I know it's a super huge ugly method at the moment)
-*/
-void menu_insertLayerInstance(Timeline* master)
-{
-    string choice = "";
-    //Prompt for Frame index
-    cout << "There are currently " << master->getNumberOfFrames() <<
-    " Frames available in the Timeline." << endl;
-    cout << "Enter the index of the Frame you would like to insert the "
-    << "LayerInstance into: ";
-    getline(cin, choice);
-    int frameIndex = -1;
-    int layerInstanceIndex = -1;
-    int layerIndex = -1;
-    try
-    {
-       frameIndex = stoi(choice);
-    }
-    catch(...)
-    {
-       cout << "Error: Input must be a valid integer." << endl;
-       return;
-    }
-    if(frameIndex < 0 || frameIndex >= master->getNumberOfFrames())
-    {
-       cout << "Error: Index out of bounds." << endl;
-       return;
-    }
-    //Prompt for Timeline Layer index
-    cout << "There are currently " << master->getNumberOfLayers() <<
-    " Layers available in the Timeline." << endl;
-    cout << "Enter the index of the Layer (in the Timeline) you would like"
-    << "to insert into the Frame: ";
-    getline(cin, choice);
-    try
-    {
-       layerIndex = stoi(choice);
-    }
-    catch(...)
-    {
-       cout << "Error: Input must be a valid integer." << endl;
-    }
-    if(layerIndex < 0 || layerIndex >= master->getNumberOfLayers())
-    {
-       cout << "Error: Index out of bounds." << endl;
-       return;
-    }
-    //Prompt for LayerInstance index in Frame
-    cout << "There are currently " <<
-    master->getFrameAt(frameIndex)->getNumLayerInstances() <<
-    " LayerInstances in the specified Frame." << endl;
-    cout << "Enter the index you would like to insert the LayerInstance " <<
-    "into: ";
-    getline(cin, choice);
-    try
-    {
-       layerInstanceIndex = stoi(choice);
-    }
-    catch(...)
-    {
-       cout << "Error: Input must be a valid integer." << endl;
-    }
-    if(layerInstanceIndex < 0 || layerInstanceIndex >
-      master->getFrameAt(frameIndex)->getNumLayerInstances())
-    {
-       cout << "Error: Index out of bounds." << endl;
-       return;
-    }
-    Layer* testLayer = master->getLayerAt(layerIndex).get();
-    if(!master->getFrameAt(frameIndex)->containsLayer(testLayer))
-    {
-        master->getFrameAt(frameIndex)->addLayer(master->
-                            getLayerAt(layerIndex), layerInstanceIndex);
-    }
-    else
-    {
-        cout << "A LayerInstance for that Layer is already contained in the "
-        << "specified Frame." << endl;
-    }
-
-}
-
-//This method allows the user to select a Frame in the Timeline to edit
-void menu_editFrame(Timeline* master)
-{
-    string choice = "";
-    cout << "Enter the index of the Frame you want to edit: ";
-    getline(cin, choice);
-    try
-    {
-        int frameIndex = stoi(choice);
-        if(frameIndex < 0 || frameIndex >= master->getNumberOfFrames())
-        {
-            cout << "Error: Index out of bounds." << endl;
-        }
-        else
-        {
-            master->getFrameAt(frameIndex)->editMode();
-        }
-    }
-    catch(...)
-    {
-        cout << "Error: Input must be a valid integer." << endl;
-    }
-}

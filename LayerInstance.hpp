@@ -1,6 +1,6 @@
-/**
-*Anari Graphics System, version 0.1
-*LayerInstance Class
+/** Layer Instance [Anari Graphics System]
+* Version: 0.1
+*
 *This class represents one instance of a Layer object that will be
 *contained in a Frame object to be sequentially rendered. It contains
 *a transformation matrix variable, that describes the manipulation of
@@ -10,10 +10,26 @@
 *Layer changes properties (like dimensions), and it also wants to update
 *the Frame that it's stored in, so that the Frame can update its grid
 *appropriately.
-*Last Updated: 17 April 2016
 *
-*Copyright (C) MousePaw Games
-*Licensing:
+* Last Updated: 14 May 2016
+* Author: Audrey Henry
+*/
+
+/* LICENSE
+* Copyright (C) 2016 MousePaw Games.
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef LAYERINSTANCE_H
@@ -96,7 +112,7 @@ class LayerInstance : public Observable, public Observer
         void addObserver(Observer* newObs);
         void removeObserver(Observer* newObs);
         void update();
-        int getNumOfObservers();
+        unsigned int getNumOfObservers();
 
         //Overidden method from Observable interface
         void update(int zPref);
