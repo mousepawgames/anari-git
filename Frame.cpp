@@ -1,13 +1,3 @@
-/**
-*Anari Graphics System, version 0.1
-*Frame Class
-*This is the definition of the methods for Frame.hpp
-*Last Updated: 10 May 2016
-*
-*Copyright (C) MousePaw Games
-*Licensing:
-*/
-
 #include "Frame.hpp"
 
 using std::vector;
@@ -45,19 +35,19 @@ Frame::~Frame()
 }
 
 
-void Frame::initializeGrid(int xParts, int yParts)
+void Frame::initializeGrid(unsigned int xParts, unsigned int yParts)
 {
     //Creates a new vector for each x partition and adds it to the grid
-    for(int i = 0; i < xParts; i++)
+    for(unsigned int i = 0; i < xParts; ++i)
     {
-        std::vector<std::vector<int>> xTemp;
+        std::vector<std::vector<unsigned int>> xTemp;
         grid.push_back(xTemp);
 
         /*Creates a new vector for each y partition and adds it to
         the new x vector*/
-        for(int j = 0; j < yParts; j++)
+        for(unsigned int j = 0; j < yParts; ++j)
         {
-            std::vector<int> yTemp;
+            std::vector<unsigned int> yTemp;
             grid.at(i).push_back(yTemp);
         }
     }
@@ -159,8 +149,8 @@ void Frame::addLayer(shared_ptr<Layer> newLayer, int index, Matrix newMatrix)
         {
             layerInstances.insert(layerInstances.end(), temp);
         }
-        //Update the LayerInstance zPrefs
-        updateZPrefs();
+        //Update the LayerInstance zPrefs in preparation for grid insertion
+        updateZPrefs_Add(index);
         /*Check whether or not the new LayerInstance's dimensions fall in
         *the canvas.*/
         if(newLayer->getXDimension() > 0 && newLayer->getYDimension() > 0)
@@ -186,6 +176,8 @@ void Frame::addLayerLast(shared_ptr<Layer> newLayer)
     /*Add the new LayerInstance pointer to the back of the Frame's
     LayerInstance vector */
     layerInstances.push_back(temp);
+
+    updateZPrefs_Add(zPref);
     //Test whether or not the LayerInstance falls in the canvas dimensions
     if(newLayer->getXDimension() > 0 && newLayer->getYDimension() > 0)
     {
@@ -206,7 +198,7 @@ void Frame::addLayerFirst(shared_ptr<Layer> newLayer)
     //Insert the LayerInstance pointer in the Frame's LayerInstance vector
     layerInstances.insert(layerInstances.begin(), temp);
     //Update the LayerInstance zPrefs
-    updateZPrefs();
+    updateZPrefs_Add(0);
     //Test if the LayerInstance falls in the Canvas dimensions
     if(newLayer->getXDimension() > 0 && newLayer->getYDimension() > 0)
     {
@@ -225,12 +217,12 @@ void Frame::addLayerToGrid(LayerInstance* newLayer)
     {
         /*The next two for loops iterate through all of the partitions that the
         *LayerInstance appears in and inserts the LayerInstance's zPreference.*/
-        for(int i = newLayer->getXMinPart(); i <= newLayer->getXMaxPart(); i++)
+        for(int i = newLayer->getXMinPart(); i <= newLayer->getXMaxPart(); ++i)
         {
-            /*NOTE: Because the partition origin begins at the bottom right
+            /*NOTE: Because the partition origin begins at the bottom left
             *corner, the y value increases as it moves up.*/
             for(int j = newLayer->getYMinPart(); j <= newLayer->getYMaxPart();
-             j++)
+             ++j)
             {
                 //Insert the LayerInstance's zPref into the current partition
                 insertIntoVector(newLayer->getZPreference(),
@@ -245,12 +237,15 @@ void Frame::removeLayerFromGrid(LayerInstance* deleteMe)
 {
     /*The next two for loops iterate through all of the partitions that the
     *LayerInstance appears in and deletes it from each partition.*/
-    for(int i = deleteMe->getXMinPart(); i <= deleteMe->getXMaxPart(); i++)
+    if(validPartitions(*deleteMe))
     {
-        for(int j = deleteMe->getYMinPart(); j <= deleteMe->getYMaxPart(); j++)
+        for(int i = deleteMe->getXMinPart(); i <= deleteMe->getXMaxPart(); ++i)
         {
-            //Delete the LayerInstance from the partition
-            deleteFromVector(deleteMe->getZPreference(), &(grid.at(i).at(j)));
+            for(int j = deleteMe->getYMinPart(); j <= deleteMe->getYMaxPart(); ++j)
+            {
+                //Delete the LayerInstance from the partition
+                deleteFromVector(deleteMe->getZPreference(), &(grid.at(i).at(j)));
+            }
         }
     }
 }
@@ -258,27 +253,14 @@ void Frame::removeLayerFromGrid(LayerInstance* deleteMe)
 /*This function accepts a vector of ints and a new int to insert into the
 *vector. This function is used to insert the new ZPreference into a grid
 *partition.*/
-void Frame::insertIntoVector(int newLayer,
-    std::vector<int>* thisVector)
+void Frame::insertIntoVector(unsigned int newLayer,
+    std::vector<unsigned int>* thisVector)
 {
     //Check for empty vector
     if((int)thisVector->size() != 0)
     {
-        //Loop through and account for layer insertion
-        /*Because of the design change where we need to use ints representing
-        *the zPreferences rather than LayerInstance pointers, we need to
-        *update the zPreferences that come after the new layer.*/
-        for(int i = 0; i < (int)thisVector->size(); i++)
-        {
-            //Test for LayerInstances that come after the new layer
-            if(thisVector->at(i) >= newLayer)
-            {
-                //Increment values occurring after new Layer
-                thisVector->at(i)++;
-            }
-        }
         //Iterate through the vector and insert in order
-        for(int i = 0; i < (int)thisVector->size(); i++)
+        for(unsigned int i = 0; i < thisVector->size(); ++i)
         {
             /*Because we're inserting into an ordered list, if we come across
             *a larger value, we know this is where we need to stop.*/
@@ -301,41 +283,31 @@ void Frame::insertIntoVector(int newLayer,
 /*This method takes in a vector of ints and an int representing a new Layer's
 *z Preference. The goal is to remove that int from the given vector. It's
 *how the grid handles deletion for each partition.*/
-void Frame::deleteFromVector(int deleteMe,
-     std::vector<int>* thisVector)
+void Frame::deleteFromVector(unsigned int deleteMe,
+     std::vector<unsigned int>* thisVector)
 {
     //Test for empty vector
     if((int)thisVector->size() != 0)
     {
         //Loop through the vector to find the int value
-        for(int i = 0; i < (int)thisVector->size(); i++)
+        for(unsigned int i = 0; i < thisVector->size(); ++i)
         {
             //If found, delete the value
             if(thisVector->at(i) == deleteMe)
             {
                 thisVector->erase(thisVector->begin() + i);
+                break;
             }
-        }
-        /*The purpose of this loop is to account for the Layer's deletion
-        *from the vector. Any LayerInstance that was above the old Layer
-        *is decremented to account for the deletion.*/
-        //NOTE: Need to make sure the value was actually deleted from the array.
-        for(int i = 0; i < (int)thisVector->size(); i++)
-        {
-          if(thisVector->at(i) > deleteMe)
-          {
-              thisVector->at(i)--;
-          }
         }
     }
 }
 
 //Simple method that returns the LayerInstance at the given index
-LayerInstance* Frame::getLayerInstanceAt(int index)
+LayerInstance* Frame::getLayerInstanceAt(unsigned int index)
 {
-    int listSize = (int)layerInstances.size();
+    unsigned int listSize = layerInstances.size();
     //Make sure the index is valid
-    if(index >=0 && (index < listSize || index == 0))
+    if(index < listSize)
     {
         //Return the LayerInstance at the given index
         return layerInstances.at(index);
@@ -350,13 +322,12 @@ LayerInstance* Frame::getLayerInstanceAt(int index)
 
 //This move method allows the user to move LayerInstance objects in the Frame.
 //This move swaps the zPreferences between Layers
-void Frame::reorderLayer(int fromIndex, int toIndex)
+void Frame::reorderLayer(unsigned int fromIndex, unsigned int toIndex)
 {
 
-    int listSize = (int)layerInstances.size();
+    unsigned int listSize = layerInstances.size();
     //Check that both indexes are valid
-    if((fromIndex >= 0 && fromIndex < listSize) &&
-       (toIndex >= 0 && toIndex < listSize))
+    if(fromIndex < listSize && toIndex < listSize)
     {
         /*The way this method reorders the LayerInstances is it erases the
         *element at the "fromIndex" position in the Frame's LayerInstance
@@ -365,7 +336,7 @@ void Frame::reorderLayer(int fromIndex, int toIndex)
         LayerInstance* tempInstance = layerInstances.at(fromIndex);
         layerInstances.erase(layerInstances.begin() + fromIndex);
         layerInstances.insert(layerInstances.begin() + toIndex, tempInstance);
-        updateZPrefs();
+        updateZPrefs_Reorder(fromIndex, toIndex);
     }
     //Handle invalid indexes
     else
@@ -376,10 +347,10 @@ void Frame::reorderLayer(int fromIndex, int toIndex)
 
 
 //This method removes a LayerInstance from the Frame
-void Frame::removeLayer(int deleteIndex)
+void Frame::removeLayer(unsigned int deleteIndex)
 {
-    int listSize = (int)layerInstances.size();
-    if(deleteIndex < listSize && deleteIndex >= 0)
+    unsigned int listSize = layerInstances.size();
+    if(deleteIndex < listSize)
     {
         //Remove the LayerInstance from the grid
         removeLayerFromGrid(layerInstances.at(deleteIndex));
@@ -387,7 +358,7 @@ void Frame::removeLayer(int deleteIndex)
         delete(layerInstances.at(deleteIndex));
         layerInstances.erase(layerInstances.begin() + deleteIndex);
         //Update the zPreferences
-        updateZPrefs();
+        updateZPrefs_Delete(deleteIndex);
     }
     //Handle the invalid index
     else
@@ -398,14 +369,15 @@ void Frame::removeLayer(int deleteIndex)
 
 void Frame::removeLayer(Layer* deleteLayer)
 {
-    for(int i = 0; i < (int)layerInstances.size(); i++)
+    for(unsigned int i = 0; i < layerInstances.size(); ++i)
     {
         if(layerInstances.at(i)->getLayer() == deleteLayer)
         {
             removeLayerFromGrid(layerInstances.at(i));
             delete(layerInstances.at(i));
             layerInstances.erase(layerInstances.begin() + i);
-            updateZPrefs();
+            updateZPrefs_Delete(i);
+            break;
         }
     }
 }
@@ -414,15 +386,15 @@ void Frame::removeLayer(Layer* deleteLayer)
 void Frame::clearFrame()
 {
     //Clear layerInstances vector
-    while((int)layerInstances.size() != 0)
+    while(layerInstances.size() != 0)
     {
         delete(layerInstances.at(0));
         layerInstances.erase(layerInstances.begin());
     }
     //Loop through grid and empty each partition
-    for(int i = 0; i < (int)grid.size(); i++)
+    for(unsigned int i = 0; i < grid.size(); ++i)
     {
-        for(int j = 0; j < (int)grid.at(0).size(); j++)
+        for(unsigned int j = 0; j < grid.at(0).size(); ++j)
         {
             grid.at(i).at(j).clear();
         }
@@ -430,24 +402,23 @@ void Frame::clearFrame()
 }
 
 //Helper method that swaps LayerInstances in the Frame
-void Frame::swapLayerInstance(int fromIndex, int toIndex)
+void Frame::swapLayerInstance(unsigned int fromIndex, unsigned int toIndex)
 {
     //Check for valid indexes
-   if(fromIndex >= 0 && fromIndex < (int)layerInstances.size()
-      && toIndex >= 0 && toIndex < (int) layerInstances.size())
+   if(fromIndex < layerInstances.size() && toIndex < layerInstances.size())
    {
        //Swap the LayerInstances in the Frame
        LayerInstance* temp = layerInstances.at(fromIndex);
        layerInstances.at(fromIndex) = layerInstances.at(toIndex);
        layerInstances.at(toIndex) = temp;
        //Update the LayerInstances' zPreferences
-       updateZPrefs();
+       updateZPrefs_Reorder(fromIndex, toIndex);
    }
    //Handle invalid indexes
    else
    {
        //Index out of bounds
-       if((int)layerInstances.size() == 0)
+       if(layerInstances.size() == 0)
        {
            cout << "Error: Can't swap indexes on an empty frame!" << endl;
        }
@@ -460,7 +431,7 @@ void Frame::swapLayerInstance(int fromIndex, int toIndex)
 }
 
 //Method that loops through the LayerInstances and updates the zPreferences
-void Frame::updateZPrefs()
+/*void Frame::updateZPrefs()
 {
     //Loop through the LayerInstances and set the zPreferences
     for(int i = 0; i < (int)layerInstances.size(); i++)
@@ -472,6 +443,113 @@ void Frame::updateZPrefs()
     {
         for(int j = 0; j < (int)grid.at(i).size(); j++)
         {
+            sortInts(&grid.at(i).at(j));
+        }
+    }
+}*/
+
+//This method updates the z prefs BEFORE the new layerInstance is added to
+//the grid.
+void Frame::updateZPrefs_Add(unsigned int newLayerIndex)
+{
+    //Loop through the LayerInstances and set the zPreferences
+    for(unsigned int i = 0; i < layerInstances.size(); ++i)
+    {
+        layerInstances.at(i)->setZPreference(i);
+    }
+    //Go through grid and account for changes
+    for(unsigned int i = 0; i < grid.size(); ++i)
+    {
+        for(unsigned int j = 0; j < grid.at(i).size(); ++j)
+        {
+            //Loop through each partition and increment any index that
+            //appears after the insertion index.
+            for(unsigned int k = 0; k < grid.at(i).at(j).size(); ++k)
+            {
+                if(grid.at(i).at(j).at(k) >= newLayerIndex)
+                {
+                    ++grid.at(i).at(j).at(k);
+                }
+            }
+        }
+    }
+    //Now the grid should be ready to insert the new LayerInstance
+}
+
+//This method will update the z preferences of all of the LayerInstances
+//AFTER the layerInstance has been removed from the Frame.
+void Frame::updateZPrefs_Delete(unsigned int deletedIndex)
+{
+    //Loop through the LayerInstances and set the zPreferences
+    for(unsigned int i = 0; i < layerInstances.size(); ++i)
+    {
+        layerInstances.at(i)->setZPreference(i);
+    }
+    //Go through grid and account for changes
+    for(unsigned int i = 0; i < grid.size(); ++i)
+    {
+        for(unsigned int j = 0; j < grid.at(i).size(); ++j)
+        {
+            //Loop through each partition and decrement any index that
+            //appears after the insertion index.
+            for(unsigned int k = 0; k < grid.at(i).at(j).size(); ++k)
+            {
+                if(grid.at(i).at(j).at(k) > deletedIndex)
+                {
+                    --grid.at(i).at(j).at(k);
+                }
+            }
+        }
+    }
+}
+
+void Frame::updateZPrefs_Reorder(unsigned int fromIndex, unsigned int toIndex)
+{
+    //Loop through the LayerInstances and set the zPreferences
+    for(unsigned int i = 0; i < layerInstances.size(); ++i)
+    {
+        layerInstances.at(i)->setZPreference(i);
+    }
+    //Go through grid and account for changes
+    for(unsigned int i = 0; i < grid.size(); ++i)
+    {
+        for(unsigned int j = 0; j < grid.at(i).size(); ++j)
+        {
+            /*Loop through the contents of each partition and account for
+            *layer reordering. This kind of looks like a scary statement,
+            *but the basic logic behind it is this: Update the index of the
+            *layer we want to move to the desired destination index. Then,
+            *if that Layer is moving forward, decrement all of the other
+            *zPreferences that are between the origin and the destination.
+            *If the Layer is moving backward, increment all of the Z
+            *preferences between the origin and the destination.*/
+            for(unsigned int k = 0; k < grid.at(i).at(j).size(); ++k)
+            {
+                //Update the zPreference of the layer we're moving
+                if(grid.at(i).at(j).at(k) == fromIndex)
+                {
+                    grid.at(i).at(j).at(k) = toIndex;
+                }
+                //Test to see if we're moving the LayerInstance forward
+                else if(toIndex > fromIndex)
+                {
+                    if(grid.at(i).at(j).at(k) > fromIndex &&
+                       grid.at(i).at(j).at(k) <= toIndex)
+                    {
+                        --grid.at(i).at(j).at(k);
+                    }
+                }
+                //Otherwise, we're moving the LayerInstance backward
+                else
+                {
+                    if(grid.at(i).at(j).at(k) > toIndex &&
+                       grid.at(i).at(j).at(k) <= fromIndex)
+                    {
+                        ++grid.at(i).at(j).at(k);
+                    }
+                }
+            }
+            //After updating the zPreferences, sort the partition
             sortInts(&grid.at(i).at(j));
         }
     }
@@ -504,7 +582,7 @@ int Frame::calcBottomLeftXPart(int bottomLeftXCoord)
     *the x partition that the x coordinate falls in.*/
     while(bottomLeftXCoord > tempX + getXPartDim())
     {
-        minXPart++;
+        ++minXPart;
         tempX += getXPartDim();
     }
     //Return our result
@@ -518,7 +596,7 @@ int Frame::calcBottomLeftYPart(int bottomLeftYCoord)
     int minYPart = 0;
     while(bottomLeftYCoord > tempY + getYPartDim())
     {
-        minYPart++;
+        ++minYPart;
         tempY += getYPartDim();
     }
     return minYPart;
@@ -535,7 +613,7 @@ int Frame::calcTopRightXPart(int topRightXCoord)
     int maxXPart = 0;
     while(topRightXCoord > tempX + getXPartDim())
     {
-        maxXPart++;
+        ++maxXPart;
         tempX += getXPartDim();
     }
     return maxXPart;
@@ -548,7 +626,7 @@ int Frame::calcTopRightYPart(int topRightYCoord)
     int maxYPart = 0;
     while(topRightYCoord > tempY + getYPartDim())
     {
-        maxYPart++;
+        ++maxYPart;
         tempY += getYPartDim();
     }
     return maxYPart;
@@ -643,15 +721,15 @@ void Frame::update(int zPref)
 
 /*This method accepts a pointer to a vector of ints as input and sorts the
 *elements in the vector. It's a helper method to sort grid partitions.*/
-void Frame::sortInts(std::vector<int>* thisVector)
+void Frame::sortInts(std::vector<unsigned int>* thisVector)
 {
     //The following logic implements the insertion sort algorithm
     if((int)thisVector->size() > 1)
     {
-        for(int index = 1; index < (int)thisVector->size(); index++)
+        for(unsigned int index = 1; index < thisVector->size(); ++index)
         {
-            int key = thisVector->at(index);
-            int position = index;
+            unsigned int key = thisVector->at(index);
+            unsigned int position = index;
             while(position > 0 && key < thisVector->at(position-1))
             {
                 thisVector->at(position) = thisVector->at(position - 1);
@@ -664,7 +742,7 @@ void Frame::sortInts(std::vector<int>* thisVector)
 
 bool Frame::containsLayer(Layer* testLayer)
 {
-    for(int i = 0; i < (int)layerInstances.size(); i++)
+    for(unsigned int i = 0; i < layerInstances.size(); ++i)
     {
         if(layerInstances.at(i)->getLayer() == testLayer)
         {
@@ -693,7 +771,7 @@ void Frame::editMode()
         //Display all of the LayerInstances
         if(choice == 1)
         {
-            for(int i = 0; i < (int)layerInstances.size(); i++)
+            for(unsigned int i = 0; i < layerInstances.size(); ++i)
             {
                 cout << i << ". ";
                 layerInstances.at(i)->render();
@@ -732,16 +810,16 @@ void Frame::editMode()
 void Frame::test_printGridContents()
 {
     //Loop through the x and y dimensions of the grid
-    for(int i = 0; i < (int)grid.at(0).size(); i++)
+    for(unsigned int i = 0; i < grid.at(0).size(); ++i)
     {
-        for(int j = 0; j < (int)grid.size(); j++)
+        for(unsigned int j = 0; j < grid.size(); ++j)
         {
             //Print out the grid coordinates
             cout << "Sector (" << j << "," << i << ")" << endl;
-            for(int k = 0; k < (int)grid.at(j).at(i).size(); k++)
+            for(unsigned int k = 0; k < grid.at(j).at(i).size(); ++k)
             {
                 //Render each LayerInstance in that partition.
-                layerInstances.at(k)->render();
+                layerInstances.at(grid.at(j).at(i).at(k))->render();
                 std::cout << std::endl;
             }
         }
