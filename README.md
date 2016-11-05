@@ -13,7 +13,8 @@ Authors
  - Audrey Henry
  - Jared Hutton
  - Jason C. McDonald
- - Leah Talkov
+ - Andrew Peacock
+ - Sergio Ramirez
 
 Building
 -------------
