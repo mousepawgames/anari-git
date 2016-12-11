@@ -1,4 +1,5 @@
 #include "StaticLayer.hpp"
+#include "ConsoleUtil.hpp"
 
 using std::cout;
 using std::endl;
@@ -168,13 +169,13 @@ void StaticLayer::editMode()
     int option = -1;
     while(option != 9)
     {
-        cout << "\nStatic Layer Edit Mode \n-------------------------\n"
-        << endl;
+        cout << "Static Layer Edit Mode \n-------------------------\n";
         //Prompt for input
         editMode_help();
         cout << "Choose an option from the menu:";
         //Retrieve input
         getline(cin, input);
+        consoleClear();
         //Try to parse the input as an int
         try
         {
@@ -220,6 +221,7 @@ void StaticLayer::editMode()
             {
                 cout << "false" << endl;
             }
+            consolePause();
         }
         else if(option == 8)
         {
@@ -230,7 +232,9 @@ void StaticLayer::editMode()
         else if(option != 9)
         {
             cout << "Error: Unrecognized command." << endl;
+            consolePause();
         }
+        consoleClear();
     }
 }
 
@@ -264,7 +268,8 @@ void StaticLayer::editMode_help()
 //This method displays the Layer's image to the user
 void StaticLayer::editMode_getImage()
 {
-    cout << "Layer Image: " << getImage() << endl;
+    cout << "\nLayer Image: " << getImage() << endl;
+    consolePause();
 }
 
 //this method allows the user to set the Layer's image
@@ -333,6 +338,7 @@ void StaticLayer::editMode_setDim()
     else
     {
         cout << "Error: Dimensions cannot be less than zero." << endl;
+        consolePause();
     }
 }
 
@@ -341,6 +347,7 @@ void StaticLayer::editMode_getDim()
 {
     cout << "X Dimension: " << dim[0] << endl;
     cout << "Y Dimension: " << dim[1] << endl;
+    consolePause();
 }
 
 void StaticLayer::editMode_setOrigin()
@@ -398,6 +405,7 @@ void StaticLayer::editMode_getOrigin()
 {
     cout << "X Origin Coord: " << originCoords[0] << endl;
     cout << "Y Origin Coord: " << originCoords[1] << endl;
+    consolePause();
 }
 
 //This method tells the user whether or not the Layer is visible
@@ -427,5 +435,6 @@ void StaticLayer::editMode_setVisibility()
     {
         cout << "Error: Input must be either \"true\" or \"false\""
         << endl;
+        consolePause();
     }
 }

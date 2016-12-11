@@ -1,4 +1,5 @@
 #include "Frame.hpp"
+#include "ConsoleUtil.hpp"
 
 using std::vector;
 using std::string;
@@ -40,7 +41,7 @@ void Frame::initializeGrid(unsigned int xParts, unsigned int yParts)
     //Creates a new vector for each x partition and adds it to the grid
     for(unsigned int i = 0; i < xParts; ++i)
     {
-        std::vector<std::vector<unsigned int>> xTemp;
+        std::vector<std::vector<unsigned int> > xTemp;
         grid.push_back(xTemp);
 
         /*Creates a new vector for each y partition and adds it to
@@ -771,25 +772,30 @@ void Frame::editMode()
         //Display all of the LayerInstances
         if(choice == 1)
         {
+            consoleClear();
             for(unsigned int i = 0; i < layerInstances.size(); ++i)
             {
                 cout << i << ". ";
                 layerInstances.at(i)->render();
             }
+            consolePause();
         }
         //Move a LayerInstance in the Frame
         else if(choice == 2)
         {
+            consoleClear();
             editMode_moveLayerInstance();
         }
         //Set a LayerInstance Matrix
         else if (choice == 3)
         {
+            consoleClear();
             editMode_setLayerInstanceMatrix();
         }
         //Display the grid
         else if (choice == 4)
         {
+            consoleClear();
             test_printGridContents();
         }
         //Exit
@@ -801,7 +807,9 @@ void Frame::editMode()
         {
             cout << "Error: Choice must be a valid option from the menu."
             << endl;
+            consolePause();
         }
+        consoleClear();
     }
 }
 
@@ -824,17 +832,17 @@ void Frame::test_printGridContents()
             }
         }
     }
+    consolePause();
 }
 
 void Frame::editMode_displayMenu()
 {
-    cout << "Frame Edit Mode\n------------------------\n" << endl;
+    cout << "Frame Edit Mode\n------------------------\n";
     cout << "1. Display the LayerInstances in the Frame" << endl;
     cout << "2. Move a LayerInstance" << endl;
     cout << "3. Edit a LayerInstance Transformation Matrix" << endl;
     cout << "4. Display the Frame grid" << endl;
     cout << "5. Exit Edit Mode" << endl;
-    cout << "Choice: ";
 }
 
 void Frame::editMode_setLayerInstanceMatrix()
@@ -849,6 +857,7 @@ void Frame::editMode_setLayerInstanceMatrix()
            (int)layerInstances.size())
         {
             cout << "Error: Index out of bounds." << endl;
+            consolePause();
         }
         else
         {
@@ -862,13 +871,16 @@ void Frame::editMode_setLayerInstanceMatrix()
             catch(...)
             {
                 cout << "Error: Input must be a valid integer." << endl;
+                consolePause();
             }
         }
     }
     catch(...)
     {
         cout << "Error: Input must be a valid index." << endl;
+        consolePause();
     }
+    consoleClear();
 }
 
 void Frame::editMode_moveLayerInstance()
@@ -882,6 +894,7 @@ void Frame::editMode_moveLayerInstance()
         if(indexA < 0 || indexA >= (int)layerInstances.size())
         {
             cout << "Error: Index out of bounds." << endl;
+            consolePause();
         }
         else
         {
@@ -894,6 +907,7 @@ void Frame::editMode_moveLayerInstance()
                 if(indexB < 0 || indexB >= (int)layerInstances.size())
                 {
                     cout << "Error: Index out of bounds." << endl;
+                    consolePause();
                 }
                 else
                 {
@@ -903,11 +917,14 @@ void Frame::editMode_moveLayerInstance()
             catch(...)
             {
                 cout << "Error: Input must be a valid integer." << endl;
+                consolePause();
             }
         }
     }
     catch(...)
     {
         cout << "Error: Input must be a valid integer." << endl;
+        consolePause();
     }
+    consoleClear();
 }

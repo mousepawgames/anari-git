@@ -1,5 +1,6 @@
 #include "Timeline.hpp"
 #include "StaticLayer.hpp"
+#include "ConsoleUtil.hpp"
 
 using std::vector;
 using std::string;
@@ -8,6 +9,18 @@ using std::cin;
 using std::endl;
 using std::make_shared;
 
+const int PLAY = 1;
+const int TIMELINE_INFO = 2;
+const int ADD_LAYER = 3;
+const int EDIT_LAYER = 4;
+const int ADD_FRAME = 5;
+const int EDIT_FRAME = 6;
+const int DELETE_LAYER = 7;
+const int DELETE_FRAME = 8;
+const int FRAME_GRID_INFO = 9;
+const int INSERT_INSTANCE = 10;
+const int DELETE_INSTANCE = 11;
+const int EXIT_MENU = 0;
 
 //Constructor that creates a timeline with the given number of Frames
 Timeline::Timeline(unsigned int startingLength)
@@ -35,6 +48,191 @@ Timeline::~Timeline()
         delete(frames.at(0));
         frames.erase(frames.begin());
     }
+}
+
+void Timeline::editMode_displayMenu()
+{
+    cout << "Main Timeline" << endl;
+    cout << "=====================" << endl;
+    cout << std::left << std::setw(5) << "1." << "Play from start" << endl;
+    cout << std::left << std::setw(5) << "2." << "Display timeline info" << endl;
+    cout << std::left << std::setw(5) << "3." << "Create new static layer" << endl;
+    cout << std::left << std::setw(5) << "4." << "Edit a layer" << endl;
+    cout << std::left << std::setw(5) << "5." << "Add empty frame to timeline" << endl;
+    cout << std::left << std::setw(5) << "6." << "Edit frame" << endl;
+    cout << std::left << std::setw(5) << "7." << "Delete layer" << endl;
+    cout << std::left << std::setw(5) << "8." << "Delete frame" << endl;
+    cout << std::left << std::setw(5) << "9." << "Display frame grid partion" << endl;
+    cout << std::left << std::setw(5) << "10." << "Insert layer instance into frame" << endl;
+    cout << std::left << std::setw(5) << "11." << "Delete layer instance from frame" << endl;
+    cout << std::left << std::setw(5) << "0." << "Exit" << endl;
+
+}
+
+void Timeline::editMode()
+{
+    int choice = -1;
+    do
+    {
+        // Display the list of avail1able commands
+        editMode_displayMenu();
+
+        // Get the input from the user
+        string strInput = "";
+
+        getline(std::cin, strInput);
+        try
+        {
+            choice = stoi(strInput);
+        }
+        catch (...)
+        {
+            cout << "Invalid input. Try again." << endl;
+            consolePause();
+            consoleClear();
+            continue;
+        }
+
+        switch (choice)
+        {
+            case PLAY:
+            {
+                consoleClear();
+                play();
+                break;
+            }
+            case TIMELINE_INFO:
+            {
+                consoleClear();
+                displayInfo();
+                break;
+            }
+            case ADD_LAYER:
+            {
+                consoleClear();
+                editMode_addLayer();
+                break;
+            }
+            case EDIT_LAYER:
+            {
+                consoleClear();
+                editMode_editLayer();
+                break;
+            }
+            case ADD_FRAME:
+            {
+                consoleClear();
+                editMode_addFrame();
+                break;
+            }
+            case EDIT_FRAME:
+            {
+                consoleClear();
+                editMode_editFrame();
+                break;
+            }
+            case DELETE_LAYER:
+            {
+                consoleClear();
+                editMode_deleteLayer();
+                break;
+            }
+            case DELETE_FRAME:
+            {
+                consoleClear();
+                editMode_deleteFrame();
+                break;
+            }
+            case FRAME_GRID_INFO:
+            {
+                consoleClear();
+                editMode_displayGrid();
+                break;
+            }
+            case INSERT_INSTANCE:
+            {
+                consoleClear();
+                editMode_insertLayerInstance();
+                break;
+            }
+            case DELETE_INSTANCE:
+            {
+                consoleClear();
+                editMode_deleteLayerInstance();
+                break;
+            }
+            case EXIT_MENU:
+            {
+                cout << "Goodbye!" << endl;
+                break;
+            }
+            default:
+            {
+                cout << "Invalid selection. Try again." << endl;
+                consolePause();
+                consoleClear();
+
+                break;
+            }
+
+        }
+
+        /*// Test the user input against all of the available commands
+        if(choice == EDIT_LAYER)
+        {
+            editMode_editLayer();
+        }
+        else if(choice == ADD_LAYER)
+        {
+            editMode_addLayer();
+        }
+        else if(choice == ADD_FRAME)
+        {
+            editMode_addFrame();
+        }
+        else if(choice == DELETE_LAYER)
+        {
+            editMode_deleteLayer();
+        }
+        else if(choice == DELETE_FRAME)
+        {
+            editMode_deleteFrame();
+        }
+        else if(choice == PLAY)
+        {
+            play();
+        }
+        else if(choice == TIMELINE_INFO)
+        {
+            displayInfo();
+        }
+        else if(choice == FRAME_GRID_INFO)
+        {
+            editMode_displayGrid();
+        }
+        else if(choice == DELETE_INSTANCE)
+        {
+            editMode_deleteLayerInstance();
+        }
+        else if(choice == INSERT_INSTANCE)
+        {
+            editMode_insertLayerInstance();
+        }
+        else if(choice == EDIT_FRAME)
+        {
+            editMode_editFrame();
+        }
+        else if(choice == EXIT_MENU)
+        {
+            cout << "Goodbye! =)" << endl;
+        }
+        else
+        {
+            cout << "Error: Unrecognized command." << endl;
+        }*/
+
+    } while (!(choice == EXIT_MENU));
+
 }
 
 //Set and get methods
@@ -231,6 +429,7 @@ void Timeline::editFrame(unsigned int frameIndex)
     if(frameIndex >= frames.size())
     {
         cout << "Error: The requested index was out of bounds." << endl;
+        consolePause();
     }
     else
     {
@@ -276,6 +475,8 @@ void Timeline::play()
     {
         cout << "No frames to render" << endl;
     }
+    consolePause();
+    consoleClear();
 }
 
 //Method that plays the Timeline backwards
@@ -298,13 +499,15 @@ void Timeline::playBackwards()
 
 void Timeline::displayInfo()
 {
-    cout << "Timeline Info\n==============\n" << endl;
+    cout << "Timeline Info\n==============" << endl;
     cout << "Number of Frames: " << getNumberOfFrames() << endl;
     cout << "Number of Layers: " << getNumberOfLayers() << endl;
     cout << "X Dimension: " << getXDim() << endl;
     cout << "Y Dimension: " << getYDim() << endl;
     cout << "X Partition Dimension: " << getXPartDim() << endl;
     cout << "Y Partition Dimension: " << getYPartDim() << endl;
+    consolePause();
+    consoleClear();
 }
 
 //Helper Methods
@@ -364,106 +567,6 @@ void Timeline::displayInfo()
    }
 }*/
 
-void Timeline::editMode()
-{
-    string choice = "";
-    while(!(choice == "exit"))
-    {
-        //Display the list of available commands
-        editMode_displayMenu();
-        //Get the input from the user
-        getline(cin, choice);
-        //Test the user input against all of the available commands
-        if(choice == "editlayer")
-        {
-            editMode_editLayer();
-        }
-        else if(choice == "addlayer")
-        {
-            editMode_addLayer();
-        }
-        else if(choice == "addframe")
-        {
-            editMode_addFrame();
-        }
-        else if(choice == "deletelayer")
-        {
-            editMode_deleteLayer();
-        }
-        else if(choice == "deleteframe")
-        {
-            editMode_deleteFrame();
-        }
-        else if(choice == "play")
-        {
-            play();
-        }
-        else if(choice == "playbackwards")
-        {
-            playBackwards();
-        }
-        else if(choice == "displaytimelineinfo")
-        {
-            displayInfo();
-        }
-        else if(choice == "displayframegrid")
-        {
-            editMode_displayGrid();
-        }
-        else if(choice == "deletelayerinstance")
-        {
-            editMode_deleteLayerInstance();
-        }
-        else if(choice == "insertlayerinstance")
-        {
-            editMode_insertLayerInstance();
-        }
-        else if(choice == "editframe")
-        {
-            editMode_editFrame();
-        }
-        else if(choice == "exit")
-        {
-            cout << "Goodbye! =)" << endl;
-        }
-        /*If the user's input didn't fit any of the preceding commands,
-        *then it was invalid.*/
-        else
-        {
-            cout << "Error: Unrecognized command." << endl;
-        }
-
-    }
-
-}
-
-void Timeline::editMode_displayMenu()
-{
-    cout << "Main Menu" << endl;
-    cout << "=====================" << endl;
-    cout << "editlayer - Allows the user to edit a layer" << endl;
-    cout << "addlayer - Allows the user to add a new Layer" << endl;
-    cout << "addframe - Allows the user to add a new Frame" << endl;
-    cout << "editframe - Allows the user to edit a Frame in the Timeline"
-    << endl;
-    cout << "deletelayer - Allows the user to delete a Layer from " <<
-    "the timeline" << endl;
-    cout << "deleteframe - Allows the user to delete a Frame from the "
-    << "timeline" << endl;
-    cout << "play - plays the current animation." << endl;
-    cout << "displaytimelineinfo - Displays the info about the current"
-    << " timeline" << endl;
-    cout << "displayframegrid - Displays the grid partitions of a specified"
-    << " frame" << endl;
-    cout << "deletelayerinstance - Allows the user to delete a LayerInstance"
-    << " object from a specified Frame in the Timeline." << endl;
-    cout << "insertlayerinstance - Allows the user to insert a LayerInstance"
-    << " into a specified Frame. It will not insert a LayerInstance for a "
-    << "Layer that is already in the Frame." << endl;
-    cout << "exit - Exit the main menu\n" << endl;
-
-}
-
 void Timeline::editMode_editLayer()
 {
     //Prompt for the index of the Layer to edit
@@ -477,6 +580,7 @@ void Timeline::editMode_editLayer()
         //Test to see that the input index is within the bounds of the vector
         if(layerIndex >= 0 && layerIndex < (int)getNumberOfLayers())
         {
+            consoleClear();
             //Call the requested Layer's editMode function.
             layers.at(layerIndex)->editMode();
         }
@@ -484,13 +588,16 @@ void Timeline::editMode_editLayer()
         else
         {
             cout << "Error: Input was not a valid Layer index." << endl;
+            consolePause();
         }
     }
     //Handle invalid input
     catch(...)
     {
         cout << "Error: Input must be a valid integer." << endl;
+        consolePause();
     }
+    consoleClear();
 }
 
 void Timeline::editMode_addLayer()
@@ -499,8 +606,8 @@ void Timeline::editMode_addLayer()
     string indexString = "";
     /*Right now we're allowing the user to hit enter and have the insertion
     *index default to the end of the Timeline's vector of Layers.*/
-    cout << "Enter the index where you would like to insert the new layer. If"
-    << " you would like to add the Layer at the end, just hit enter." << endl;
+    cout << "Enter the index where you would like to insert the new layer."
+    << "\n(Press enter to insert at end)" << endl;
     getline(cin, indexString);
     int index = -1;
     /*If the user just hit enter, set the insertion index to the end
@@ -521,6 +628,8 @@ void Timeline::editMode_addLayer()
         catch(...)
         {
             cout << "Error: Input must be a valid integer." << endl;
+            consolePause();
+            consoleClear();
             return;
         }
     }
@@ -530,19 +639,21 @@ void Timeline::editMode_addLayer()
         /*If the insertion index is legitimate, prompt for a new image
         *for the Layer.*/
         string newImage = "";
-        cout << "Enter a new image for the Layer: ";
+        cout << "Enter a new image (text string) for the Layer: ";
         getline(cin, newImage);
         //Create a new Layer and add it to the Timeline
         addLayer(make_shared<StaticLayer>(newImage), index);
         /*Once we've created the new Layer, call that Layer's editMode,
         *so the user can continue customizing it.*/
-        getLayerAt(index)->editMode();
+        //getLayerAt(index)->editMode();
     }
     //Handle out-of-bounds index
     else
     {
         cout << "Error: The requested index was out of range." << endl;
+        consolePause();
     }
+    consoleClear();
 }
 
 void Timeline::editMode_addFrame()
@@ -555,9 +666,8 @@ void Timeline::editMode_addFrame()
 
     /*Right now we'll allow users to just hit "enter" which will add a new
     *Frame to the end of the Timeline's Frame vector by default.*/
-    cout << "Enter the index that you would like to insert a new Frame into,"
-    << " or just hit \"enter\" to add the Frame at the end of the Timeline."
-    << endl;
+    cout << "Enter the index that you would like to insert a new Frame into.\n"
+    << "(Press \"enter\" to add the Frame at the end of the Timeline)\n";
 
     //Get the input from the user
     getline(cin, indexChoice);
@@ -583,14 +693,17 @@ void Timeline::editMode_addFrame()
             else
             {
                 cout << "Error: An invalid index was entered." << endl;
+                consolePause();
             }
         }
         //Handle invalid input
         catch(...)
         {
             cout << "Error: Input must be a valid integer." << endl;
+            consolePause();
         }
     }
+    consoleClear();
 }
 
 void Timeline::editMode_deleteLayer()
@@ -614,13 +727,16 @@ void Timeline::editMode_deleteLayer()
         {
             cout << "Error: Specified index was out of range for the timeline."
             << endl;
+            consolePause();
         }
     }
     //Handle invalid input
     catch(...)
     {
         cout << "Error: Input must be a valid integer." << endl;
+        consolePause();
     }
+    consoleClear();
 }
 
 void Timeline::editMode_deleteFrame()
@@ -644,13 +760,16 @@ void Timeline::editMode_deleteFrame()
         {
             cout << "Error: Specified index was out of range for the timeline."
             << endl;
+            consolePause();
         }
     }
     //Handle invalid input
     catch(...)
     {
         cout << "Error: Input must be a valid integer." << endl;
+        consolePause();
     }
+    consoleClear();
 }
 
 void Timeline::editMode_displayGrid()
@@ -669,12 +788,15 @@ void Timeline::editMode_displayGrid()
         else
         {
             cout << "Error: The requested Frame is out of range." << endl;
+            consolePause();
         }
     }
     catch(...)
     {
         cout << "Error: Input must be a valid integer." << endl;
+        consolePause();
     }
+    consoleClear();
 }
 
 void Timeline::editMode_editFrame()
@@ -688,16 +810,20 @@ void Timeline::editMode_editFrame()
         if(frameIndex < 0 || frameIndex >= (int)getNumberOfFrames())
         {
             cout << "Error: Index out of bounds." << endl;
+            consolePause();
         }
         else
         {
+            consoleClear();
             frames.at(frameIndex)->editMode();
         }
     }
     catch(...)
     {
         cout << "Error: Input must be a valid integer." << endl;
+        consolePause();
     }
+    consoleClear();
 }
 
 void Timeline::editMode_deleteLayerInstance()
@@ -714,35 +840,44 @@ void Timeline::editMode_deleteLayerInstance()
     }
     catch(...)
     {
-       cout << "Error: Input must be a valid integer." << endl;
-       return;
+        cout << "Error: Input must be a valid integer." << endl;
+        consolePause();
+        consoleClear();
+        return;
     }
-    if(frameIndex < 0 || frameIndex >= (int)getNumberOfFrames())
+    if (frameIndex < 0 || frameIndex >= (int)getNumberOfFrames())
     {
-       cout << "Error: Index out of bounds." << endl;
-       return;
+        cout << "Error: Index out of bounds." << endl;
+        consolePause();
+        consoleClear();
+        return;
     }
-    cout << "There are currently " << frames.at(frameIndex)
-    ->getNumLayerInstances() << " LayerInstances in the Frame." << endl;
+    cout << "\nThere are currently " << frames.at(frameIndex)->getNumLayerInstances()
+    << " LayerInstances in the Frame." << endl;
     cout << "Enter the index of the LayerInstance you would like to delete "
     << "from the Frame: ";
     getline(cin, choice);
     try
     {
-       layerInstanceIndex = stoi(choice);
+        layerInstanceIndex = stoi(choice);
     }
     catch(...)
     {
-       cout << "Error: Input must be a valid integer." << endl;
-       return;
+        cout << "Error: Input must be a valid integer." << endl;
+        consolePause();
+        consoleClear();
+        return;
     }
     if(layerInstanceIndex < 0 || layerInstanceIndex >=
-      frames.at(frameIndex)->getNumLayerInstances())
+       frames.at(frameIndex)->getNumLayerInstances())
     {
-       cout << "Error: Index out of bounds." << endl;
-       return;
+        cout << "Error: Index out of bounds." << endl;
+        consolePause();
+        consoleClear();
+        return;
     }
     frames.at(frameIndex)->removeLayer(layerInstanceIndex);
+    consoleClear();
 }
 
 /*The purpose of this method is to insert a LayerInstance that points to an
@@ -775,15 +910,19 @@ void Timeline::editMode_insertLayerInstance()
     catch(...)
     {
        cout << "Error: Input must be a valid integer." << endl;
+        consolePause();
+        consoleClear();
        return;
     }
     if(frameIndex < 0 || frameIndex >= (int)getNumberOfFrames())
     {
-       cout << "Error: Index out of bounds." << endl;
+       cout << "Error: Index out of bounds." <<  endl;
+        consolePause();
+        consoleClear();
        return;
     }
     //Prompt for Timeline Layer index
-    cout << "There are currently " << getNumberOfLayers() <<
+    cout << "\nThere are currently " << getNumberOfLayers() <<
     " Layers available in the Timeline." << endl;
     cout << "Enter the index of the Layer (in the Timeline) you would like"
     << "to insert into the Frame: ";
@@ -795,14 +934,17 @@ void Timeline::editMode_insertLayerInstance()
     catch(...)
     {
        cout << "Error: Input must be a valid integer." << endl;
+        consolePause();
     }
     if(layerIndex < 0 || layerIndex >= (int)getNumberOfLayers())
     {
        cout << "Error: Index out of bounds." << endl;
+        consolePause();
+        consoleClear();
        return;
     }
     //Prompt for LayerInstance index in Frame
-    cout << "There are currently " <<
+    cout << "\nThere are currently " <<
     frames.at(frameIndex)->getNumLayerInstances() <<
     " LayerInstances in the specified Frame." << endl;
     cout << "Enter the index you would like to insert the LayerInstance " <<
@@ -815,11 +957,14 @@ void Timeline::editMode_insertLayerInstance()
     catch(...)
     {
        cout << "Error: Input must be a valid integer." << endl;
+        consolePause();
     }
     if(layerInstanceIndex < 0 || layerInstanceIndex >
       frames.at(frameIndex)->getNumLayerInstances())
     {
        cout << "Error: Index out of bounds." << endl;
+        consolePause();
+        consoleClear();
        return;
     }
     Layer* testLayer = layers.at(layerIndex).get();
@@ -832,7 +977,9 @@ void Timeline::editMode_insertLayerInstance()
     {
         cout << "A LayerInstance for that Layer is already contained in the "
         << "specified Frame." << endl;
+        consolePause();
     }
+    consoleClear();
 }
 
 /*This method allows the user to select the type of Layer they want to insert

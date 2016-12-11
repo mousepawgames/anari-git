@@ -10,7 +10,6 @@
 */
 
 
-#include <iostream>
 #include "StaticLayer.hpp"
 #include "IOL.hpp"
 #include "Frame.hpp"
@@ -27,8 +26,6 @@ void menu_addIOL(Timeline* master);
 
 int main()
 {
-    string input;
-
     //Creating Layers to be used in timeline.
     //StaticLayer StaticLayer0 = StaticLayer("J", 1, 810, -720, 10);
 
@@ -37,77 +34,9 @@ int main()
     to 480x270.*/
     Timeline master = Timeline();
 
+    master.editMode();
 
-
-    string choice = "";
-    /*The following while loop handles the main menu of the Timeline editing
-    *program. It prompts the user for a command, and performs the specified
-    *command, if the command exists. When the user wants to exit the program,
-    *they type the command "exit", and the loop will exit.*/
-    while(!(choice == "exit"))
-    {
-        //Display the list of available commands
-        displayMenu();
-        //Get the input from the user
-        getline(cin, choice);
-        //Test the user input against all of the available commands
-        if(choice == "edittimeline")
-        {
-            master.editMode();
-        }
-        else if(choice == "addiol")
-        {
-            menu_addIOL(&master);
-        }
-        /*else if(choice == "addframe")
-        {
-            menu_addFrame(&master);
-        }
-        else if(choice == "deletelayer")
-        {
-            menu_deleteLayer(&master);
-        }
-        else if(choice == "deleteframe")
-        {
-            menu_deleteFrame(&master);
-        }*/
-        else if(choice == "play")
-        {
-            master.play();
-        }
-        /*else if(choice == "displaytimelineinfo")
-        {
-            master.displayInfo();
-        }
-        else if(choice == "displayframegrid")
-        {
-            menu_displayGrid(&master);
-        }
-        else if(choice == "deletelayerinstance")
-        {
-            menu_deleteLayerInstance(&master);
-        }
-        else if(choice == "insertlayerinstance")
-        {
-            menu_insertLayerInstance(&master);
-        }
-        else if(choice == "editframe")
-        {
-            menu_editFrame(&master);
-        }*/
-        else if(choice == "exit")
-        {
-            cout << "Goodbye! =)" << endl;
-        }
-        /*If the user's input didn't fit any of the preceding commands,
-        *then it was invalid.*/
-        else
-        {
-            cout << "Error: Unrecognized command." << endl;
-        }
-
-    }
-
+    
     /*Test Layers
     StaticLayer StaticLayerA = StaticLayer("A", 250, 250, -480, 0);
         This will appear in sector (0,1), (1,1), (0,2), (1,2)
@@ -200,19 +129,6 @@ int main()
          cout << "\n 1920 : " << xDim << "\n1080 : " << yDim << "\n480 : " << xPartDim << "\n270 : " << yPartDim << endl;
     }*/
     return 0;
-}
-
-//This method displays the available commands, and asks the user to choose one
-void displayMenu()
-{
-    cout << "Main Menu" << endl;
-    cout << "=====================" << endl;
-    cout << "edittimeline - Allows the user to edit the master Timeline"
-    << endl;
-    cout << "addiol - Allows the user to add a new IOL Layer to the master"
-    << " Timeline" << endl;
-    cout << "play - plays the current animation." << endl;
-    cout << "exit - Exit the main menu\n" << endl;
 }
 
 //Allows the user to add a new Layer to the timeline and edit its contents.

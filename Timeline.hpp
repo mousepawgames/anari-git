@@ -30,6 +30,7 @@
 
 #include <vector>
 #include <memory>
+#include <iomanip>
 #include "Frame.hpp"
 
 
@@ -56,7 +57,7 @@ private:
     std::vector<Frame*> frames;
 
     ///The container that stores references to all of the layers
-    std::vector<shared_ptr<Layer>> layers;
+    std::vector<shared_ptr<Layer> > layers;
 
     /**Helper method I defined to handle frame swapping
     *\param index of the first frame in the timeline's frame vector to
