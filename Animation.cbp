@@ -36,6 +36,7 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="ConsoleUtil.hpp" />
 		<Unit filename="Frame.cpp" />
 		<Unit filename="Frame.hpp" />
 		<Unit filename="IOL.cpp" />
@@ -53,6 +54,7 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="src/Observable.cpp" />
 		<Unit filename="src/Observer.cpp" />
+		<Unit filename="transformationsTester.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
