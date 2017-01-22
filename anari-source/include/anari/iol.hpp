@@ -28,11 +28,12 @@
 #ifndef IOL_HPP
 #define IOL_HPP
 
-#include "Layer.hpp"
-#include "Timeline.hpp"
+#include "anari/layer.hpp"
+#include "anari/timeline.hpp"
 #include <string>
 
-typedef int Matrix;
+//Matrix transformation
+typedef Eigen::MatrixXf Matrix;
 
 class IOL : public Layer
 {
@@ -74,7 +75,7 @@ class IOL : public Layer
         /**Overidden method from Layer class that creates a new LayerInstance pointer
         *\param the transformation matrix that will be applied to the new
         *   LayerInstance.*/
-        LayerInstance* newLayerInstance(Matrix mtx=-1);
+        LayerInstance* newLayerInstance(Matrix newMatrix = Matrix::Identity(1,1));
 
         ///Overridden methods from Layer class, get and set Layer dimensions
         int getXDimension();

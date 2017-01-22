@@ -31,14 +31,14 @@
 #include <vector>
 #include <memory>
 #include <iomanip>
-#include "Frame.hpp"
-
+#include <Eigen/Dense>
+#include "anari/frame.hpp"
 
 using std::vector;
 using std::string;
 
-//NOTE: Using an int in place of Matrix object for the moment
-typedef int Matrix;
+//Matrix transformation
+typedef Eigen::MatrixXf Matrix;
 
 
 class Timeline
@@ -129,7 +129,7 @@ public:
     *\param an optional parameter that specifies the transformation matrix
     *   value of the new LayerInstances that will be created for each Frame.*/
     void addLayer(shared_ptr<Layer> newLayer, unsigned int index,
-                  Matrix newMatrix=-1);
+                  Matrix newMatrix = Matrix::Identity(1,1));
 
     ///A method that inserts an SOL into the timeline, with starting indexes
     //void insertSOL(SOL* newSOL, int layerIndex, int frameIndex);
@@ -185,22 +185,22 @@ public:
     *achieve this functionality in the future.*/
     void playBackwards();
 
-    void displayInfo();
+    //void displayInfo();
 
     //This method initializes the Timeline's editMode menu.
-    void editMode();
+    //void editMode();
 
-    void editMode_displayMenu();
-    void editMode_editLayer();
-    void editMode_addLayer();
-    void editMode_addFrame();
-    void editMode_deleteLayer();
-    void editMode_deleteFrame();
-    void editMode_displayGrid();
-    void editMode_editFrame();
-    void editMode_deleteLayerInstance();
-    void editMode_insertLayerInstance();
-    int editMode_chooseLayerType();
+//    void editMode_displayMenu();
+//    void editMode_editLayer();
+//    void editMode_addLayer();
+//    void editMode_addFrame();
+//    void editMode_deleteLayer();
+//    void editMode_deleteFrame();
+//    void editMode_displayGrid();
+//    void editMode_editFrame();
+//    void editMode_deleteLayerInstance();
+//    void editMode_insertLayerInstance();
+//    int editMode_chooseLayerType();
 
 };
 

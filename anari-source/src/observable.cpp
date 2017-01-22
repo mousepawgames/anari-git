@@ -1,4 +1,4 @@
-#include "Observable.hpp"
+#include "anari/observable.hpp"
 
 Observable::Observable()
 {

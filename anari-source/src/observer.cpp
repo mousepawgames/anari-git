@@ -1,4 +1,4 @@
-#include "Observer.hpp"
+#include "anari/observer.hpp"
 
 Observer::Observer()
 {

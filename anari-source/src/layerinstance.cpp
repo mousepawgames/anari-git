@@ -1,4 +1,4 @@
-#include "LayerInstance.hpp"
+#include "anari/layerinstance.hpp"
 using std::string;
 using std::list;
 using std::cout;
@@ -195,6 +195,7 @@ void LayerInstance::update()
 *the same thing as the function above*/
 void LayerInstance::update(int zPref)
 {
+    (void)zPref;
     //Loop through the LayerInstance's Observers
     for(list<Observer*>::const_iterator it = observers.begin();
     it != observers.end(); ++it)

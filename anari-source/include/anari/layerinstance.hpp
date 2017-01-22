@@ -36,12 +36,13 @@
 #define LAYERINSTANCE_H
 
 #include <memory>
-#include "Layer.hpp"
-#include "Observable.hpp"
+#include <Eigen/Dense>
+#include "anari/layer.hpp"
+#include "anari/observable.hpp"
 
 
-//NOTE: Temp typedef to represent matrix
-typedef int Matrix;
+//Matrix transformation
+typedef Eigen::MatrixXf Matrix;
 using std::shared_ptr;
 
 class LayerInstance : public Observable, public Observer
@@ -49,9 +50,9 @@ class LayerInstance : public Observable, public Observer
     public:
         /**Constructor with optional Layer pointer and Matrix parameters
         *\param a Layer pointer that the new LayerInstance will point to.
-        *\param a Matrix that the new LayerInstance will implement as a
-        *   transformation matrix*/
-        LayerInstance(Layer* newLayer=nullptr, Matrix newMatrix=-1);
+        *\param Default matrix transformation that the new LayerInstance will implement,
+        * as the identity matrix so no changes will be made to original matrix.*/
+        LayerInstance(Layer* newLayer, Matrix newMatrix);
 
          ///Destructor
         virtual ~LayerInstance();

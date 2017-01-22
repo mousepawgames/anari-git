@@ -36,17 +36,17 @@
 #include <limits>
 #include <exception>
 #include <list>
+#include <Eigen/Dense>
 
-#include "Observable.hpp"
+#include "anari/observable.hpp"
 
 //Use a forward declaration so we can reference LayerInstance pointers
 class LayerInstance;
 
 using std::string;
 
-/*NOTE: In the future we will use real Matrix variables, but for now
-we'll just typedef an int.*/
-typedef int Matrix;
+//Matrix transformation
+typedef Eigen::MatrixXf Matrix;
 
 class Layer : public Observable
 {
@@ -83,7 +83,7 @@ class Layer : public Observable
         *\param an optional transformation matrix that will be applied to the
         *   new LayerInstance pointer.
         *\return a new LayerInstance pointer that references the current Layer*/
-        virtual LayerInstance* newLayerInstance(Matrix mtx=-1) = 0;
+        virtual LayerInstance* newLayerInstance(Matrix newMatrix = Matrix::Identity(1,1)) = 0;
 
         ///Methods to get and set the Layer's dimensions on the canvas
         virtual int getXDimension() = 0;
@@ -101,7 +101,7 @@ class Layer : public Observable
 
         /**The editMode layer allows derived classes to interface with users
         depending on their unique features. */
-        virtual void editMode() = 0;
+        //virtual void editMode() = 0;
 
         ///Overidden observable methods
         virtual void addObserver(Observer* newObs) = 0;

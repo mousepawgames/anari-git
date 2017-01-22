@@ -28,14 +28,13 @@
 #ifndef STATICLAYER_H
 #define STATICLAYER_H
 
-#include "LayerInstance.hpp"
+#include "anari/layerinstance.hpp"
 #include <string>
 
 using std::string;
 
-/*NOTE: Will use actual Matrix variables in the future,
-but for now we'll typdef the int type.*/
-typedef int Matrix;
+//Matrix transformation
+typedef Eigen::MatrixXf Matrix;
 
 class StaticLayer : public Layer
 {
@@ -52,7 +51,7 @@ class StaticLayer : public Layer
         *\param an optional parameter that represents the y coordinate of the
         *   origin point.*/
         //NOTE: We are currently storing the image as a string for testing
-        StaticLayer(string image="", int xDim=250, int yDim=250, int xOrigin=960,
+        StaticLayer(Matrix image = Matrix::Random(5,5), int xDim=250, int yDim=250, int xOrigin=960,
                     int yOrigin=540);
 
         ///Destructor
@@ -66,10 +65,10 @@ class StaticLayer : public Layer
         virtual void render(Matrix transformationMatrix, int frameIndex=0);
 
         ///Method that returns the image
-        string getImage();
+        Matrix getImage();
 
         ///Method that sets the Layers' image
-        void setImage(string newImage);
+        void setImage(Matrix newImage);
 
         ///Overidden methods from Layer class. Set and get visibility variable.
         bool isVisible();
@@ -78,7 +77,7 @@ class StaticLayer : public Layer
         /**Overidden method from Layer class that creates a new LayerInstance pointer
         *\param the transformation matrix that will be applied to the new
         *   LayerInstance.*/
-        LayerInstance* newLayerInstance(Matrix mtx=-1);
+        LayerInstance* newLayerInstance(Matrix newMatrix = Matrix::Identity(5,5));
 
         ///Overridden methods from Layer class, get and set Layer dimensions
         int getXDimension();
@@ -102,16 +101,12 @@ class StaticLayer : public Layer
 
 
         //editMode functions
-        void editMode();
-
-
-
-
-
+        //void editMode();
     protected:
     private:
         ///Base image that the Layer renders to the screen
-        string image;
+        //string image;
+        Matrix image;
 
         ///boolean that determines whether or not the Layer is visible
         bool visibility;
@@ -128,15 +123,15 @@ class StaticLayer : public Layer
         /**editMode functions that are specific to the StaticLayer type.
         *I chose to make these methods private, because we want the StaticLayer
         *class to handle these behind the scenes in the editMode function.*/
-        void editMode_help();
-        void editMode_getImage();
-        void editMode_setImage();
-        void editMode_setDim();
-        void editMode_getDim();
-        void editMode_setOrigin();
-        void editMode_getOrigin();
-        bool editMode_isVisible();
-        void editMode_setVisibility();
+        //void editMode_help();
+        //void editMode_getImage();
+        //void editMode_setImage();
+//        void editMode_setDim();
+//        void editMode_getDim();
+//        void editMode_setOrigin();
+//        void editMode_getOrigin();
+//        bool editMode_isVisible();
+//        void editMode_setVisibility();
 };
 
 #endif // STATICLAYER_H

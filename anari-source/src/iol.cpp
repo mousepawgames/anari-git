@@ -35,7 +35,7 @@
 *complication will also apply to the future SOL Layer type, and any others that
 *contain a Timeline.*/
 
-#include "IOL.hpp"
+#include "anari/iol.hpp"
 
 using std::cout;
 using std::endl;
@@ -60,6 +60,7 @@ IOL::~IOL()
 //This method renders the current animation Frame to the screen
 void IOL::render(Matrix transformationMatrix, int frameIndex)
 {
+    (void)frameIndex;
     //Determine whether or not there are any Frames in the Timeline to render
     if(timeline.getNumberOfFrames() > 0 && visibility)
     {
@@ -173,6 +174,8 @@ int IOL::getYDimension()
 
 void IOL::setDimensions(int x, int y)
 {
+    (void)x;
+    (void)y;
     /*At this point I don't want to allow the user to change the dimensions
     *of the IOL manually, as that should be handled according to the Layers
     *in the Timeline. We still have to override it though.*/
@@ -194,6 +197,8 @@ int IOL::getOriginY()
 ///Set methods for origin coordinates.
 void IOL::setOriginCoord(int newX, int newY)
 {
+    (void)newX;
+    (void)newY;
     /*NOTE: I'd like to take this method out of the class entirely, but
     *because it's a virtual method inherited from the Layer class, I can't
     *not implement it. For the moment, I'll just have this method call the
@@ -267,58 +272,58 @@ void IOL::updateDimensionData()
 
 /**The editMode layer allows derived classes to interface with users
 depending on their unique features. */
-void IOL::editMode()
-{
-    string choice = "";
-    while(choice != "exit")
-    {
-        editMode_displayMenu();
-        getline(cin, choice);
-        if(choice == "setvisibility")
-        {
-            editMode_setVisibility();
-        }
-        else if(choice == "getvisibility")
-        {
-            editMode_isVisible();
-        }
-        else if(choice == "setrepeats")
-        {
-            editMode_setRepeats();
-        }
-        else if(choice == "getrepeats")
-        {
-            editMode_getRepeats();
-        }
-        else if(choice == "getrunning")
-        {
-            editMode_getRunning();
-        }
-        else if(choice == "setrunning")
-        {
-            editMode_setRunning();
-        }
-        else if(choice == "getcurrentframe")
-        {
-            editMode_getCurrentFrame();
-        }
-        else if(choice == "setcurrentframe")
-        {
-            editMode_setCurrentFrame();
-        }
-        else if(choice == "edittimeline")
-        {
-            timeline.editMode();
-            //Once they're done editing the timeline, make sure we
-            //update the dimensions of the IOL.
-            updateDimensionData();
-        }
-        else if(choice != "exit")
-        {
-            cout << "Error: Please select a valid command from the menu." << endl;
-        }
-    }
-}
+//void IOL::editMode()
+//{
+//    string choice = "";
+//    while(choice != "exit")
+//    {
+//        editMode_displayMenu();
+//        getline(cin, choice);
+//        if(choice == "setvisibility")
+//        {
+//            editMode_setVisibility();
+//        }
+//        else if(choice == "getvisibility")
+//        {
+//            editMode_isVisible();
+//        }
+//        else if(choice == "setrepeats")
+//        {
+//            editMode_setRepeats();
+//        }
+//        else if(choice == "getrepeats")
+//        {
+//            editMode_getRepeats();
+//        }
+//        else if(choice == "getrunning")
+//        {
+//            editMode_getRunning();
+//        }
+//        else if(choice == "setrunning")
+//        {
+//            editMode_setRunning();
+//        }
+//        else if(choice == "getcurrentframe")
+//        {
+//            editMode_getCurrentFrame();
+//        }
+//        else if(choice == "setcurrentframe")
+//        {
+//            editMode_setCurrentFrame();
+//        }
+//        else if(choice == "edittimeline")
+//        {
+//            timeline.editMode();
+//            //Once they're done editing the timeline, make sure we
+//            //update the dimensions of the IOL.
+//            updateDimensionData();
+//        }
+//        else if(choice != "exit")
+//        {
+//            cout << "Error: Please select a valid command from the menu." << endl;
+//        }
+//    }
+//}
 
 ///Overidden observable methods
 void IOL::addObserver(Observer* newObs)
@@ -522,4 +527,3 @@ void IOL::editMode_displayMenu()
     cout << "exit - exits out of the IOL edit menu" << endl;
     cout << "Choice: ";
 }
-

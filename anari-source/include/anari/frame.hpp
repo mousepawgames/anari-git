@@ -39,15 +39,15 @@
 #include <vector>
 #include <utility>
 #include <memory>
-#include "LayerInstance.hpp"
+#include <Eigen/Dense>
+#include "anari/layerinstance.hpp"
 
 
 using std::string;
 using std::vector;
 
-/*NOTE: We are temporarily using an int as a Matrix, will use actual matrix objects
-*in the future.*/
-typedef int Matrix;
+//Matrix transformation
+typedef Eigen::MatrixXf Matrix;
 
 /**The Frame class stores LayerInstance objects, and a list of them is
 *rendered by the Timeline object, in order to display the animation.*/
@@ -98,7 +98,7 @@ class Frame: public Observer
         *\param an optional parameter that sets the transformation matrix
         *   for the new LayerInstance.
         */
-        void addLayer(shared_ptr<Layer> newLayer, int index, Matrix newMatrix=-1);
+        void addLayer(shared_ptr<Layer> newLayer, int index, Matrix newMatrix = Matrix::Identity(1,1));
 
         /**Add a layer to the end of the Frame's LayerInstance vector. It will
         *essentially add a new LayerInstance to the background.
