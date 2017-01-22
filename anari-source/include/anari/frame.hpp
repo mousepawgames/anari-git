@@ -40,7 +40,7 @@
 #include <utility>
 #include <memory>
 #include <Eigen/Dense>
-#include "LayerInstance.hpp"
+#include "anari/layerinstance.hpp"
 
 
 using std::string;

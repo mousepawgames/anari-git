@@ -33,7 +33,7 @@
 #ifndef OBSERVABLE_HPP
 #define OBSERVABLE_HPP
 
-#include "Observer.hpp"
+#include "anari/observer.hpp"
 
 
 class Observable

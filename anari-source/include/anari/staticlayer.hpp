@@ -28,7 +28,7 @@
 #ifndef STATICLAYER_H
 #define STATICLAYER_H
 
-#include "LayerInstance.hpp"
+#include "anari/layerinstance.hpp"
 #include <string>
 
 using std::string;

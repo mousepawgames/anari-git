@@ -28,8 +28,8 @@
 #ifndef IOL_HPP
 #define IOL_HPP
 
-#include "Layer.hpp"
-#include "Timeline.hpp"
+#include "anari/layer.hpp"
+#include "anari/timeline.hpp"
 #include <string>
 
 //Matrix transformation

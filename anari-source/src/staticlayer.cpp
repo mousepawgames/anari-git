@@ -1,5 +1,5 @@
-#include "StaticLayer.hpp"
-#include "ConsoleUtil.hpp"
+#include "anari/staticlayer.hpp"
+//#include "ConsoleUtil.hpp"
 #include <Eigen/Dense>
 
 using std::cout;
@@ -32,6 +32,7 @@ StaticLayer::~StaticLayer()
 *transformation matrix as input to help render.*/
 void StaticLayer::render(Matrix transformMtx, int frameIndex)
 {
+    (void)frameIndex;
     //cout << image << "(" << transformMtx << ")";
     image = transformMtx * image;
 }
@@ -245,7 +246,7 @@ unsigned int StaticLayer::getNumOfObservers()
 *own editMode command. */
 
 /*This method displays all of the available commands used to interact
-//*with the StaticLayer.*/
+ *with the StaticLayer.*/
 //void StaticLayer::editMode_help()
 //{
 //    cout << "Available Commands\n-------------------------" << endl;

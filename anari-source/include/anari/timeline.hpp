@@ -32,7 +32,7 @@
 #include <memory>
 #include <iomanip>
 #include <Eigen/Dense>
-#include "Frame.hpp"
+#include "anari/frame.hpp"
 
 
 using std::vector;

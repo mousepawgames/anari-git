@@ -35,7 +35,7 @@
 *complication will also apply to the future SOL Layer type, and any others that
 *contain a Timeline.*/
 
-#include "IOL.hpp"
+#include "anari/iol.hpp"
 
 using std::cout;
 using std::endl;
@@ -60,6 +60,7 @@ IOL::~IOL()
 //This method renders the current animation Frame to the screen
 void IOL::render(Matrix transformationMatrix, int frameIndex)
 {
+    (void)frameIndex;
     //Determine whether or not there are any Frames in the Timeline to render
     if(timeline.getNumberOfFrames() > 0 && visibility)
     {
@@ -173,6 +174,8 @@ int IOL::getYDimension()
 
 void IOL::setDimensions(int x, int y)
 {
+    (void)x;
+    (void)y;
     /*At this point I don't want to allow the user to change the dimensions
     *of the IOL manually, as that should be handled according to the Layers
     *in the Timeline. We still have to override it though.*/
@@ -194,6 +197,8 @@ int IOL::getOriginY()
 ///Set methods for origin coordinates.
 void IOL::setOriginCoord(int newX, int newY)
 {
+    (void)newX;
+    (void)newY;
     /*NOTE: I'd like to take this method out of the class entirely, but
     *because it's a virtual method inherited from the Layer class, I can't
     *not implement it. For the moment, I'll just have this method call the
@@ -522,4 +527,3 @@ void IOL::editMode_displayMenu()
     cout << "exit - exits out of the IOL edit menu" << endl;
     cout << "Choice: ";
 }
-

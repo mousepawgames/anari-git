@@ -1,6 +1,6 @@
-#include "Timeline.hpp"
-#include "StaticLayer.hpp"
-#include "ConsoleUtil.hpp"
+#include "anari/timeline.hpp"
+#include "anari/staticlayer.hpp"
+//#include "ConsoleUtil.hpp"
 
 using std::vector;
 using std::string;
@@ -9,6 +9,7 @@ using std::cin;
 using std::endl;
 using std::make_shared;
 
+/*
 const int PLAY = 1;
 const int TIMELINE_INFO = 2;
 const int ADD_LAYER = 3;
@@ -21,6 +22,7 @@ const int FRAME_GRID_INFO = 9;
 const int INSERT_INSTANCE = 10;
 const int DELETE_INSTANCE = 11;
 const int EXIT_MENU = 0;
+*/
 
 //Constructor that creates a timeline with the given number of Frames
 Timeline::Timeline(unsigned int startingLength)
@@ -429,7 +431,7 @@ void Timeline::editFrame(unsigned int frameIndex)
     if(frameIndex >= frames.size())
     {
         cout << "Error: The requested index was out of bounds." << endl;
-        consolePause();
+        //consolePause();
     }
     else
     {
@@ -475,8 +477,8 @@ void Timeline::play()
     {
         cout << "No frames to render" << endl;
     }
-    consolePause();
-    consoleClear();
+    //consolePause();
+    //consoleClear();
 }
 
 //Method that plays the Timeline backwards
@@ -1018,5 +1020,3 @@ void Timeline::playBackwards()
 //    return -1;
 //}
 //
-
-

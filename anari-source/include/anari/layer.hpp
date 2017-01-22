@@ -38,7 +38,7 @@
 #include <list>
 #include <Eigen/Dense>
 
-#include "Observable.hpp"
+#include "anari/observable.hpp"
 
 //Use a forward declaration so we can reference LayerInstance pointers
 class LayerInstance;

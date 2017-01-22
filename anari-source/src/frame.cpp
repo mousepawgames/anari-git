@@ -1,5 +1,5 @@
-#include "Frame.hpp"
-#include "ConsoleUtil.hpp"
+#include "anari/frame.hpp"
+//#include "ConsoleUtil.hpp"
 
 using std::vector;
 using std::string;
@@ -775,30 +775,30 @@ void Frame::editMode()
         //Display all of the LayerInstances
         if(choice == 1)
         {
-            consoleClear();
+            //consoleClear();
             for(unsigned int i = 0; i < layerInstances.size(); ++i)
             {
                 cout << i << ". ";
                 layerInstances.at(i)->render();
             }
-            consolePause();
+            //consolePause();
         }
         //Move a LayerInstance in the Frame
         else if(choice == 2)
         {
-            consoleClear();
+            //consoleClear();
             editMode_moveLayerInstance();
         }
         //Set a LayerInstance Matrix
         else if (choice == 3)
         {
-            consoleClear();
+            //consoleClear();
             editMode_setLayerInstanceMatrix();
         }
         //Display the grid
         else if (choice == 4)
         {
-            consoleClear();
+            //consoleClear();
             test_printGridContents();
         }
         //Exit
@@ -810,9 +810,9 @@ void Frame::editMode()
         {
             cout << "Error: Choice must be a valid option from the menu."
             << endl;
-            consolePause();
+            //consolePause();
         }
-        consoleClear();
+        //consoleClear();
     }
 }
 
@@ -835,7 +835,7 @@ void Frame::test_printGridContents()
             }
         }
     }
-    consolePause();
+    //consolePause();
 }
 
 void Frame::editMode_displayMenu()
@@ -860,7 +860,7 @@ void Frame::editMode_setLayerInstanceMatrix()
            (int)layerInstances.size())
         {
             cout << "Error: Index out of bounds." << endl;
-            consolePause();
+            //consolePause();
         }
         else
         {
@@ -876,16 +876,16 @@ void Frame::editMode_setLayerInstanceMatrix()
 //            catch(...)
 //            {
 //                cout << "Error: Input must be a valid integer." << endl;
-//                consolePause();
+//                //consolePause();
 //            }
         }
     }
     catch(...)
     {
         cout << "Error: Input must be a valid index." << endl;
-        consolePause();
+        //consolePause();
     }
-    consoleClear();
+    //consoleClear();
 }
 
 void Frame::editMode_moveLayerInstance()
@@ -899,7 +899,7 @@ void Frame::editMode_moveLayerInstance()
         if(indexA < 0 || indexA >= (int)layerInstances.size())
         {
             cout << "Error: Index out of bounds." << endl;
-            consolePause();
+            //consolePause();
         }
         else
         {
@@ -912,7 +912,7 @@ void Frame::editMode_moveLayerInstance()
                 if(indexB < 0 || indexB >= (int)layerInstances.size())
                 {
                     cout << "Error: Index out of bounds." << endl;
-                    consolePause();
+                    //consolePause();
                 }
                 else
                 {
@@ -922,14 +922,14 @@ void Frame::editMode_moveLayerInstance()
             catch(...)
             {
                 cout << "Error: Input must be a valid integer." << endl;
-                consolePause();
+                //consolePause();
             }
         }
     }
     catch(...)
     {
         cout << "Error: Input must be a valid integer." << endl;
-        consolePause();
+        //consolePause();
     }
-    consoleClear();
+    //consoleClear();
 }

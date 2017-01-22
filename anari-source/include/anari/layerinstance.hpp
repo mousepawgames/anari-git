@@ -37,8 +37,8 @@
 
 #include <memory>
 #include <Eigen/Dense>
-#include "Layer.hpp"
-#include "Observable.hpp"
+#include "anari/layer.hpp"
+#include "anari/observable.hpp"
 
 
 //Matrix transformation
