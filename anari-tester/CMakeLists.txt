@@ -90,7 +90,7 @@ add_executable(anari-tester
 # Link against dependencies.
 target_link_libraries(${TARGET_NAME} ${CPGF_DIR}/lib/libcpgf.a)
 target_link_libraries(${TARGET_NAME} ${PAWLIB_DIR}/lib/libpawlib.a)
-target_link_libraries(${TARGET_NAME} ${CMAKE_HOME_DIRECTORY}/../anari-source/anari/$<CONFIG>/libanari.a)
+target_link_libraries(${TARGET_NAME} ${CMAKE_HOME_DIRECTORY}/../anari-source/lib/$<CONFIG>/libanari.a)
 
 if(COMPILERTYPE STREQUAL "clang")
     if(SAN STREQUAL "address")

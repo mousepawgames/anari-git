@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="anari" />
+		<Option makefile_is_custom="1" />
+		<Option execution_dir="../../anari-git" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<MakeCommands>
+			<Build command="" />
+			<CompileFile command="" />
+			<Clean command="$make clean" />
+			<DistClean command="$make -f $makefile distclean$target" />
+			<AskRebuildNeeded command="" />
+			<SilentBuild command=" &gt; $(CMD_NULL)" />
+		</MakeCommands>
+		<Build>
+			<Target title="Debug">
+				<Option output="lib/Debug/anari-source" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Debug/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<MakeCommands>
+					<Build command="$make anari_debug" />
+					<CompileFile command="" />
+					<Clean command="$make cleandebug" />
+					<DistClean command="$make -f $makefile distclean$target" />
+					<AskRebuildNeeded command="" />
+					<SilentBuild command="$make anari_debug &gt; $(CMD_NULL)" />
+				</MakeCommands>
+			</Target>
+			<Target title="Release">
+				<Option output="lib/Release/anari-source" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Release/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+				<MakeCommands>
+					<Build command="$make anari" />
+					<CompileFile command="" />
+					<Clean command="$make cleanrelease" />
+					<DistClean command="$make -f $makefile distclean$target" />
+					<AskRebuildNeeded command="" />
+					<SilentBuild command="$make anari &gt; $(CMD_NULL)" />
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="include/anari/frame.hpp" />
+		<Unit filename="include/anari/iol.hpp" />
+		<Unit filename="include/anari/layer.hpp" />
+		<Unit filename="include/anari/layerinstance.hpp" />
+		<Unit filename="include/anari/observable.hpp" />
+		<Unit filename="include/anari/observer.hpp" />
+		<Unit filename="include/anari/staticlayer.hpp" />
+		<Unit filename="include/anari/timeline.hpp" />
+		<Unit filename="src/frame.cpp" />
+		<Unit filename="src/iol.cpp" />
+		<Unit filename="src/layer.cpp" />
+		<Unit filename="src/layerinstance.cpp" />
+		<Unit filename="src/observable.cpp" />
+		<Unit filename="src/observer.cpp" />
+		<Unit filename="src/staticlayer.cpp" />
+		<Unit filename="src/timeline.cpp" />
+		<Extensions>
+			<envvars />
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
