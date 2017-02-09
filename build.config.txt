@@ -26,18 +26,18 @@
 # This sets the path to CPGF, Eigen, Opus, and pugixml.
 # The build system will look for `lib/` and `include/' at this location.
 #
-# The default for all is '${CMAKE_HOME_DIRECTORY}/../../lib-git/libs', which
-# assumes a copy of the lib-git repository in the same directory as this
+# The default for all is '${CMAKE_HOME_DIRECTORY}/../../libdeps/libs', which
+# assumes a copy of the libdeps repository in the same directory as this
 # repository folder.
 #
-# 'make <library>' or 'make all' would need to be run in lib-git first.
+# 'make <library>' or 'make all' would need to be run in libdeps first.
 
 set(CPGF_DIR
-	${CMAKE_HOME_DIRECTORY}/../../lib-git/libs
+	${CMAKE_HOME_DIRECTORY}/../../libdeps/libs
 )
 
 set(EIGEN_DIR
-	${CMAKE_HOME_DIRECTORY}/../../lib-git/libs
+	${CMAKE_HOME_DIRECTORY}/../../libdeps/libs
 )
 
 ##### PAWLIB #####
