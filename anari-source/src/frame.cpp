@@ -1,5 +1,4 @@
 #include "anari/frame.hpp"
-//#include "ConsoleUtil.hpp"
 
 using std::vector;
 using std::string;
@@ -169,9 +168,6 @@ void Frame::addLayer(shared_ptr<Layer> newLayer, int index, Matrix newMatrix)
 void Frame::addLayerLast(shared_ptr<Layer> newLayer)
 {
     //Get the Layer pointer to give us a new LayerInstance pointer
-
-
-
     LayerInstance* temp = newLayer->newLayerInstance();
     int zPref = (int)layerInstances.size();
     //Set the new LayerInstance pointer's attributes
@@ -756,180 +752,9 @@ bool Frame::containsLayer(Layer* testLayer)
     return false;
 }
 
-void Frame::editMode()
-{
-    string choiceString = "";
-    int choice = -1;
-    while(choice != 5)
-    {
-        editMode_displayMenu();
-        getline(cin, choiceString);
-        try
-        {
-            choice = stoi(choiceString);
-        }
-        catch(...)
-        {
-            choice = -1;
-        }
-        //Display all of the LayerInstances
-        if(choice == 1)
-        {
-            //consoleClear();
-            for(unsigned int i = 0; i < layerInstances.size(); ++i)
-            {
-                cout << i << ". ";
-                layerInstances.at(i)->render();
-            }
-            //consolePause();
-        }
-        //Move a LayerInstance in the Frame
-        else if(choice == 2)
-        {
-            //consoleClear();
-            editMode_moveLayerInstance();
-        }
-        //Set a LayerInstance Matrix
-        else if (choice == 3)
-        {
-            //consoleClear();
-            editMode_setLayerInstanceMatrix();
-        }
-        //Display the grid
-        else if (choice == 4)
-        {
-            //consoleClear();
-            test_printGridContents();
-        }
-        //Exit
-        else if(choice == 5)
-        {
-            //Do nothing
-        }
-        else
-        {
-            cout << "Error: Choice must be a valid option from the menu."
-            << endl;
-            //consolePause();
-        }
-        //consoleClear();
-    }
-}
-
-
-//Test method that renders the contents of the grid
-void Frame::test_printGridContents()
-{
-    //Loop through the x and y dimensions of the grid
-    for(unsigned int i = 0; i < grid.at(0).size(); ++i)
-    {
-        for(unsigned int j = 0; j < grid.size(); ++j)
-        {
-            //Print out the grid coordinates
-            cout << "Sector (" << j << "," << i << ")" << endl;
-            for(unsigned int k = 0; k < grid.at(j).at(i).size(); ++k)
-            {
-                //Render each LayerInstance in that partition.
-                layerInstances.at(grid.at(j).at(i).at(k))->render();
-                std::cout << std::endl;
-            }
-        }
-    }
-    //consolePause();
-}
-
-void Frame::editMode_displayMenu()
-{
-    cout << "Frame Edit Mode\n------------------------\n";
-    cout << "1. Display the LayerInstances in the Frame" << endl;
-    cout << "2. Move a LayerInstance" << endl;
-    cout << "3. Edit a LayerInstance Transformation Matrix" << endl;
-    cout << "4. Display the Frame grid" << endl;
-    cout << "5. Exit Edit Mode" << endl;
-}
-
-void Frame::editMode_setLayerInstanceMatrix()
-{
-    string choice = "";
-    cout << "Enter the index of the LayerInstance you would like to edit: ";
-    getline(cin, choice);
-    try
-    {
-        int layerInstanceIndex = stoi(choice);
-        if(layerInstanceIndex < 0 || layerInstanceIndex >=
-           (int)layerInstances.size())
-        {
-            cout << "Error: Index out of bounds." << endl;
-            //consolePause();
-        }
-        else
-        {
-            //TODO: implement small library of common ready made transformations
-            //for user to choose from.
-//            cout << "Enter the new matrix for the LayerInstance: ";
-//            getline(cin, choice);
-//            try
-//            {
-//                Matrix newMatrix = stoi(choice);
-//                layerInstances.at(layerInstanceIndex)->setMatrix(newMatrix);
-//            }
-//            catch(...)
-//            {
-//                cout << "Error: Input must be a valid integer." << endl;
-//                //consolePause();
-//            }
-        }
-    }
-    catch(...)
-    {
-        cout << "Error: Input must be a valid index." << endl;
-        //consolePause();
-    }
-    //consoleClear();
-}
-
-void Frame::editMode_moveLayerInstance()
-{
-    string choice = "";
-    cout << "Enter the index of the LayerInstance you would like to move: ";
-    getline(cin, choice);
-    try
-    {
-        int indexA = stoi(choice);
-        if(indexA < 0 || indexA >= (int)layerInstances.size())
-        {
-            cout << "Error: Index out of bounds." << endl;
-            //consolePause();
-        }
-        else
-        {
-            cout << "Enter the index that you would like to move the "
-            << "LayerInstance to: ";
-            getline(cin, choice);
-            try
-            {
-                int indexB = stoi(choice);
-                if(indexB < 0 || indexB >= (int)layerInstances.size())
-                {
-                    cout << "Error: Index out of bounds." << endl;
-                    //consolePause();
-                }
-                else
-                {
-                    reorderLayer(indexA, indexB);
-                }
-            }
-            catch(...)
-            {
-                cout << "Error: Input must be a valid integer." << endl;
-                //consolePause();
-            }
-        }
-    }
-    catch(...)
-    {
-        cout << "Error: Input must be a valid integer." << endl;
-        //consolePause();
-    }
-    //consoleClear();
+/*
+* Return the frame's grid to display in testing
+*/
+std::vector< std::vector< std::vector<unsigned int> > > Frame::getGrid() {
+    return grid;
 }

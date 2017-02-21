@@ -99,10 +99,6 @@ class Layer : public Observable
         ///Set methods for origin coordinates.
         virtual void setOriginCoord(int newX, int newY) = 0;
 
-        /**The editMode layer allows derived classes to interface with users
-        depending on their unique features. */
-        //virtual void editMode() = 0;
-
         ///Overidden observable methods
         virtual void addObserver(Observer* newObs) = 0;
         virtual void removeObserver(Observer* newObs) = 0;

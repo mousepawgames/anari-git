@@ -98,7 +98,8 @@ class Frame: public Observer
         *\param an optional parameter that sets the transformation matrix
         *   for the new LayerInstance.
         */
-        void addLayer(shared_ptr<Layer> newLayer, int index, Matrix newMatrix = Matrix::Identity(1,1));
+        void addLayer(shared_ptr<Layer> newLayer, int index, Matrix
+            newMatrix = Matrix::Identity(1,1));
 
         /**Add a layer to the end of the Frame's LayerInstance vector. It will
         *essentially add a new LayerInstance to the background.
@@ -165,7 +166,7 @@ class Frame: public Observer
 
         /**Update method inherited from Observer class. Used to update grid
         *based on Layer property changes.
-        *\param the zPreference of the LayerInstance pointer in the Frame
+        *\param the zPreference of the LayerInstance pointer in the frame
         *   that will be updated*/
         void update(int zPref);
 
@@ -176,13 +177,10 @@ class Frame: public Observer
         *   contains a LayerInstance for the given Layer.*/
         bool containsLayer(Layer* testLayer);
 
-        /**Test method, not to be used in actual implementation.
-        *It prints the contents of each grid partition to the screen.*/
-        void test_printGridContents();
-
-        /**This method allows the user to interact with and edit the Frame at
-        *runtime.*/
-        void editMode();
+        /**Returns frame grid for use in dev testing
+        *\return the frame's layer instance grid
+        */
+        std::vector< std::vector< std::vector<unsigned int> > > getGrid();
 
     private:
         ///String variable that describes the Frame
@@ -321,11 +319,6 @@ class Frame: public Observer
         *the min and max partition values will be set to -1.
         *\param the LayerInstance whose dimensions will be tested*/
         void setLayerPartitions(LayerInstance* testLayer);
-
-        //Private helper editMode methods
-        void editMode_displayMenu();
-        void editMode_setLayerInstanceMatrix();
-        void editMode_moveLayerInstance();
 };
 
 #endif // FRAME_H

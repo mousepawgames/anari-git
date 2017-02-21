@@ -85,6 +85,7 @@ include_directories(../anari-source/include)
 
 add_executable(anari-tester
     main.cpp
+    Test.cpp
 )
 
 # Link against dependencies.

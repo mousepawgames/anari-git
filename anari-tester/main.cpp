@@ -1,8 +1,15 @@
-#include "anari/timeline.hpp"
-#include <iostream>
+//
+//  main.cpp
+//  anari
+//
+//  Created by Andrew Peacock on 1/21/17.
+//  Copyright © 2017 MousePaw. All rights reserved.
+//
+
+#include "Test.hpp"
 
 int main()
 {
-    std::cout << "Hello, world! This is Anari tester." << std::endl;
-    return 0;
+    Test test = Test();
+    test.editMode();
 }

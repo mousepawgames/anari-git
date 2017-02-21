@@ -57,7 +57,9 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="Test.cpp" />
 		<Unit filename="include/ConsoleUtil.hpp" />
+		<Unit filename="include/Test.hpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/oldmain.cpp" />
 		<Unit filename="src/transformationsTester.cpp" />
