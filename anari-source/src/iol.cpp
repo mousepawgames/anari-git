@@ -60,7 +60,6 @@ IOL::~IOL()
 //This method renders the current animation Frame to the screen
 void IOL::render(Matrix transformationMatrix, int frameIndex)
 {
-    (void)frameIndex;
     //Determine whether or not there are any Frames in the Timeline to render
     if(timeline.getNumberOfFrames() > 0 && visibility)
     {
@@ -174,8 +173,6 @@ int IOL::getYDimension()
 
 void IOL::setDimensions(int x, int y)
 {
-    (void)x;
-    (void)y;
     /*At this point I don't want to allow the user to change the dimensions
     *of the IOL manually, as that should be handled according to the Layers
     *in the Timeline. We still have to override it though.*/
@@ -270,67 +267,12 @@ void IOL::updateDimensionData()
     update();
 }
 
-/**The editMode layer allows derived classes to interface with users
-depending on their unique features. */
-//void IOL::editMode()
-//{
-//    string choice = "";
-//    while(choice != "exit")
-//    {
-//        editMode_displayMenu();
-//        getline(cin, choice);
-//        if(choice == "setvisibility")
-//        {
-//            editMode_setVisibility();
-//        }
-//        else if(choice == "getvisibility")
-//        {
-//            editMode_isVisible();
-//        }
-//        else if(choice == "setrepeats")
-//        {
-//            editMode_setRepeats();
-//        }
-//        else if(choice == "getrepeats")
-//        {
-//            editMode_getRepeats();
-//        }
-//        else if(choice == "getrunning")
-//        {
-//            editMode_getRunning();
-//        }
-//        else if(choice == "setrunning")
-//        {
-//            editMode_setRunning();
-//        }
-//        else if(choice == "getcurrentframe")
-//        {
-//            editMode_getCurrentFrame();
-//        }
-//        else if(choice == "setcurrentframe")
-//        {
-//            editMode_setCurrentFrame();
-//        }
-//        else if(choice == "edittimeline")
-//        {
-//            timeline.editMode();
-//            //Once they're done editing the timeline, make sure we
-//            //update the dimensions of the IOL.
-//            updateDimensionData();
-//        }
-//        else if(choice != "exit")
-//        {
-//            cout << "Error: Please select a valid command from the menu." << endl;
-//        }
-//    }
-//}
-
 ///Overidden observable methods
 void IOL::addObserver(Observer* newObs)
 {
     bool alreadySubscribed = false;
     for(list<Observer*>::iterator it = observers.begin();
-    it != observers.end(); ++it)
+        it != observers.end(); ++it)
     {
         if((*it) == newObs)
         {
@@ -347,7 +289,7 @@ void IOL::removeObserver(Observer* newObs)
 {
     //Iterate through the list looking for the given Observer pointer
     for(list<Observer*>::iterator it = observers.begin();
-    it != observers.end(); ++it)
+        it != observers.end(); ++it)
     {
         //If we find it, remove it from the list
         if((*it) == newObs)
@@ -361,7 +303,7 @@ void IOL::removeObserver(Observer* newObs)
 void IOL::update()
 {
     for(list<Observer*>::iterator it = observers.begin();
-    it != observers.end(); ++it)
+        it != observers.end(); ++it)
     {
         (*it)->update();
     }
@@ -372,158 +314,3 @@ unsigned int IOL::getNumOfObservers()
     return observers.size();
 }
 
-
-//The following are implementations of helper methods for edit mode
-
-void IOL::editMode_getRepeats()
-{
-    if(repeats)
-    {
-        cout << "The Layer is set to repeat." << endl;
-    }
-    else
-    {
-        cout << "The Layer isn't set to repeat." << endl;
-    }
-}
-
-void IOL::editMode_setRepeats()
-{
-    //SetRepeats
-    string newRepeats;
-    //Prompt for input
-    cout << "Set whether or not the animation repeats (true/false):";
-    getline(cin, newRepeats);
-    if(newRepeats == "true")
-    {
-        repeats = true;
-    }
-    else if(newRepeats == "false")
-    {
-        repeats = false;
-    }
-    //Handle invalid option
-    else
-    {
-        cout << "Error: Input must be either \"true\" or \"false\""
-        << endl;
-    }
-}
-
-void IOL::editMode_getRunning()
-{
-    if(running)
-    {
-        cout << "The Layer is currently running." << endl;
-    }
-    else
-    {
-        cout << "The Layer isn't currently running." << endl;
-    }
-}
-
-void IOL::editMode_setRunning()
-{
-    string newRunning;
-    //Prompt for input
-    cout << "Set whether or not the layer is running (true/false):";
-    getline(cin, newRunning);
-    if(newRunning == "true")
-    {
-        running = true;
-    }
-    else if(newRunning == "false")
-    {
-        running = false;
-    }
-    //Handle invalid option
-    else
-    {
-        cout << "Error: Input must be either \"true\" or \"false\""
-        << endl;
-    }
-}
-
-void IOL::editMode_getCurrentFrame()
-{
-    cout << "The current frame is " << currentFrame << "." << endl;
-}
-
-void IOL::editMode_setCurrentFrame()
-{
-    //Prompt the user to enter in the new current frame index
-    string frameString = "";
-    cout << "Enter the index of the new current frame: ";
-    getline(cin, frameString);
-    try
-    {
-        int frameIndex = stoi(frameString);
-        if(frameIndex >= 0 && frameIndex < (int)timeline.getNumberOfFrames())
-        {
-            currentFrame = frameIndex;
-        }
-        else
-        {
-            cout << "Error: Requested index out of bounds." << endl;
-        }
-    }
-    catch(...)
-    {
-        cout << "Error: Input must be a valid integer." << endl;
-    }
-}
-
-void IOL::editMode_isVisible()
-{
-    if(visibility)
-    {
-        cout << "The Layer is currently visible." << endl;
-    }
-    else
-    {
-        cout << "The Layer is currently not visible." << endl;
-    }
-}
-
-void IOL::editMode_setVisibility()
-{
-    string newVisibility;
-    //Prompt for input
-    cout << "Set the visibility of the layer (true/false):";
-    getline(cin, newVisibility);
-    /*Test the user input. If they answered true or false, set the visibility
-    *value accordingly. Otherwise, display an error.*/
-    if(newVisibility == "true")
-    {
-        visibility = true;
-    }
-    else if(newVisibility == "false")
-    {
-        visibility = false;
-    }
-    //Handle invalid option
-    else
-    {
-        cout << "Error: Input must be either \"true\" or \"false\""
-        << endl;
-    }
-}
-
-void IOL::editMode_displayMenu()
-{
-    //This menu displays all of the available commands for the IOL editMode.
-    cout << "\nIOL Edit Mode Menu\n----------------------------" << endl;
-    cout << "setvisibility - set the visibility of the Layer" << endl;
-    cout << "getvisibility - get the visibility of the Layer" << endl;
-    cout << "getrepeats - get whether or not the IOL repeats" << endl;
-    cout << "setrepeats - set whether or not the IOL repeats" << endl;
-    cout << "getrunning - get whether or not the IOL is running" << endl;
-    cout << "setrunning - set whether or not the IOL is running" << endl;
-    cout << "getcurrentframe - get the current frame in the IOL animation"
-    << endl;
-    cout << "setcurrentframe - set the current frame in the IOL animation"
-    << endl;
-    cout << "edittimeline - edit the IOL's animation" << endl;
-    cout << "exit - exits out of the IOL edit menu" << endl;
-    cout << "Choice: ";
-}

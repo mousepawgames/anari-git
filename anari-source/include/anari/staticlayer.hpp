@@ -100,8 +100,6 @@ class StaticLayer : public Layer
         unsigned int getNumOfObservers();
 
 
-        //editMode functions
-        //void editMode();
     protected:
     private:
         ///Base image that the Layer renders to the screen
@@ -120,18 +118,6 @@ class StaticLayer : public Layer
         ///Vector that will contain the LayerInstances
         std::list<Observer*> observers;
 
-        /**editMode functions that are specific to the StaticLayer type.
-        *I chose to make these methods private, because we want the StaticLayer
-        *class to handle these behind the scenes in the editMode function.*/
-        //void editMode_help();
-        //void editMode_getImage();
-        //void editMode_setImage();
-//        void editMode_setDim();
-//        void editMode_getDim();
-//        void editMode_setOrigin();
-//        void editMode_getOrigin();
-//        bool editMode_isVisible();
-//        void editMode_setVisibility();
 };
 
 #endif // STATICLAYER_H

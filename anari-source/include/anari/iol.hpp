@@ -91,10 +91,6 @@ class IOL : public Layer
         ///Set methods for origin coordinates.
         void setOriginCoord(int newX, int newY);
 
-        /**The editMode layer allows derived classes to interface with users
-        depending on their unique features. */
-        void editMode();
-
         ///Overidden observable methods
         void addObserver(Observer* newObs);
         void removeObserver(Observer* newObs);
@@ -150,17 +146,6 @@ class IOL : public Layer
         *LayerInstances there. This function should be called any time a Layer
         *is added to or removed from the IOL.*/
         void updateDimensionData();
-
-        //Helper methods for edit mode
-        void editMode_getRepeats();
-        void editMode_setRepeats();
-        void editMode_getRunning();
-        void editMode_setRunning();
-        void editMode_getCurrentFrame();
-        void editMode_setCurrentFrame();
-        void editMode_isVisible();
-        void editMode_setVisibility();
-        void editMode_displayMenu();
 };
 
 #endif // IOL_HPP
