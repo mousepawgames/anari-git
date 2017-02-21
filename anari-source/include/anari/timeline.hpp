@@ -30,16 +30,15 @@
 
 #include <vector>
 #include <memory>
-#include <iomanip>
 #include <Eigen/Dense>
 #include "anari/frame.hpp"
+
 
 using std::vector;
 using std::string;
 
 //Matrix transformation
 typedef Eigen::MatrixXf Matrix;
-
 
 class Timeline
 {
@@ -176,32 +175,14 @@ public:
 
     /**Renders the animation on the screen. It will loop through all of the
     *Frames in the Timeline and render each one in order.*/
-    void play();
+    //void play();
 
     /**Renders the animation on the screen backwards. It will loop through all
     *of the Timeline's Frames backwards, and render them one after the other.*/
     /*NOTE: This method currently functions as intended, however it's not
     *particularly useful at this stage, and we may find a better way to
     *achieve this functionality in the future.*/
-    void playBackwards();
-
-    //void displayInfo();
-
-    //This method initializes the Timeline's editMode menu.
-    //void editMode();
-
-//    void editMode_displayMenu();
-//    void editMode_editLayer();
-//    void editMode_addLayer();
-//    void editMode_addFrame();
-//    void editMode_deleteLayer();
-//    void editMode_deleteFrame();
-//    void editMode_displayGrid();
-//    void editMode_editFrame();
-//    void editMode_deleteLayerInstance();
-//    void editMode_insertLayerInstance();
-//    int editMode_chooseLayerType();
-
+    //void playBackwards();
 };
 
 #endif // TIMELINE_HPP_INCLUDED
