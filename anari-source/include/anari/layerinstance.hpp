@@ -1,36 +1,35 @@
-/** Layer Instance [Anari Graphics System]
-* Version: 0.1
-*
-*This class represents one instance of a Layer object that will be
-*contained in a Frame object to be sequentially rendered. It contains
-*a transformation matrix variable, that describes the manipulation of
-*the original Layer object's image.
-*The LayerInstance class inherits from both the Observable and Observer
-*classes. This is because a LayerInstance wants to know when its parent
-*Layer changes properties (like dimensions), and it also wants to update
-*the Frame that it's stored in, so that the Frame can update its grid
-*appropriately.
-*
-* Last Updated: 14 May 2016
-* Author: Audrey Henry
-*/
+/** Layer Instance [Anari]
+  * Version: 0.1
+  *
+  * This class represents one instance of a Layer object that will be
+  * contained in a Frame object to be sequentially rendered. It contains
+  * a transformation matrix variable, that describes the manipulation of
+  * the original Layer object's image.
+  * The LayerInstance class inherits from both the Observable and Observer
+  * classes. This is because a LayerInstance wants to know when its parent
+  * Layer changes properties (like dimensions), and it also wants to update
+  * the Frame that it's stored in, so that the Frame can update its grid
+  * appropriately.
+  *
+  * Author(s): Audrey Henry
+  */
 
 /* LICENSE
-* Copyright (C) 2016 MousePaw Games.
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Copyright (C) 2016 MousePaw Media.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #ifndef LAYERINSTANCE_H
 #define LAYERINSTANCE_H

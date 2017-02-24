@@ -1,31 +1,30 @@
-/** Layer [Anari Graphics System]
-* Version: 0.1
-*
-*This class is an interface, so far it only contains a stub for a render method.
-*Each layer "flavor" should implement this interface.
-*The main idea was to be able to utilize polymorphism.
-*Ex: (Layer* layer = new IndependentObjectLayer();)
-*
-* Last Updated: 14 May 2016
-* Author: Audrey Henry
-*/
+/** Layer [Anari]
+  * Version: 0.1
+  *
+  * This class is an interface, so far it only contains a stub for a render method.
+  * Each layer "flavor" should implement this interface.
+  * The main idea was to be able to utilize polymorphism.
+  * Ex: (Layer* layer = new IndependentObjectLayer();)
+  *
+  * Author(s): Audrey Henry
+  */
 
 /* LICENSE
-* Copyright (C) 2016 MousePaw Games.
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Copyright (C) 2016 MousePaw Media.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #ifndef LAYER_H
 #define LAYER_H

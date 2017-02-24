@@ -1,35 +1,34 @@
-/** Frame [Anari Graphics System]
-* Version: 0.1
-*
-*This file defines the Frame class, which contains multiple
-*LayerInstance objects. When a Frame is rendered, it displays
-*each LayerInstance object to the screen in the order they are stored.
-*The LayerInstances together make an entire image, with a LayerInstance
-*for the background, a LayerInstance for the middleground, and a character
-*in the foreground. LayerInstance images can appear differently on different
-*Frames. When Frames are rendered one after the other, it gives the illusion
-*of movement, animation.
-*
-* Last Updated: 14 May 2016
-* Author: Audrey Henry
-*/
+/** Frame [Anari]
+ * Version: 0.1
+ *
+ * This file defines the Frame class, which contains multiple
+ * LayerInstance objects. When a Frame is rendered, it displays
+ * each LayerInstance object to the screen in the order they are stored.
+ * The LayerInstances together make an entire image, with a LayerInstance
+ * for the background, a LayerInstance for the middleground, and a character
+ * in the foreground. LayerInstance images can appear differently on different
+ * Frames. When Frames are rendered one after the other, it gives the illusion
+ * of movement, animation.
+ *
+ * Author(s): Audrey Henry
+ */
 
 /* LICENSE
-* Copyright (C) 2016 MousePaw Games.
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Copyright (C) 2016 MousePaw Media.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #ifndef FRAME_H
 #define FRAME_H

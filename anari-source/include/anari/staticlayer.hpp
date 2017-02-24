@@ -1,15 +1,14 @@
-/** Static Layer [Anari Graphics System]
+/** Static Layer [Anari]
   * Version: 0.1
   *
-  *This is the most basic Layer type, representing a static image on the canvas.
-  *Last Updated: 30 April 2016
+  * This is the most basic Layer type, representing a static image on the canvas.
+  * Last Updated: 30 April 2016
   *
-  * Last Updated: 14 May 2016
-  * Author: Audrey Henry
+  * Author(s): Audrey Henry
   */
 
 /* LICENSE
- * Copyright (C) 2016 MousePaw Games.
+ * Copyright (C) 2016 MousePaw Media.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
