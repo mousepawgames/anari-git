@@ -36,10 +36,10 @@ All contributions are licensed to us under the
 
 ## License
 
-Anari Graphics System is licensed under the GNU General Public Licence 3.0. (See
+Anari is licensed under the GNU General Public Licence 3.0. (See
 LICENSE.md)
 
-The project is owned and maintained by [MousePaw Media][1].
+The project is owned and maintained by [MousePaw Media][2].
 
 [1]: http://www.mousepawgames.com/anari
 [2]: http://www.mousepawgames.com/opensource
