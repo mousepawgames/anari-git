@@ -41,8 +41,8 @@ LICENSE.md)
 
 The project is owned and maintained by [MousePaw Media][2].
 
-[1]: http://www.mousepawgames.com/anari
-[2]: http://www.mousepawgames.com/opensource
-[3]: http://www.mousepawgames.com/opensource#contribute
-[4]: http://www.mousepawgames.com/termsofdevelopment
+[1]: https://www.mousepawmedia.com/anari
+[2]: https://www.mousepawmedia.com/developers
+[3]: https://www.mousepawmedia.com/developers/contributing
+[4]: https://www.mousepawmedia.com/termsofdevelopment
 [5]: https://github.com/mousepawmedia/github

@@ -5,7 +5,7 @@
 //*Timeline class as well as Frame, Layer, LayerInstance, and StaticLayer.
 //*Last Updated: 30 April 2016
 //*
-//*Copyright (C) MousePawGames
+//*Copyright (C) MousePawMedia
 //*Licenses:
 //*/
 //
