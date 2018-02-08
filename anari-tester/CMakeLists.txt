@@ -79,13 +79,12 @@ include_directories(include)
 
 # Include headers of dependencies.
 include_directories(${CMAKE_HOME_DIRECTORY}/../anari-source/include)
+include_directories(${PAWLIB_DIR}/include)
 include_directories(${CPGF_DIR}/include)
 include_directories(${EIGEN_DIR}/include)
-include_directories(${PAWLIB_DIR}/include)
 
 add_executable(anari-tester
     main.cpp
-    Test.cpp
 )
 
 # Link against dependencies.

@@ -36,13 +36,13 @@ All contributions are licensed to us under the
 
 ## License
 
-Anari is licensed under the GNU General Public Licence 3.0. (See
+Anari is licensed under the GNU General Public License 3.0. (See
 LICENSE.md)
 
 The project is owned and maintained by [MousePaw Media][2].
 
 [1]: https://www.mousepawmedia.com/anari
-[2]: https://www.mousepawmedia.com/developers
+[2]: https://www.mousepawmedia.com/
 [3]: https://www.mousepawmedia.com/developers/contributing
 [4]: https://www.mousepawmedia.com/termsofdevelopment
 [5]: https://github.com/mousepawmedia/github

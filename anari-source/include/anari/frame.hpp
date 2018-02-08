@@ -39,6 +39,7 @@
 #include <utility>
 #include <memory>
 #include <Eigen/Dense>
+
 #include "anari/layerinstance.hpp"
 
 

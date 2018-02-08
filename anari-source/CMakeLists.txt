@@ -83,6 +83,7 @@ include_directories(${CPGF_DIR}/include)
 include_directories(${EIGEN_DIR}/include)
 
 add_library(${TARGET_NAME} STATIC
+    include/anari/basic_test.hpp
     include/anari/frame.hpp
     include/anari/iol.hpp
     include/anari/layer.hpp
@@ -91,6 +92,7 @@ add_library(${TARGET_NAME} STATIC
     include/anari/staticlayer.hpp
     include/anari/timeline.hpp
 
+    src/basic_test.cpp
     src/frame.cpp
     src/iol.cpp
     src/layer.cpp
