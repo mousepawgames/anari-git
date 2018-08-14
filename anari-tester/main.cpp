@@ -68,17 +68,13 @@ int main(int argc, char* argv[])
     //Set up signal handling.
     ioc.configure_echo(echo_cout);
 
-    pawlib::TestCatalog* catalog = new pawlib::TestCatalog;
-    catalog->register_suite<TestSuite_Basic>("A-sB00");
-
-    (void) catalog;
-    (void) argc;
-    (void) argv;
+    pawlib::GoldilocksShell* shell = new pawlib::GoldilocksShell(">> ");
+    shell->register_suite<TestSuite_Basic>("A-sB00");
 
     // If we got command-line arguments.
     if(argc > 1)
     {
-        return pawlib::GoldilocksShell::command(catalog, argc, argv);
+        return shell->command(argc, argv);
     }
     else
     {
@@ -87,12 +83,12 @@ int main(int argc, char* argv[])
         test_code();
 
         // Shift control to the interactive console.
-        pawlib::GoldilocksShell::interactive(catalog);
+        shell->interactive();
     }
 
-    // Delete our test catalog.
-    delete catalog;
-    catalog = 0;
+    // Delete our GoldilocksShell.
+    delete shell;
+    shell = 0;
 
     return 0;
 }

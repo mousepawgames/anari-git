@@ -60,6 +60,9 @@ IOL::~IOL()
 //This method renders the current animation Frame to the screen
 void IOL::render(Matrix transformationMatrix, int frameIndex)
 {
+    // FIXME: Temporarily ignore unused parameter.
+    (void)frameIndex;
+
     //Determine whether or not there are any Frames in the Timeline to render
     if(timeline.getNumberOfFrames() > 0 && visibility)
     {
@@ -176,6 +179,10 @@ void IOL::setDimensions(int x, int y)
     /*At this point I don't want to allow the user to change the dimensions
     *of the IOL manually, as that should be handled according to the Layers
     *in the Timeline. We still have to override it though.*/
+
+   // FIXME: Temporarily ignore unused parameters.
+   (void)x;
+   (void)y;
 }
 
 /**Overridden methods from the Layer class, get and set the Layer
@@ -313,4 +320,3 @@ unsigned int IOL::getNumOfObservers()
 {
     return observers.size();
 }
-

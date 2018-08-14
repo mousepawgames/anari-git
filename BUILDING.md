@@ -2,9 +2,9 @@
 
 ## Building Basics
 
-CMake is used to build Anari and Anari Tester. For your convenience,
-we've included Makefiles to automate all common build scenarios on Linux.
-Run `$ make` in the root of this repository for more information.
+CMake 3.1 or later is used to build Anari and Anari Tester. For your
+convenience, we've included Makefiles to automate all common build scenarios on
+Linux. Run `$ make` in the root of this repository for more information.
 
 At this time, the Makefiles are only designed for Linux. If you are building
 on another system, you can interact with CMake directly.
@@ -45,10 +45,13 @@ If you want to test out Anari directly, run `make tester`. Then, look for the
 you may use the symbolic link `tester` or `tester_debug` in the root of this
 repository.
 
-## Code::Blocks
+## IDE Support
 
-Anari was written and built in CodeBlocks. The projects (`*.cbp`) in this
-repository are pre-configured to build directly in the repository.
+Anari was written and built in CodeBlocks and VSCode. The CodeBlocks projects
+(`*.cbp`) in this repository are pre-configured to build using the
+Makefile/CMake build system. The configuration files in `.vscode/` are
+pre-configured to provide the best IDE experience, and allow building and
+debugging.
 
 ## Source Directories
 
