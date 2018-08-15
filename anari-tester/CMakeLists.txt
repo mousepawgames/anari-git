@@ -130,7 +130,7 @@ include_directories(${CPGF_DIR}/include)
 include_directories(${EIGEN_DIR}/include)
 
 # CHANGEME: Include files to compile.
-add_executable(anari-tester
+add_executable($(TARGET_NAME)
     main.cpp
 )
 
