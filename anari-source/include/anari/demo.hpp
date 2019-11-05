@@ -1,13 +1,13 @@
-/** Anari Tester
-  * Version: 1.0
+/** Anari Demo File
+  * Version: 0.2
   *
-  * Allows running tests and custom code for Anari.
+  * Dummy "Hello World" with Cairo to test compiling and linking.
   *
   * Author(s): Jason C. McDonald
   */
 
 /* LICENSE
- * Copyright (c) 2016 MousePaw Media.
+ * Copyright (c) 2019 MousePaw Media.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,49 +41,13 @@
  * on how to contribute to our projects.
  */
 
-#include "pawlib/goldilocks_shell.hpp"
-#include "pawlib/iochannel.hpp"
+#include <iostream>
 
-#include "anari/demo.hpp"
+#include <cairo/cairo.h>
+#include <SDL2/SDL.h>
 
-/** Temporary test code goes in this function ONLY.
-  * All test code that is needed long term should be
-  * moved to a dedicated Goldilocks Test and TestSuite.
-  */
-void test_code()
+class Demo
 {
-    Demo::cairo_demo();
-    return;
-}
-
-/////// WARNING: DO NOT ALTER BELOW THIS POINT! ///////
-
-int main(int argc, char* argv[])
-{
-    //Set up signal handling.
-    ioc.configure_echo(echo_cout);
-
-    pawlib::GoldilocksShell* shell = new pawlib::GoldilocksShell(">> ");
-    //shell->register_suite<TestSuite_Basic>("A-sB00");
-
-    // If we got command-line arguments.
-    if(argc > 1)
-    {
-        return shell->command(argc, argv);
-    }
-    else
-    {
-        ioc << ta_bold << fg_blue << "===== Anari Tester =====\n" << io_end;
-
-        test_code();
-
-        // Shift control to the interactive console.
-        shell->interactive();
-    }
-
-    // Delete our GoldilocksShell.
-    delete shell;
-    shell = 0;
-
-    return 0;
-}
+    public:
+        static void cairo_demo();
+};

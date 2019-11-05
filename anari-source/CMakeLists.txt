@@ -128,34 +128,32 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../../lib/$<CONF
 
 include_directories(include)
 
+# CHANGEME: Find dynamic library dependencies.
+find_library(CAIRO_LIB cairo)
+find_path(CAIRO_INCLUDE_DIR cairo/cairo.h)
+
+find_library(SDL2_LIB SDL2)
+find_path(SDL2_INCLUDE_DIR SDL2/SDL.h)
+
 # CHANGEME: Include headers of dependencies.
 include_directories(${PAWLIB_DIR}/include)
 include_directories(${CPGF_DIR}/include)
 include_directories(${EIGEN_DIR}/include)
+include_directories(${EVENTPP_DIR}/include)
+
+include_directories(${CAIRO_INCLUDE_DIR}/cairo)
+include_directories(${SDL2_INCLUDE_DIR}/SDL2)
 
 # CHANGEME: Include files to compile.
 add_library(${TARGET_NAME} STATIC
-    include/anari/basic_test.hpp
-    include/anari/frame.hpp
-    include/anari/iol.hpp
-    include/anari/layer.hpp
-    include/anari/layerinstance.hpp
-    include/anari/observable.hpp
-    include/anari/staticlayer.hpp
-    include/anari/timeline.hpp
+    include/anari/demo.hpp
 
-    src/basic_test.cpp
-    src/frame.cpp
-    src/iol.cpp
-    src/layer.cpp
-    src/layerinstance.cpp
-    src/observable.cpp
-    src/observer.cpp
-    src/staticlayer.cpp
-    src/timeline.cpp
+    src/demo.cpp
 )
 
 # CHANGEME: Link against dependencies.
+target_link_libraries(${TARGET_NAME} ${CAIRO_LIB})
+target_link_libraries(${TARGET_NAME} ${SDL2_LIB})
 target_link_libraries(${TARGET_NAME} ${PAWLIB_DIR}/lib/libpawlib.a)
 target_link_libraries(${TARGET_NAME} ${CPGF_DIR}/lib/libcpgf.a)
 
