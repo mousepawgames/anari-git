@@ -27,7 +27,9 @@
     "files.associations": {
         "array": "cpp",
         "type_traits": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "exception": "cpp",
+        "thread": "cpp"
     },
     "files.trimFinalNewlines": true,
     "files.trimTrailingWhitespace": true,

@@ -74,8 +74,8 @@ else()
     message(FATAL_ERROR "Not using or simulating a compatible compiler (minimum GCC 5.x, Clang 3.4). Other compilers are not yet supported. Aborting build.")
 endif()
 
-# Target C++14
-set(CMAKE_CXX_STANDARD 14)
+# Target C++17
+set(CMAKE_CXX_STANDARD 17)
 # Disable extensions (turns gnu++14 to c++14)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -146,9 +146,14 @@ include_directories(${SDL2_INCLUDE_DIR}/SDL2)
 
 # CHANGEME: Include files to compile.
 add_library(${TARGET_NAME} STATIC
+    include/anari/drawing.hpp
     include/anari/demo.hpp
+    include/anari/hardcoded.hpp
+    include/anari/window.hpp
 
+    src/drawing.cpp
     src/demo.cpp
+    src/window.cpp
 )
 
 # CHANGEME: Link against dependencies.

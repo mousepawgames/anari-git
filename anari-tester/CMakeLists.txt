@@ -74,8 +74,8 @@ else()
     message(FATAL_ERROR "Not using or simulating a compatible compiler (minimum GCC 5.x, Clang 3.4). Other compilers are not yet supported. Aborting build.")
 endif()
 
-# Target C++14
-set(CMAKE_CXX_STANDARD 14)
+# Target C++17
+set(CMAKE_CXX_STANDARD 17)
 # Disable extensions (turns gnu++14 to c++14)
 set(CMAKE_CXX_EXTENSIONS OFF)
 

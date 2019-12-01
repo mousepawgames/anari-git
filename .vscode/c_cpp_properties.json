@@ -7,7 +7,9 @@
                 "/usr/local/include",
                 "${workspaceRoot}/../libdeps/libs/include",
                 "${workspaceRoot}/../pawlib/pawlib/include",
+                "${workspaceRoot}/../pawlib/pawlib/include/pawlib",
                 "${workspaceRoot}/anari-source/include",
+                "${workspaceRoot}/anari-source/include/anari",
                 "${workspaceRoot}/anari-tester/include"
             ],
             "defines": [],
@@ -41,8 +43,8 @@
                 "/usr/include",
                 "${workspaceRoot}/../libdeps/libs/include",
                 "${workspaceRoot}/../pawlib/pawlib/include",
+                "${workspaceRoot}/../pawlib/pawlib/include/pawlib",
                 "${workspaceRoot}/anari-source/include",
-                "${workspaceRoot}/anari-source/include/anari",
                 "${workspaceRoot}/anari-tester/include"
             ],
             "defines": [],
@@ -69,7 +71,13 @@
             "name": "Win32",
             "includePath": [
                 "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include",
-                "${workspaceRoot}"
+                "${workspaceRoot}",
+                "${workspaceRoot}/../libdeps/libs/include",
+                "${workspaceRoot}/../pawlib/pawlib/include",
+                "${workspaceRoot}/../pawlib/pawlib/include/pawlib",
+                "${workspaceRoot}/anari-source/include",
+                "${workspaceRoot}/anari-source/include/anari",
+                "${workspaceRoot}/anari-tester/include"
             ],
             "defines": [
                 "_DEBUG",
@@ -79,6 +87,8 @@
             "browse": {
                 "path": [
                     "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include/*",
+                    "${workspaceRoot}/../libdeps/libs/include",
+                    "${workspaceRoot}/../pawlib/pawlib/include",
                     "${workspaceRoot}"
                 ],
                 "limitSymbolsToIncludedHeaders": true,

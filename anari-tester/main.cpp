@@ -43,7 +43,6 @@
 
 #include "pawlib/goldilocks_shell.hpp"
 #include "pawlib/iochannel.hpp"
-
 #include "anari/demo.hpp"
 
 /** Temporary test code goes in this function ONLY.
@@ -52,7 +51,7 @@
   */
 void test_code()
 {
-    Demo::cairo_demo();
+    Demo::renderDemo();
     return;
 }
 
@@ -61,7 +60,7 @@ void test_code()
 int main(int argc, char* argv[])
 {
     //Set up signal handling.
-    ioc.configure_echo(echo_cout);
+    ioc.configure_echo(IOEchoMode::cout);
 
     pawlib::GoldilocksShell* shell = new pawlib::GoldilocksShell(">> ");
     //shell->register_suite<TestSuite_Basic>("A-sB00");
@@ -73,7 +72,8 @@ int main(int argc, char* argv[])
     }
     else
     {
-        ioc << ta_bold << fg_blue << "===== Anari Tester =====\n" << io_end;
+        ioc << IOFormatTextAttr::bold << IOFormatTextFG::blue
+            << "===== Anari Tester =====\n" << IOCtrl::endl;
 
         test_code();
 

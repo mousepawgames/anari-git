@@ -41,13 +41,17 @@
  * on how to contribute to our projects.
  */
 
-#include <iostream>
-
 #include <cairo/cairo.h>
+
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_surface.h>
+
+#include "anari/drawing.hpp"
+#include "anari/hardcoded.hpp"
+#include "anari/window.hpp"
 
 class Demo
 {
     public:
-        static void cairo_demo();
+        static int renderDemo();
 };
