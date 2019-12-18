@@ -49,6 +49,7 @@
 #include "anari/drawing.hpp"
 #include "anari/hardcoded.hpp"
 #include "anari/window.hpp"
+#include "anari/renderer.hpp"
 
 class Demo
 {

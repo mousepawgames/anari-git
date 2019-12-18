@@ -27,7 +27,7 @@ struct Segment
     }
 };
 
-typedef pawlib::FlexArray<Segment> Curve;
+typedef FlexArray<Segment> Curve;
 
 class Drawing
 {

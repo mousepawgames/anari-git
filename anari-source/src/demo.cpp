@@ -2,11 +2,16 @@
 
 int Demo::renderDemo()
 {
+    /// The main window handler
     Window mainWindow(hardcoded::WINDOW_WIDTH, hardcoded::WINDOW_HEIGHT);
-    Drawing master(hardcoded::WINDOW_WIDTH, hardcoded::WINDOW_HEIGHT);
+    /// Create the renderer
+    Renderer* renderer = new Renderer(mainWindow);
+    renderer->createTexture(hardcoded::WINDOW_WIDTH, hardcoded::WINDOW_HEIGHT);
+    /// Initializing object for Cairo draw calls
+    Drawing draw(hardcoded::WINDOW_WIDTH, hardcoded::WINDOW_HEIGHT);
     // Set color
-    master.setDrawingColor(0.7, 0.2, 0.2, 1.0);
-    master.setLineWidth(2);
+    draw.setDrawingColor(0.7, 0.2, 0.2, 1.0);
+    draw.setLineWidth(2);
     Segment segment;
     // Set start points of the curve
     segment.start(100, 100, 30, 200);
@@ -15,11 +20,13 @@ int Demo::renderDemo()
     // Create the FlexArray to put the curves into the buffer.
     Curve curve;
     curve.push(segment);
-    master.drawCurve(curve);
-    // Get necessary surface data for updating the texture
-    unsigned char* data = master.getSurfaceData();
-    // Update
-    mainWindow.updateTexture(data);
+    /// Draw everythign in the buffer
+    draw.drawCurve(curve);
+    /// Get necessary surface data for updating the texture
+    unsigned char* data = draw.getSurfaceData();
+    /// Update the texture
+    renderer->updateTexture(data);
+    /// Main program loop that listens for events
     while (1)
     {
         SDL_Event event;
@@ -27,11 +34,13 @@ int Demo::renderDemo()
         {
             if (event.type == SDL_QUIT)
             {
-                mainWindow.terminateProgram();
+                /// Order here is important
+                renderer->terminateRenderer();
+                mainWindow.terminateWindow();
                 break;
             }
         }
-        mainWindow.render();
+        renderer->render();
     }
     return 0;
 }

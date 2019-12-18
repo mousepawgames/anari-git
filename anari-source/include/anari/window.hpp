@@ -3,22 +3,28 @@ class Window
 {
     private:
         SDL_Window* window;
-        SDL_Renderer* renderer;
-        SDL_Rect rect;
-        SDL_Texture* texture;
         int windowWidth, windowHeight;
-        const int BYTES_PER_PIXEL = 4;
-        const int PITCH;
+
+
+        struct Dimensions
+        {
+            int width;
+            int height;
+
+            /// Guaranteed to have correct values, no need for checks
+            Dimensions(int w, int h)
+            {
+                width = w;
+                height = h;
+            }
+        };
 
     public:
         Window(const int, const int);
         virtual ~Window();
         void createWindow();
-        void createTexture();
-        void createRenderer();
-        void createDrawingSurface();
-        void terminateProgram();
-        void render();
-        int updateTexture(unsigned char*);
-        bool checkHardwareAcceleration();
+        void terminateWindow();
+        SDL_Window* getWindowHandle() const;
+        Dimensions getWindowSize() const;
+
 };

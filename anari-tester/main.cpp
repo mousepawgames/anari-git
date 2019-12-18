@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
     //Set up signal handling.
     ioc.configure_echo(IOEchoMode::cout);
 
-    pawlib::GoldilocksShell* shell = new pawlib::GoldilocksShell(">> ");
+    GoldilocksShell* shell = new GoldilocksShell(">> ");
     //shell->register_suite<TestSuite_Basic>("A-sB00");
 
     // If we got command-line arguments.

@@ -150,6 +150,7 @@ add_library(${TARGET_NAME} STATIC
     include/anari/demo.hpp
     include/anari/hardcoded.hpp
     include/anari/window.hpp
+    include/anari/renderer.hpp
 
     src/drawing.cpp
     src/demo.cpp
