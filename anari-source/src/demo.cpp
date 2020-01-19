@@ -1,17 +1,15 @@
 #include "anari/demo.hpp"
+#include <memory>
 
 int Demo::renderDemo()
 {
     /// The main window handler
     Window mainWindow(hardcoded::WINDOW_WIDTH, hardcoded::WINDOW_HEIGHT);
-    /// Create the renderer
-    Renderer* renderer = new Renderer(mainWindow);
-    renderer->createTexture(hardcoded::WINDOW_WIDTH, hardcoded::WINDOW_HEIGHT);
-    /// Initializing object for Cairo draw calls
-    Drawing draw(hardcoded::WINDOW_WIDTH, hardcoded::WINDOW_HEIGHT);
-    // Set color
-    draw.setDrawingColor(0.7, 0.2, 0.2, 1.0);
-    draw.setLineWidth(2);
+    /// Create the renderer and initialize it
+    Renderer* renderer = new UniformRenderer(&mainWindow);
+    /// Set color and width
+    renderer->setDrawingColor(0.3, 0.2, 0.7, 1.0);
+    renderer->setLineWidth(2);
     Segment segment;
     // Set start points of the curve
     segment.start(100, 100, 30, 200);
@@ -21,11 +19,9 @@ int Demo::renderDemo()
     Curve curve;
     curve.push(segment);
     /// Draw everythign in the buffer
-    draw.drawCurve(curve);
-    /// Get necessary surface data for updating the texture
-    unsigned char* data = draw.getSurfaceData();
-    /// Update the texture
-    renderer->updateTexture(data);
+    renderer->drawCurve(curve);
+    /// Updates the texture
+    renderer->updateTexture();
     /// Main program loop that listens for events
     while (1)
     {
@@ -34,13 +30,14 @@ int Demo::renderDemo()
         {
             if (event.type == SDL_QUIT)
             {
-                /// Order here is important
                 renderer->terminateRenderer();
+                renderer->cleanup();
                 mainWindow.terminateWindow();
                 break;
             }
         }
         renderer->render();
     }
+    delete renderer;
     return 0;
 }

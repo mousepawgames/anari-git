@@ -13,6 +13,18 @@ Window::Window(const int width, const int height)
     createWindow();
 }
 
+/// Copy Constructor
+Window::Window(const Window& rhs)
+{
+    this->window = rhs.window;
+    this->windowWidth = rhs.windowWidth;
+    this->windowHeight = rhs.windowHeight;
+}
+
+/// Copy Assignment operator
+Window& Window::operator=(const Window&) noexcept = default;
+
+/// Destructor
 Window::~Window()
 {
     terminateWindow();

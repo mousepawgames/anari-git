@@ -29,7 +29,8 @@
         "type_traits": "cpp",
         "typeinfo": "cpp",
         "exception": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "string_view": "cpp"
     },
     "files.trimFinalNewlines": true,
     "files.trimTrailingWhitespace": true,

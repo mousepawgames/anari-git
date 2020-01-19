@@ -46,10 +46,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_surface.h>
 
-#include "anari/drawing.hpp"
 #include "anari/hardcoded.hpp"
-#include "anari/window.hpp"
-#include "anari/renderer.hpp"
+#include "anari/uniform_renderer.hpp"
 
 class Demo
 {

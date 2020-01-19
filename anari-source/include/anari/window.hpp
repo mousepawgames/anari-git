@@ -5,7 +5,6 @@ class Window
         SDL_Window* window;
         int windowWidth, windowHeight;
 
-
         struct Dimensions
         {
             int width;
@@ -21,6 +20,8 @@ class Window
 
     public:
         Window(const int, const int);
+        Window(const Window&);
+        Window& operator=(const Window&) noexcept;
         virtual ~Window();
         void createWindow();
         void terminateWindow();
