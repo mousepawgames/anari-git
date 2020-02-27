@@ -151,9 +151,11 @@ add_library(${TARGET_NAME} STATIC
     include/anari/window.hpp
     include/anari/renderer.hpp
     include/anari/uniform_renderer.hpp
+    include/anari/test_renderer.hpp
 
     src/renderer.cpp
     src/uniform_renderer.cpp
+    src/test_renderer.cpp
     src/demo.cpp
     src/window.cpp
 )

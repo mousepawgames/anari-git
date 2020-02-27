@@ -44,10 +44,10 @@
 #include <cairo/cairo.h>
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_surface.h>
 
 #include "anari/hardcoded.hpp"
 #include "anari/uniform_renderer.hpp"
+#include "anari/test_renderer.hpp"
 
 class Demo
 {

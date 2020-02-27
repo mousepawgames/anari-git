@@ -115,7 +115,7 @@ void UniformRenderer::bindSurfaceAndContext()
 /** Gets the necessary data for cairo's draw calls
  * \return surface data
  */
-unsigned char* UniformRenderer::getSurfaceData()
+unsigned char* UniformRenderer::getSurfaceData() const
 {
     return cairo_image_surface_get_data(m_Surface);
 }
@@ -186,4 +186,10 @@ void UniformRenderer::cleanup()
 {
     cairo_destroy(m_Context);
     cairo_surface_destroy(m_Surface);
+}
+
+/// Check if renderer is for testing
+bool UniformRenderer::isTestRenderer() const
+{
+    return false;
 }

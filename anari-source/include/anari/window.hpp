@@ -1,3 +1,6 @@
+#ifndef ANARI_WINDOW_HPP
+#define ANARI_WINDOW_HPP
+
 #include <SDL2/SDL.h>
 class Window
 {
@@ -27,5 +30,6 @@ class Window
         void terminateWindow();
         SDL_Window* getWindowHandle() const;
         Dimensions getWindowSize() const;
-
 };
+
+#endif

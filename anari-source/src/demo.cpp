@@ -3,10 +3,12 @@
 
 int Demo::renderDemo()
 {
-    /// The main window handler
-    Window mainWindow(hardcoded::WINDOW_WIDTH, hardcoded::WINDOW_HEIGHT);
-    /// Create the renderer and initialize it
-    Renderer* renderer = new UniformRenderer(&mainWindow);
+    /** NOTE: NOT REQUIRED FOR THIS DEMO
+     * The main window handler
+     * Window mainWindow(hardcoded::WINDOW_WIDTH, hardcoded::WINDOW_HEIGHT);
+     * Create the renderer and initialize it
+     */
+    Renderer* renderer = new TestRenderer();
     /// Set color and width
     renderer->setDrawingColor(0.3, 0.2, 0.7, 1.0);
     renderer->setLineWidth(2);
@@ -23,18 +25,15 @@ int Demo::renderDemo()
     /// Updates the texture
     renderer->updateTexture();
     /// Main program loop that listens for events
-    while (1)
+    SDL_Event event;
+    while (!renderer->isTestRenderer() && SDL_PollEvent(&event))
     {
-        SDL_Event event;
-        if (SDL_PollEvent(&event))
+        if (event.type == SDL_QUIT)
         {
-            if (event.type == SDL_QUIT)
-            {
-                renderer->terminateRenderer();
-                renderer->cleanup();
-                mainWindow.terminateWindow();
-                break;
-            }
+            /// mainWindow.terminateWindow();
+            renderer->terminateRenderer();
+            renderer->cleanup();
+            break;
         }
         renderer->render();
     }

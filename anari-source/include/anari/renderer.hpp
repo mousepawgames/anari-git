@@ -1,4 +1,6 @@
-#pragma once
+#ifndef ANARI_RENDERER_HPP
+#define ANARI_RENDERER_HPP
+
 #include <SDL2/SDL.h>
 #include <cairo/cairo.h>
 #include "anari/window.hpp"
@@ -46,6 +48,7 @@ class Renderer
         cairo_surface_t* m_Surface;
 
     public:
+        Renderer();
         explicit Renderer(const Window*);
         virtual ~Renderer();
         /// SDL Related calls
@@ -56,13 +59,16 @@ class Renderer
         virtual void render() = 0;
         virtual int updateTexture() = 0;
         virtual void terminateRenderer() = 0;
+        virtual bool isTestRenderer() const = 0;
 
         /// Cairo related calls
         virtual void bindSurfaceAndContext() = 0;
-        virtual unsigned char* getSurfaceData() = 0;
+        virtual unsigned char* getSurfaceData() const;
         virtual void drawCurve(Curve&) = 0;
         virtual void setLineWidth(const double) = 0;
         virtual void cleanup() = 0;
         virtual void sendToDrawingBuffer() = 0;
         virtual void setDrawingColor(const double, const double, const double, const double) = 0;
 };
+
+#endif
