@@ -40,3 +40,17 @@ int Demo::renderDemo()
     delete renderer;
     return 0;
 }
+
+void Demo::colors_demo()
+{
+    RGBA x;
+    HSL z;
+    z.hue = 210.0;
+    z.saturation = 50.0;
+    z.luminace = 7.8;
+    Color obj;
+    x = obj.from_hsl(z);
+    ioc << IOFormatTextFG::red << x.red << IOCtrl::endl;
+    ioc << IOFormatTextFG::green <<x.green << IOCtrl::endl;
+    ioc << IOFormatTextFG::blue <<x.blue << IOCtrl::endl;
+}

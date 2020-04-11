@@ -26,6 +26,7 @@
 
     "files.associations": {
         "array": "cpp",
+        "cmath": "cpp",
         "type_traits": "cpp",
         "typeinfo": "cpp",
         "exception": "cpp",
@@ -37,4 +38,5 @@
 
     "restructuredtext.builtDocumentationPath": "${workspaceRoot}/docs/build/html",
     "C_Cpp.intelliSenseEngineFallback": "Enabled",
+    "restructuredtext.confPath": "${workspaceFolder}/docs/source"
 }

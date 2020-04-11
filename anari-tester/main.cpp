@@ -45,13 +45,16 @@
 #include "pawlib/iochannel.hpp"
 #include "anari/demo.hpp"
 
+#include "anari/colors_test.hpp"
+
 /** Temporary test code goes in this function ONLY.
   * All test code that is needed long term should be
   * moved to a dedicated Goldilocks Test and TestSuite.
   */
 void test_code()
 {
-    Demo::renderDemo();
+    //Demo::renderDemo();
+    Demo::colors_demo();
     return;
 }
 
@@ -64,6 +67,7 @@ int main(int argc, char* argv[])
 
     GoldilocksShell* shell = new GoldilocksShell(">> ");
     //shell->register_suite<TestSuite_Basic>("A-sB00");
+    shell->register_suite<TestSuite_Colors>("A-sB02");
 
     // If we got command-line arguments.
     if(argc > 1)
@@ -72,8 +76,10 @@ int main(int argc, char* argv[])
     }
     else
     {
-        ioc << IOFormatTextAttr::bold << IOFormatTextFG::blue
-            << "===== Anari Tester =====\n" << IOCtrl::endl;
+        ioc << IOFormatTextAttr::bold
+            << IOFormatTextFG::blue
+            << "===== Anari Tester =====\n"
+            << IOCtrl::endl;
 
         test_code();
 

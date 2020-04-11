@@ -41,6 +41,9 @@
  * on how to contribute to our projects.
  */
 
+#ifndef ANARI_DEMO_HPP
+#define ANARI_DEMO_HPP
+
 #include <cairo/cairo.h>
 
 #include <SDL2/SDL.h>
@@ -49,8 +52,15 @@
 #include "anari/uniform_renderer.hpp"
 #include "anari/test_renderer.hpp"
 
+#include "pawlib/iochannel.hpp"
+
+#include "anari/colors.hpp"
+
 class Demo
 {
     public:
+        static void colors_demo();
         static int renderDemo();
 };
+
+#endif

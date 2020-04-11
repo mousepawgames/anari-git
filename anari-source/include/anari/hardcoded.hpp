@@ -1,4 +1,8 @@
+#ifndef ANARI_HARDCODED_HPP
+#define ANARI_HARDCODED_HPP
+
 #include "anari/config.hpp"
+
 namespace hardcoded
 {
     const unsigned int WINDOW_HEIGHT = 600;
@@ -6,3 +10,5 @@ namespace hardcoded
     const char WINDOW_TITLE[] = "Anari\0";
     const bool hardwareAcceleration = true;
 }
+
+#endif

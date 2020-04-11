@@ -146,13 +146,20 @@ include_directories(${SDL2_INCLUDE_DIR}/SDL2)
 
 # CHANGEME: Include files to compile.
 add_library(${TARGET_NAME} STATIC
+    include/anari/colors.hpp
+    include/anari/colors_test.hpp
     include/anari/demo.hpp
     include/anari/hardcoded.hpp
+    include/anari/math.hpp
     include/anari/window.hpp
     include/anari/renderer.hpp
     include/anari/uniform_renderer.hpp
     include/anari/test_renderer.hpp
 
+    src/colors.cpp
+    src/colors_test.cpp
+    src/demo.cpp
+    src/math.cpp
     src/renderer.cpp
     src/uniform_renderer.cpp
     src/test_renderer.cpp
