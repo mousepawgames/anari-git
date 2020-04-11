@@ -119,7 +119,7 @@ elseif(COMPILERTYPE STREQUAL "clang")
     #set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ")
 endif()
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../../bin/$<CONFIG>")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../../bin/${CMAKE_BUILD_TYPE}")
 
 include_directories(include)
 
@@ -147,7 +147,7 @@ add_executable(${TARGET_NAME}
 )
 
 # CHANGEME: Link against dependencies.
-target_link_libraries(${TARGET_NAME} ${CMAKE_HOME_DIRECTORY}/../anari-source/lib/$<CONFIG>/libanari.a)
+target_link_libraries(${TARGET_NAME} ${CMAKE_HOME_DIRECTORY}/../anari-source/lib/${CMAKE_BUILD_TYPE}/libanari.a)
 target_link_libraries(${TARGET_NAME} ${CAIRO_LIB})
 target_link_libraries(${TARGET_NAME} ${SDL2_LIB})
 target_link_libraries(${TARGET_NAME} ${PAWLIB_DIR}/lib/libpawlib.a)
