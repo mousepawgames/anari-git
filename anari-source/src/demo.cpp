@@ -3,34 +3,35 @@
 
 int Demo::renderDemo()
 {
+    // Resolution m_winRes(600, 800);
+    // Window m_Window(m_winRes);
     /** NOTE: NOT REQUIRED FOR THIS DEMO
      * The main window handler
-     * Window mainWindow(hardcoded::WINDOW_WIDTH, hardcoded::WINDOW_HEIGHT);
+     * Window mainWindow();
      * Create the renderer and initialize it
      */
-    Renderer* renderer = new TestRenderer();
+    Renderer* renderer = new TestRenderer(/* &m_Window */);
     /// Set color and width
     renderer->setDrawingColor(0.3, 0.2, 0.7, 1.0);
     renderer->setLineWidth(2);
-    Segment segment;
-    // Set start points of the curve
-    segment.start(100, 100, 30, 200);
-    // Set endpoints of the curve
-    segment.end(113, 110, 200, 500);
-    // Create the FlexArray to put the curves into the buffer.
     Curve curve;
-    curve.push(segment);
+    // Set start points of the curve
+    curve.start(100, 100, 30, 200);
+    // Set endpoints of the curve
+    curve.add(113, 110, 200, 500);
     /// Draw everythign in the buffer
     renderer->drawCurve(curve);
     /// Updates the texture
     renderer->updateTexture();
     /// Main program loop that listens for events
-    SDL_Event event;
-    while (!renderer->isTestRenderer() && SDL_PollEvent(&event))
+    bool testing = renderer->isTestRenderer();
+    while (!testing)
     {
+        SDL_Event event;
+        SDL_PollEvent(&event);
         if (event.type == SDL_QUIT)
         {
-            /// mainWindow.terminateWindow();
+            // m_Window.terminateWindow();
             renderer->terminateRenderer();
             renderer->cleanup();
             break;

@@ -2,34 +2,22 @@
 #define ANARI_WINDOW_HPP
 
 #include <SDL2/SDL.h>
+#include "anari/geometry.hpp"
 class Window
 {
     private:
-        SDL_Window* window;
-        int windowWidth, windowHeight;
-
-        struct Dimensions
-        {
-            int width;
-            int height;
-
-            /// Guaranteed to have correct values, no need for checks
-            Dimensions(int w, int h)
-            {
-                width = w;
-                height = h;
-            }
-        };
+        SDL_Window* m_Window;
+        Resolution m_Res;
 
     public:
-        Window(const int, const int);
+        explicit Window(Resolution);
         Window(const Window&);
-        Window& operator=(const Window&) noexcept;
+        Window& operator=(const Window&);
         virtual ~Window();
         void createWindow();
         void terminateWindow();
         SDL_Window* getWindowHandle() const;
-        Dimensions getWindowSize() const;
+        Resolution getWindowSize() const;
 };
 
 #endif

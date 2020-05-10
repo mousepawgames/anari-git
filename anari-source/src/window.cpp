@@ -3,12 +3,11 @@
 
 
 /** Constructor. Initializes window, renderer, texture and drawing surface
- * \param width of the window
- * \param height of the window
+ * \param resolution of the window
  * \return the drawing surface instance
  */
-Window::Window(const int width, const int height)
-: windowWidth(width), windowHeight(height)
+Window::Window(Resolution res)
+: m_Res(res)
 {
     createWindow();
 }
@@ -16,13 +15,12 @@ Window::Window(const int width, const int height)
 /// Copy Constructor
 Window::Window(const Window& rhs)
 {
-    this->window = rhs.window;
-    this->windowWidth = rhs.windowWidth;
-    this->windowHeight = rhs.windowHeight;
+    this->m_Window = rhs.m_Window;
+    this->m_Res = rhs.m_Res;
 }
 
 /// Copy Assignment operator
-Window& Window::operator=(const Window&) noexcept = default;
+Window& Window::operator=(const Window& rhs) = default;
 
 /// Destructor
 Window::~Window()
@@ -33,12 +31,12 @@ Window::~Window()
 /// Creates of a given width and height
 void Window::createWindow()
 {
-    this->window = SDL_CreateWindow(
+    this->m_Window = SDL_CreateWindow(
         hardcoded::WINDOW_TITLE,
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        this->windowWidth,
-        this->windowHeight,
+        m_Res.width,
+        m_Res.height,
         SDL_WINDOW_RESIZABLE
     );
     // TODO: Make sure it throws an exception when it fails
@@ -48,7 +46,7 @@ void Window::createWindow()
 /// Destroys window and terminates the program.
 void Window::terminateWindow()
 {
-    SDL_DestroyWindow(this->window);
+    SDL_DestroyWindow(this->m_Window);
     SDL_Quit();
 }
 
@@ -57,13 +55,13 @@ void Window::terminateWindow()
  */
 SDL_Window* Window::getWindowHandle() const
 {
-    return window;
+    return m_Window;
 }
 
 /** Gets window width and height
  * \return struct containing width and height
  */
-Window::Dimensions Window::getWindowSize() const
+Resolution Window::getWindowSize() const
 {
-    return Dimensions{windowWidth, windowHeight};
+    return m_Res;
 }

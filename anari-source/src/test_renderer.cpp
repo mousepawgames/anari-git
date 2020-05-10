@@ -99,7 +99,7 @@ void TestRenderer::bindSurfaceAndContext()
  */
 void TestRenderer::drawCurve(Curve& m_Curve)
 {
-    for (size_t i = 0; i < m_Curve.length(); ++i)
+    for (size_t i = 0; i < m_Curve.size(); ++i)
     {
         std::cout << "Curve coordinates: \n"
                   << "start: " << m_Curve[i].cx1 << ", " << m_Curve[i].cy1

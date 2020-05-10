@@ -46,6 +46,7 @@
 #include "anari/demo.hpp"
 
 #include "anari/colors_test.hpp"
+#include "anari/geometry_tests.hpp"
 
 /** Temporary test code goes in this function ONLY.
   * All test code that is needed long term should be
@@ -68,6 +69,8 @@ int main(int argc, char* argv[])
     GoldilocksShell* shell = new GoldilocksShell(">> ");
     //shell->register_suite<TestSuite_Basic>("A-sB00");
     shell->register_suite<TestSuite_Colors>("A-sB02");
+    shell->register_suite<TestSuite_Resolution>("A-sB01");
+    shell->register_suite<TestSuite_Curve>("A-sB03");
 
     // If we got command-line arguments.
     if(argc > 1)

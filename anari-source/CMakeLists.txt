@@ -94,15 +94,9 @@ else()
 endif()
 
 # Our global compiler flags.
-add_definitions(-Wall -Wextra -Werror -pedantic)
+add_definitions(-Wall -Wextra -Werror)
 
 if(COMPILERTYPE STREQUAL "gcc")
-    # -Wimplicit-fallthrough=0 is required for
-    # GCC 7.x and onward. That is, until we switch
-    # to C++17
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_EQUAL "7" OR CMAKE_CXX_COMPILER_VERSION VERSION_GREATER "7")
-        add_definitions(-Wimplicit-fallthrough=0)
-    endif()
     # Set debug flags. -g is a default.
     #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ")
     # Set release flags. -O3 is a default.
@@ -149,6 +143,8 @@ add_library(${TARGET_NAME} STATIC
     include/anari/colors.hpp
     include/anari/colors_test.hpp
     include/anari/demo.hpp
+    include/anari/geometry.hpp
+    include/anari/geometry_tests.hpp
     include/anari/hardcoded.hpp
     include/anari/math.hpp
     include/anari/window.hpp
@@ -163,7 +159,7 @@ add_library(${TARGET_NAME} STATIC
     src/renderer.cpp
     src/uniform_renderer.cpp
     src/test_renderer.cpp
-    src/demo.cpp
+    src/geometry_tests.cpp
     src/window.cpp
 )
 

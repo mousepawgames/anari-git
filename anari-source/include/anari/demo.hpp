@@ -49,6 +49,7 @@
 #include <SDL2/SDL.h>
 
 #include "anari/hardcoded.hpp"
+#include "anari/geometry.hpp"
 #include "anari/uniform_renderer.hpp"
 #include "anari/test_renderer.hpp"
 
