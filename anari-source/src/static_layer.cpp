@@ -1,4 +1,4 @@
-include "anari/static_layer.hpp"
+#include "anari/static_layer.hpp"
 
 static_layer::static_layer(/* args */){
 }
