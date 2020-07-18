@@ -149,6 +149,7 @@ add_library(${TARGET_NAME} STATIC
     include/anari/math.hpp
     include/anari/window.hpp
     include/anari/renderer.hpp
+    include/anari/static_layer.hpp
     include/anari/uniform_renderer.hpp
     include/anari/test_renderer.hpp
 
@@ -158,7 +159,9 @@ add_library(${TARGET_NAME} STATIC
     src/math.cpp
     src/renderer.cpp
     src/uniform_renderer.cpp
+    src/static_layer.cpp
     src/test_renderer.cpp
+    src/transformation.cpp
     src/geometry_tests.cpp
     src/window.cpp
 )
