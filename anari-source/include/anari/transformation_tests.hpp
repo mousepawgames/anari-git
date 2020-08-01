@@ -26,10 +26,13 @@ class TransformationEmptyConstructorTester : public Test
     bool run()
     {
         Transformation transform = Transformation();
-        PL_ASSERT_EQUAL(transform.theMatrix(0,0), 0);
-        PL_ASSERT_EQUAL(transform.theMatrix(0,1), 0);
-        PL_ASSERT_EQUAL(transform.theMatrix(1,0), 0);
-        PL_ASSERT_EQUAL(transform.theMatrix(1,1), 0);
+        for ( int i = 0; i < DIMENSION; ++i)
+        {
+            for ( int j = 0; j < DIMENSION; ++j)
+            {
+                PL_ASSERT_EQUAL(transform.theMatrix(i, j), 0);
+            }
+        }
         return true;
     }
 
