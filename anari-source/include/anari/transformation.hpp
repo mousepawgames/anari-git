@@ -49,8 +49,14 @@ class Transformation
            return *this;
         }
 
-        // TODO: Add a parentheses operator overload
+        // TODO: Add a parentheses operator
         // whatever operator()(const .........)
+        double& operator()(const int row, const int col)
+        {
+            assert(row >= 0 && row <= 3);
+            assert(col >= 0 && col <= 3);
+            return *(this->theMatrix(row, col));
+        }
 
         /** Perform a linear transformation with another 3x3 matrix
          * \param transformMatrix: The matrix to perform a linear transformation with
