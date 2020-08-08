@@ -16,7 +16,7 @@ class Transformation
         Matrix3D theMatrix;
 
         /// Default Constructor
-        Transformation()
+        explicit Transformation()
         : theMatrix()
         {
             for (int i = 0; i < DIMENSION; ++i)
