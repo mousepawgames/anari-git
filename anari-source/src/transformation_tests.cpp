@@ -4,4 +4,5 @@ void TestSuite_Transformation::load_tests()
 {
     register_test("A-tB0401", new TransformationEmptyConstructorTester());
     register_test("A-tB0402", new TransformationConstructorTester());
+    register_test("A-tB0403", new TestLinearTransformation());
 }

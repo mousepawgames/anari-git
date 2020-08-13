@@ -39,5 +39,6 @@
     "restructuredtext.builtDocumentationPath": "${workspaceRoot}/docs/build/html",
     "C_Cpp.intelliSenseEngineFallback": "Enabled",
     "restructuredtext.confPath": "${workspaceFolder}/docs/source",
-    "cmake.sourceDirectory": "${workspaceFolder}/anari-source"
+    "cmake.sourceDirectory": "${workspaceFolder}/anari-source",
+    "C_Cpp.errorSquiggles": "Disabled"
 }

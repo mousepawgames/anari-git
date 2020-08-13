@@ -49,8 +49,7 @@ class Transformation
            return *this;
         }
 
-        // TODO: Add a parentheses operator
-        // whatever operator()(const .........)
+        /// Parenthesis operator
         double& operator()(const int row, const int col)
         {
             assert(row >= 0 && row <= 3);

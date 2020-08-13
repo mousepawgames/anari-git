@@ -89,6 +89,76 @@ testdoc_t get_title()
 
 };
 
+class TestLinearTransformation: public Test
+{
+    testdoc_t get_title()
+    {
+        return "Transformation Matrix3D Linear Transformation";
+    }
+
+    testdoc_t get_docs()
+    {
+        return "Test out the doTransformation method inside the Transformation class.";
+    }
+
+    // bool pre()
+
+    // bool prefail()
+
+    // bool janitor()
+
+    bool run()
+    {
+        Matrix3D testMatrix; // Create a new test matrix
+        Matrix3D inputMatrix;
+
+        for (int i = 0; i < DIMENSION; i++)
+        {
+            for (int j = 0; i < DIMENSION; j++)
+            {
+                testMatrix(i, j) = 1;
+                inputMatrix(i, j) = 1;
+            }
+
+        }
+        Transformation transform = Transformation(inputMatrix);
+        transform.doTransformation(testMatrix);
+
+        for (int i = 0; i < DIMENSION; i++)
+        {
+            for (int j = 0; i < DIMENSION; j++)
+            {
+                PL_ASSERT_EQUAL(transform.theMatrix(i,j), 2);
+            }
+
+        }
+        return true;
+    }
+
+    // bool post()
+
+    // bool postmortem()
+};
+
+class TestInvalidMatrix: public Test
+{
+    Matrix2d invalid;
+    Matrix3D inputMatrix;
+
+    for (int i = 0; i < DIMENSION; i++)
+    {
+        for (int j = 0; i < DIMENSION; j++)
+        {
+            invalid(i, j) = 1;git
+            inputMatrix(i, j) = 1;
+        }
+    }
+    Transformation transform = Transformation(inputMatrix);
+
+    PL_ASSERT_EQUAL(inputMatrix, transform.doTransformation(invalid));
+    return true;
+};
+
 class TestSuite_Transformation : TestSuite
 {
     testdoc_t get_title()
