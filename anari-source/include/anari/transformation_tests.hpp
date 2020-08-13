@@ -149,7 +149,7 @@ class TestInvalidMatrix: public Test
     {
         for (int j = 0; i < DIMENSION; j++)
         {
-            invalid(i, j) = 1;git
+            invalid(i, j) = 1;
             inputMatrix(i, j) = 1;
         }
     }
