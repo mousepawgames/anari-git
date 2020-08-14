@@ -149,16 +149,16 @@ class TestSuite_Transformation : TestSuite
     void load_tests();
 };
 
-class LinearTransformationTester: public Test
+class InvalidTransformationTester: public Test
 {
 testdoc_t get_title()
     {
-        return "Linear Transformation Tester";
+        return "Invalid Transformation Tester";
     }
 
     testdoc_t get_docs()
     {
-        return "Create a new Transformation object with a Matrix3D and test doTransformation.";
+        return "Create a new Transformation object with a Matrix3D and test doTransformation with an invalid matrix.";
     }
 
     // bool pre()
