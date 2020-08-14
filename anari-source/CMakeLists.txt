@@ -142,27 +142,31 @@ include_directories(${SDL2_INCLUDE_DIR}/SDL2)
 add_library(${TARGET_NAME} STATIC
     include/anari/colors.hpp
     include/anari/colors_test.hpp
+    include/anari/config.hpp
     include/anari/demo.hpp
     include/anari/geometry.hpp
     include/anari/geometry_tests.hpp
     include/anari/hardcoded.hpp
     include/anari/math.hpp
-    include/anari/window.hpp
     include/anari/renderer.hpp
     include/anari/static_layer.hpp
-    include/anari/uniform_renderer.hpp
     include/anari/test_renderer.hpp
+    include/anari/transformation.hpp
+    include/anari/transformation_tests.hpp
+    include/anari/uniform_renderer.hpp
+    include/anari/window.hpp
 
     src/colors.cpp
     src/colors_test.cpp
+    src/config.cpp
     src/demo.cpp
+    src/geometry_tests.cpp
     src/math.cpp
     src/renderer.cpp
-    src/uniform_renderer.cpp
     src/static_layer.cpp
     src/test_renderer.cpp
-    src/transformation.cpp
-    src/geometry_tests.cpp
+    src/transformation_tests.cpp
+    src/uniform_renderer.cpp
     src/window.cpp
 )
 
