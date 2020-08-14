@@ -139,16 +139,6 @@ testdoc_t get_title()
 
 };
 
-class TestSuite_Transformation : TestSuite
-{
-    testdoc_t get_title()
-    {
-        return "Transformation Tests";
-    }
-
-    void load_tests();
-};
-
 class InvalidTransformationTester: public Test
 {
 testdoc_t get_title()
