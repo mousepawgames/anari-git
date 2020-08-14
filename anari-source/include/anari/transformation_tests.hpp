@@ -89,6 +89,116 @@ testdoc_t get_title()
 
 };
 
+class LinearTransformationTester: public Test
+{
+testdoc_t get_title()
+    {
+        return "Linear Transformation Tester";
+    }
+
+    testdoc_t get_docs()
+    {
+        return "Create a new Transformation object with a Matrix3D and test doTransformation.";
+    }
+
+    // bool pre()
+
+    // bool prefail()
+
+    // bool janitor()
+
+    bool run()
+    {
+        Matrix3D testMatrix; // Create a new test matrix
+        Matrix3D inputMatrix;
+        for (int i = 0; i < DIMENSION; i++)
+        {
+            for (int j = 0; i < DIMENSION; j++)
+            {
+                testMatrix(i, j) = 1;
+                inputMatrix(i, j) = 1;
+            }
+
+        }
+        Transformation transform = Transformation(inputMatrix);
+        transform.doTransformation(testMatrix);
+        for (int i = 0; i < DIMENSION; i++)
+        {
+            for (int j = 0; i < DIMENSION; j++)
+            {
+                PL_ASSERT_EQUAL(transform.theMatrix(i,j), 2);
+            }
+
+        }
+        return true;
+    }
+
+    // bool post()
+
+    // bool postmortem()
+
+};
+
+class TestSuite_Transformation : TestSuite
+{
+    testdoc_t get_title()
+    {
+        return "Transformation Tests";
+    }
+
+    void load_tests();
+};
+
+class LinearTransformationTester: public Test
+{
+testdoc_t get_title()
+    {
+        return "Linear Transformation Tester";
+    }
+
+    testdoc_t get_docs()
+    {
+        return "Create a new Transformation object with a Matrix3D and test doTransformation.";
+    }
+
+    // bool pre()
+
+    // bool prefail()
+
+    // bool janitor()
+
+    bool run()
+    {
+        Matrix2D testMatrix; // Create a new test matrix
+        Matrix3D inputMatrix;
+        for (int i = 0; i < DIMENSION; i++)
+        {
+            for (int j = 0; i < DIMENSION; j++)
+            {
+                testMatrix(i, j) = 1;
+                inputMatrix(i, j) = 1;
+            }
+
+        }
+        Transformation transform = Transformation(inputMatrix);
+        transform.doTransformation(testMatrix);
+        for (int i = 0; i < DIMENSION; i++)
+        {
+            for (int j = 0; i < DIMENSION; j++)
+            {
+                PL_ASSERT_EQUAL(transform.theMatrix(i,j), inputMatrix(i, j));
+            }
+
+        }
+        return true;
+    }
+
+    // bool post()
+
+    // bool postmortem()
+
+};
+
 class TestSuite_Transformation : TestSuite
 {
     testdoc_t get_title()

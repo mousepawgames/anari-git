@@ -41,7 +41,7 @@ class Transformation
         explicit Transformation(const Transformation& cpy)
         : theMatrix(cpy.theMatrix)
         {}
-
+s
         /// Copy Assignment
         Transformation& operator=(const Transformation& rhs)
         {
@@ -49,8 +49,6 @@ class Transformation
            return *this;
         }
 
-        // TODO: Add a parentheses operator
-        // whatever operator()(const .........)
         double& operator()(const int row, const int col)
         {
             assert(row >= 0 && row <= 3);
