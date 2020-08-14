@@ -41,7 +41,7 @@ class Transformation
         explicit Transformation(const Transformation& cpy)
         : theMatrix(cpy.theMatrix)
         {}
-s
+
         /// Copy Assignment
         Transformation& operator=(const Transformation& rhs)
         {
