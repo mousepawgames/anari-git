@@ -3,6 +3,15 @@
 
 #include "pawlib/flex_array.hpp"
 
+
+struct Coordinate
+{
+    // cppcheck-suppress unusedStructMember
+    float x;
+    // cppcheck-suppress unusedStructMember
+    float y;
+};
+
 struct Segment
 {
     double x1, y1;

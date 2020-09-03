@@ -147,6 +147,7 @@ add_library(${TARGET_NAME} STATIC
     include/anari/geometry_tests.hpp
     include/anari/hardcoded.hpp
     include/anari/math.hpp
+    include/anari/static_layer.hpp
     include/anari/window.hpp
     include/anari/renderer.hpp
     include/anari/static_layer.hpp
@@ -163,6 +164,7 @@ add_library(${TARGET_NAME} STATIC
     src/test_renderer.cpp
     src/transformation.cpp
     src/geometry_tests.cpp
+    src/static_layer.cpp
     src/window.cpp
 )
 

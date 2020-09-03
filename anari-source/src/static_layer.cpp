@@ -1,7 +1,16 @@
 #include "anari/static_layer.hpp"
-
-static_layer::static_layer(/* args */){
+// White Object
+StaticLayer::StaticLayer(/* args */)
+{
 }
 
-static_layer::~static_layer(){
+StaticLayer::~StaticLayer() {}
+
+Color& StaticLayer::get_color() { return object_color; }
+
+FlexArray<Coordinate> StaticLayer::get_transformation_points()
+{
+	return transformation_points;
 }
+
+FlexArray<Coordinate> StaticLayer::get_object_points() { return object_points; }

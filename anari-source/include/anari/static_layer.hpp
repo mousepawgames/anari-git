@@ -23,45 +23,35 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ANARI_STATIC_LAYER_HPP
-#define ANARI_STATIC_LAYER_HPP
+#ifndef ANARI_StaticLayer_HPP
+#define ANARI_StaticLayer_HPP
 
-class static_layer
+#include "colors.hpp"
+#include "pawlib/flex_array.hpp"
+#include "geometry.hpp"
+
+class StaticLayer
 {
 private:
-    struct points{
-        float x;
-        float y;
-    };
 
-    struct offset{
-        float x;
-        float y;
-        float angle;
-    };
-
-    struct colorAttributes{
-        float hue;
-        float saturation;
-        float brightness;
-    };
-
+    Color object_color;
+    FlexArray<Coordinate> transformation_points;
+    FlexArray<Coordinate> object_points;
 
 public:
-    static_layer(/* args */);
-    ~static_layer();
+    StaticLayer(/* args */); // Defaults Registration Points to 0,0
+    StaticLayer(float red, float green, float blue, float alpha); // Sets registration Points
+    ~StaticLayer();
 
-    /*functions related to child classes*/
+    //functions related to child classes
+    Color& get_color();
+    FlexArray<Coordinate> get_transformation_points();
+    FlexArray<Coordinate> get_object_points();
 
-    virtual void geometryInstantiation();
-    virtual void setOffset();
-    virtual offset getOffset();
-    virtual void colorCurves();
-    virtual void setRegistrationPoints();
-    virtual void getRegistationPoints();
-    virtual colorAttributes getcolorAttributes();
-    virtual void setcolorAttributes();
-};
+};//
+/*
+[x1y1, x1y2, x1y3]
+*/
 
 
 #endif
