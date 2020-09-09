@@ -20,12 +20,12 @@ public:
 
     bool run()
     {
-        Transformation transform = Transformation();
-        for ( int i = 0; i < DIMENSION; ++i)
+        Transformation transform = Transformation();    // Create a new array with all values set to zero
+        for ( int i = 0; i < DIMENSION; ++i)            // Loop through each row
         {
-            for ( int j = 0; j < DIMENSION; ++j)
+            for ( int j = 0; j < DIMENSION; ++j)        // Loop through each column
             {
-                PL_ASSERT_EQUAL(transform.the_matrix(i, j), 0);
+                PL_ASSERT_EQUAL(transform.the_matrix(i, j), 0); // Check to see if the value is set to zero
             }
         }
         return true;
@@ -53,7 +53,7 @@ public:
         {
             for (int j = 0; j < DIMENSION; j++)
             {
-                test_matrix(i, j) = i + j; // Random calculation
+                test_matrix(i, j) = i + j; // Random calculation of row# + col#
             }
 
         }
@@ -62,7 +62,7 @@ public:
         {
             for (int j = 0; j < DIMENSION; j++)
             {
-                PL_ASSERT_EQUAL(transform.the_matrix(i,j), test_matrix(i, j));
+                PL_ASSERT_EQUAL(transform.the_matrix(i,j), test_matrix(i, j));  // Test to see if value inside index is calculated correctly from calculation above
             }
 
         }
@@ -86,13 +86,13 @@ public:
 
     bool run()
     {
-        Matrix3d test_matrix; // Create a new test matrix
-        Matrix3d input_matrix;
+        Matrix3d test_matrix;   // Create a new test matrix to test a linear transformation
+        Matrix3d input_matrix;  // Create a new input matrix for a new Transformation object
         for (int i = 0; i < DIMENSION; i++)
         {
             for (int j = 0; j < DIMENSION; j++)
             {
-                test_matrix(i, j) = 1;
+                test_matrix(i, j) = 1;  // Set all values to the value one
                 input_matrix(i, j) = 1;
             }
 
@@ -103,7 +103,7 @@ public:
         {
             for (int j = 0; j < DIMENSION; j++)
             {
-                PL_ASSERT_EQUAL(transform.the_matrix(i,j), 2);
+                PL_ASSERT_EQUAL(transform.the_matrix(i,j), 2);  // Assuming the do_transformation method performed correctly, all values should be two
             }
 
         }
