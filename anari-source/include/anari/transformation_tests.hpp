@@ -99,7 +99,7 @@ public:
         Transformation transform = Transformation(test_matrix);
         for (int i = 0; i < DIMENSION; i++)
         {
-            for (int j = 0; j < DIMENSION; j++
+            for (int j = 0; j < DIMENSION; j++)
             {
                 PL_ASSERT_EQUAL(transform.the_matrix(i,j), test_matrix(i, j));  // Test to see if value inside index is calculated correctly from calculation above
             }
