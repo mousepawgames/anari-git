@@ -32,7 +32,7 @@ public:
     }
 };
 
-class LinearTransformationTester: public Test
+class LinearTransformationTester : public Test
 {
 public:
     testdoc_t get_title()
@@ -71,7 +71,7 @@ public:
         return true;
 };
 
-class TransformationConstructorTester: public Test
+class TransformationConstructorTester : public Test
 {
 public:
     testdoc_t get_title()
