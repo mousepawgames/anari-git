@@ -26,7 +26,7 @@
 #ifndef ANARI_LAYERINSTANCE_HPP
 #define ANARI_LAYERINSTANCE_HPP
 
-#include <"Eigen/Core"
+#include "Eigen/Core"
 #include "anari/transformation.hpp"
 using namespace Eigen;
 
