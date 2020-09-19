@@ -7,165 +7,128 @@
 
 class TransformationEmptyConstructorTester : public Test
 {
-    testdoc_t get_title()
-    {
-        return "Transformation Empty Constructor";
-    }
-
-    testdoc_t get_docs()
-    {
-        return "Create a new Transformation object and test the constructor.";
-    }
-
-    // bool pre()
-
-    // bool prefail()
-
-    // bool janitor()
-
-    bool run()
-    {
-        Transformation transform = Transformation();
-        for ( int i = 0; i < DIMENSION; ++i)
+    public:
+        testdoc_t get_title()
         {
-            for ( int j = 0; j < DIMENSION; ++j)
-            {
-                PL_ASSERT_EQUAL(transform.theMatrix(i, j), 0);
-            }
+            return "Transformation Empty Constructor";
         }
-        return true;
-    }
 
-    // bool post()
+        testdoc_t get_docs()
+        {
+            return "Create a new Transformation object and test the constructor.";
+        }
 
-    // bool postmortem()
+        bool run()
+        {
+            // Create a new array with all values set to zero
+            Transformation transform = Transformation();
+            // Loop through each row
+            for ( int i = 0; i < DIMENSION; ++i)
+            {
+                // Loop through each column
+                for ( int j = 0; j < DIMENSION; ++j)
+                {
+                    // Check to see if the value is set to zero
+                    PL_ASSERT_EQUAL(transform.the_matrix(i, j), 0);
+                }
+            }
+            return true;
+        }
 };
 
-class TransformationConstructorTester: public Test
+class LinearTransformationTester : public Test
 {
-testdoc_t get_title()
-    {
-        return "Transformation Matrix3D Constructor";
-    }
-
-    testdoc_t get_docs()
-    {
-        return "Create a new Transformation object with a Matrix3D and test the constructor.";
-    }
-
-    // bool pre()
-
-    // bool prefail()
-
-    // bool janitor()
-
-    bool run()
-    {
-        Matrix3D testMatrix; // Create a new test matrix
-
-        for (int i = 0; i < DIMENSION; i++)
+    public:
+        testdoc_t get_title()
         {
-            for (int j = 0; i < DIMENSION; j++)
-            {
-                testMatrix(i, j) = i + j; // Random calculation
-            }
-
+            return "Linear Transformation Tester";
         }
-        Transformation transform = Transformation(testMatrix);
-        for (int i = 0; i < DIMENSION; i++)
+
+        testdoc_t get_docs()
         {
-            for (int j = 0; i < DIMENSION; j++)
-            {
-                PL_ASSERT_EQUAL(transform.theMatrix(i,j), testMatrix(i, j));
-            }
-
+            return "Create a new Transformation object with a Matrix3d and test do_transformation.";
         }
-        return true;
-    }
 
-    // bool post()
+        bool run()
+        {
+            // Create a new test matrix to test a linear transformation
+            Matrix3d test_matrix;
+            // Create a new input matrix for a new Transformation object
+            Matrix3d input_matrix;
+            for (int i = 0; i < DIMENSION; i++)
+            {
+                for (int j = 0; j < DIMENSION; j++)
+                {
+                    // Set all values to the value one
+                    test_matrix(i, j) = 1;
+                    input_matrix(i, j) = 1;
+                }
 
-    // bool postmortem()
+            }
+            Transformation transform = Transformation(input_matrix);
+            transform.do_transformation(test_matrix);
+            for (int i = 0; i < DIMENSION; i++)
+            {
+                for (int j = 0; j < DIMENSION; j++)
+                {
+                    // Assuming the do_transformation method performed correctly, all values should be two
+                    PL_ASSERT_EQUAL(transform.the_matrix(i,j), 2);
+                }
 
+            }
+            return true;
+        }
 };
 
-class TestLinearTransformation: public Test
+class TransformationConstructorTester : public Test
 {
-    testdoc_t get_title()
-    {
-        return "Transformation Matrix3D Linear Transformation";
-    }
-
-    testdoc_t get_docs()
-    {
-        return "Test out the doTransformation method inside the Transformation class.";
-    }
-
-    // bool pre()
-
-    // bool prefail()
-
-    // bool janitor()
-
-    bool run()
-    {
-        Matrix3D testMatrix; // Create a new test matrix
-        Matrix3D inputMatrix;
-
-        for (int i = 0; i < DIMENSION; i++)
+    public:
+        testdoc_t get_title()
         {
-            for (int j = 0; i < DIMENSION; j++)
-            {
-                testMatrix(i, j) = 1;
-                inputMatrix(i, j) = 1;
-            }
-
+            return "Transformation Matrix3d Constructor";
         }
-        Transformation transform = Transformation(inputMatrix);
-        transform.doTransformation(testMatrix);
 
-        for (int i = 0; i < DIMENSION; i++)
+        testdoc_t get_docs()
         {
-            for (int j = 0; i < DIMENSION; j++)
-            {
-                PL_ASSERT_EQUAL(transform.theMatrix(i,j), 2);
-            }
-
+            return "Create a new Transformation object with a Matrix3d and test the constructor.";
         }
-        return true;
-    }
 
-    // bool post()
+        bool run()
+        {
+            // Create a new test matrix
+            Matrix3d test_matrix;
 
-    // bool postmortem()
+            for (int i = 0; i < DIMENSION; i++)
+            {
+                for (int j = 0; j < DIMENSION; j++)
+                {
+                    // Random calculation of row# + col#
+                    test_matrix(i, j) = i + j;
+                }
+
+            }
+            Transformation transform = Transformation(test_matrix);
+            for (int i = 0; i < DIMENSION; i++)
+            {
+                for (int j = 0; j < DIMENSION; j++)
+                {
+                    // Test to see if value inside index is calculated correctly from calculation above
+                    PL_ASSERT_EQUAL(transform.the_matrix(i,j), test_matrix(i, j));
+                }
+
+            }
+            return true;
+        }
 };
 
-class TestInvalidMatrix: public Test
+class TestSuite_Transformation : public TestSuite
 {
-    Matrix2d invalid;
-    Matrix3D inputMatrix;
-
-    for (int i = 0; i < DIMENSION; i++)
-    {
-        for (int j = 0; i < DIMENSION; j++)
+    public:
+        testdoc_t get_title()
         {
-            invalid(i, j) = 1;
-            inputMatrix(i, j) = 1;
+            return "Transformation Tests";
         }
-    }
-    Transformation transform = Transformation(inputMatrix);
 
-    PL_ASSERT_EQUAL(inputMatrix, transform.doTransformation(invalid));
-    return true;
-};
-
-class TestSuite_Transformation : TestSuite
-{
-    testdoc_t get_title()
-    {
-        return "Transformation Tests";
-    }
-
-    void load_tests();
+        void load_tests();
 };
 #endif

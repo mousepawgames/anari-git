@@ -47,6 +47,8 @@
 
 #include "anari/colors_test.hpp"
 #include "anari/geometry_tests.hpp"
+#include "anari/transformation_tests.hpp"
+#include "anari/layerinstance_tests.hpp"
 
 /** Temporary test code goes in this function ONLY.
   * All test code that is needed long term should be
@@ -71,6 +73,8 @@ int main(int argc, char* argv[])
     shell->register_suite<TestSuite_Colors>("A-sB02");
     shell->register_suite<TestSuite_Resolution>("A-sB01");
     shell->register_suite<TestSuite_Curve>("A-sB03");
+    shell->register_suite<TestSuite_Transformation>("A-sB04");
+    shell->register_suite<TestSuite_LayerInstance>("A-sB05");
 
     // If we got command-line arguments.
     if(argc > 1)
