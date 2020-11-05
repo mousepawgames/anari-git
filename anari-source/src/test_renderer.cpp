@@ -102,9 +102,9 @@ void TestRenderer::drawCurve(Curve& m_Curve)
     for (size_t i = 0; i < m_Curve.size(); ++i)
     {
         std::cout << "Curve coordinates: \n"
-                  << "start: " << m_Curve[i].cx1 << ", " << m_Curve[i].cy1
-                  << "\nend: " << m_Curve[i].cx2 << ", " << m_Curve[i].cy2
-                  << "\ncontrol: " << m_Curve[i].x2 << ", " << m_Curve[i].y2 << '\n';
+                  << "start: " << m_Curve[i].start_point(2,0) << ", " << m_Curve[i].start_point(3,0)
+                  << "\nend: " << m_Curve[i].end_point(2,0) << ", " << m_Curve[i].end_point(3,0)
+                  << "\ncontrol: " << m_Curve[i].end_point(0,0) << ", " << m_Curve[i].end_point(1,0) << '\n';
     }
 }
 

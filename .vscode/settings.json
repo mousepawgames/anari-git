@@ -31,7 +31,13 @@
         "typeinfo": "cpp",
         "exception": "cpp",
         "thread": "cpp",
-        "string_view": "cpp"
+        "string_view": "cpp",
+        "deque": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "vector": "cpp",
+        "initializer_list": "cpp",
+        "*.tcc": "cpp"
     },
     "files.trimFinalNewlines": true,
     "files.trimTrailingWhitespace": true,

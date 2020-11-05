@@ -125,18 +125,18 @@ unsigned char* UniformRenderer::getSurfaceData() const
  */
 void UniformRenderer::drawCurve(Curve& curve)
 {
-    cairo_move_to(this->m_Context, curve[0].x1, curve[0].y1);
+    cairo_move_to(this->m_Context, curve[0].start_point(0,0), curve[0].start_point(1,0));
     /// Draw all curves within the flexArray
     for (size_t i = 0; i < curve.size(); ++i)
     {
         cairo_curve_to(
             this->m_Context,
-            curve[i].cx1,
-            curve[i].cy1,
-            curve[i].cx2,
-            curve[i].cy2,
-            curve[i].x2,
-            curve[i].y2
+            curve[i].start_point(2,0),
+            curve[i].start_point(3,0),
+            curve[i].end_point(2,0),
+            curve[i].end_point(3,0),
+            curve[i].end_point(0,0),
+            curve[i].end_point(1,0)
         );
     }
     sendToDrawingBuffer();

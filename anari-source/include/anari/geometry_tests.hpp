@@ -3,6 +3,7 @@
 
 #include "pawlib/goldilocks.hpp"
 #include "anari/geometry.hpp"
+#include "Eigen/Core"
 
 class Test_ResolutionConstructor : public Test
 {
@@ -80,17 +81,21 @@ class Test_CurveConstructor : public Test
         /// Limit lifetime to make sure it's not a shallow copy
         {
             Segment* mySeg = new Segment;
-            *mySeg = { 100, 100, 30, 200, 113, 110, 200, 500 };
+            Eigen::Vector4d startVector = Eigen::Vector4d(100, 100, 30, 200);
+            Eigen::Vector4d endVector = Eigen::Vector4d(113, 110, 200, 500);
+            *mySeg = { startVector, endVector };
             curv.addSegment(*mySeg);
             delete mySeg;
         }
-        Curve copy = curv;
-        PL_ASSERT_EQUAL(curv[0].x1, copy[0].x1);
-        PL_ASSERT_EQUAL(curv[0].x2, copy[0].x2);
-        PL_ASSERT_EQUAL(curv[0].y1, copy[0].y1);
-        PL_ASSERT_EQUAL(curv[0].y2, copy[0].y2);
-        PL_ASSERT_EQUAL(curv[0].cx1, copy[0].cx1);
-        PL_ASSERT_EQUAL(curv[0].cx2, copy[0].cx2);
+        Curve curv_copy(curv);
+        PL_ASSERT_EQUAL(curv[0].start_point(0,0), curv_copy[0].start_point(0,0));
+        PL_ASSERT_EQUAL(curv[0].start_point(1,0), curv_copy[0].start_point(1,0));
+        PL_ASSERT_EQUAL(curv[0].start_point(2,0), curv_copy[0].start_point(2,0));
+        PL_ASSERT_EQUAL(curv[0].start_point(3,0), curv_copy[0].start_point(3,0));
+        PL_ASSERT_EQUAL(curv[0].end_point(0,0), curv_copy[0].end_point(0,0));
+        PL_ASSERT_EQUAL(curv[0].end_point(1,0), curv_copy[0].end_point(1,0));
+        PL_ASSERT_EQUAL(curv[0].end_point(2,0), curv_copy[0].end_point(2,0));
+        PL_ASSERT_EQUAL(curv[0].end_point(3,0), curv_copy[0].end_point(3,0));
         return true;
     }
 };
@@ -108,14 +113,18 @@ class Test_SubscriptOperator : public Test
     bool run()
     {
         Curve test = Curve();
-        Segment mySeg = { 100, 100, 30, 200, 113, 110, 200, 500 };
+        Eigen::Vector4d startVector = Eigen::Vector4d(100, 100, 30, 200);
+        Eigen::Vector4d endVector = Eigen::Vector4d(113, 110, 200, 500);
+        Segment mySeg = { startVector, endVector };
         test.addSegment(mySeg);
-        PL_ASSERT_EQUAL(test[0].x1, test[0].x1);
-        PL_ASSERT_EQUAL(test[0].x2, test[0].x2);
-        PL_ASSERT_EQUAL(test[0].y1, test[0].y1);
-        PL_ASSERT_EQUAL(test[0].y2, test[0].y2);
-        PL_ASSERT_EQUAL(test[0].cx1, test[0].cx1);
-        PL_ASSERT_EQUAL(test[0].cx2, test[0].cx2);
+        PL_ASSERT_EQUAL(test[0].start_point(0,0), startVector(0,0));
+        PL_ASSERT_EQUAL(test[0].start_point(1,0), startVector(1,0));
+        PL_ASSERT_EQUAL(test[0].start_point(2,0), startVector(2,0));
+        PL_ASSERT_EQUAL(test[0].start_point(3,0), startVector(3,0));
+        PL_ASSERT_EQUAL(test[0].end_point(0,0), endVector(0,0));
+        PL_ASSERT_EQUAL(test[0].end_point(1,0), endVector(1,0));
+        PL_ASSERT_EQUAL(test[0].end_point(2,0), endVector(2,0));
+        PL_ASSERT_EQUAL(test[0].end_point(3,0), endVector(3,0));
         return true;
     }
 
@@ -137,14 +146,14 @@ class Test_CurveAddSegment : public Test
         Curve curv = Curve();
         curv.start(32, 122, 200, 300);
         curv.add(64, 244, 400, 400);
-        PL_ASSERT_EQUAL(curv[0].x1, 32);
-        PL_ASSERT_EQUAL(curv[0].y1, 122);
-        PL_ASSERT_EQUAL(curv[0].cx1, 200);
-        PL_ASSERT_EQUAL(curv[0].cy1, 300);
-        PL_ASSERT_EQUAL(curv[0].x2, 64);
-        PL_ASSERT_EQUAL(curv[0].y2, 244);
-        PL_ASSERT_EQUAL(curv[0].cx2, 400);
-        PL_ASSERT_EQUAL(curv[0].cy2, 400);
+        PL_ASSERT_EQUAL(curv[0].start_point(0,0), 32);
+        PL_ASSERT_EQUAL(curv[0].start_point(1,0), 122);
+        PL_ASSERT_EQUAL(curv[0].start_point(2,0), 200);
+        PL_ASSERT_EQUAL(curv[0].start_point(3,0), 300);
+        PL_ASSERT_EQUAL(curv[0].end_point(0,0), 64);
+        PL_ASSERT_EQUAL(curv[0].end_point(1,0), 244);
+        PL_ASSERT_EQUAL(curv[0].end_point(2,0), 400);
+        PL_ASSERT_EQUAL(curv[0].end_point(3,0), 400);
         return true;
     }
 };
@@ -165,7 +174,6 @@ class TestSuite_Resolution : public TestSuite
     {
         return "Resolution Tests";
     }
-
     void load_tests();
 };
 
