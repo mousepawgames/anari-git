@@ -5,14 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "LLDB",
             "type": "lldb",
             "request": "launch",
+            "name": "LLDB",
             "program": "${workspaceFolder}/tester_debug",
             "args": [],
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceFolder}",
             "preLaunchTask": "Build Debug",
-            "terminal": "integrated"
+            "terminal": "external"
         },
         {
             "name": "GDB",
@@ -23,8 +23,7 @@
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": false,
-            "preLaunchTask": "Build Debug",
+            "externalConsole": true,
             "MIMode": "gdb",
             "setupCommands": [
                 {

@@ -1,3 +1,6 @@
+# Build Configuration Template (MousePaw Media Build System)
+# Version: 3.2.0
+
 ##### PATH CONFIGURATIONS ######
 #
 # Make a copy of this file and save it in the root of the repository
@@ -7,9 +10,8 @@
 # exception of default.config (which should never be modified).
 #
 # ${CMAKE_HOME_DIRECTORY} is a special variable which points to
-# either the 'library/' or 'tester/' folder, depending on which one is
-# being built. Relative paths should always begin with this variable,
-# and should be relative to either of those folders.
+# the directory containing the CMakeLists.txt file being built from.
+# Relative paths should always begin with this variable.
 #
 # To use a configuration file with make, specify it in the 'make' command via
 # "make <target> CONFIG=<name>", where '<name>' is the first part of the
@@ -20,38 +22,49 @@
 # argument "-DCONFIG_FILENAME=<name>", where '<name>' is the first part of the
 # file name (before the .config). For example, passing the argument
 # "-DCONFIG_FILENAME=foo" would build using "foo.config".
-
-##### THIRD-PARTY DEPENDENCIES #####
 #
-# This sets the path to CPGF, Eigen, Opus, and pugixml.
-# The build system will look for `lib/` and `include/' at this location.
+##### WHERE TO FIND DEPENDENCIES #####
 #
-# The default for all is '${CMAKE_HOME_DIRECTORY}/../../libdeps/libs', which
-# assumes a copy of the libdeps repository in the same directory as this
-# repository folder.
-#
-# 'make <library>' or 'make all' would need to be run in libdeps first.
-
-set(CPGF_DIR
-	${CMAKE_HOME_DIRECTORY}/../../libdeps/libs
-)
+# Specify the path to the dependencies. The default is to look for
+# dependencies in the specified repositories adjacent to this repository.
+# You may need run the appropriate make commands on said repositories first.
 
 set(EIGEN_DIR
 	${CMAKE_HOME_DIRECTORY}/../../libdeps/libs
 )
 
-##### PAWLIB #####
-#
-# This sets the path to PawLIB.
-# The build system will look for 'lib/' and 'include/' at this location.
-#
-# The default is '${CMAKE_HOME_DIRECTORY}/../../pawlib/pawlib', which
-# assumes a copy of the PawLIB git repository in the same directory as this
-# repository folder.
-#
-# 'make ready' would need to be run in that repository to generate the
-# library.
-
-set(PAWLIB_DIR
-	${CMAKE_HOME_DIRECTORY}/../../pawlib/pawlib
+set(EVENTPP_DIR
+	${CMAKE_HOME_DIRECTORY}/../../libdeps/libs
 )
+
+set(ARCTICTERN_DIR
+	${CMAKE_HOME_DIRECTORY}/../../arctic-tern/arctic-tern
+)
+
+set(GOLDILOCKS_DIR
+	${CMAKE_HOME_DIRECTORY}/../../goldilocks/goldilocks
+)
+
+set(IOSQUEAK_DIR
+	${CMAKE_HOME_DIRECTORY}/../../iosqueak/iosqueak
+)
+
+set(NIMBLY_DIR
+	${CMAKE_HOME_DIRECTORY}/../../nimbly/nimbly
+)
+
+set(ONESTRING_DIR
+	${CMAKE_HOME_DIRECTORY}/../../onestring/onestring
+)
+
+##### LLVM LIBC++ #####
+#
+# This option asks the Clang compiler to use LLVM's libc++ library.
+# The build system will look for this library in the system paths.
+#
+# If you are not compiling with Clang, this option will be ignored.
+# NOTE: libc++ is already used by default on Mac.
+#
+# Set the option to either `true` or `false` below.
+
+set(LLVM false)
