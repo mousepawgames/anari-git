@@ -2,8 +2,8 @@
 
 void TestSuite_Colors::load_tests()
 {
-    register_test("A-tB0200", new Test_CMYKtoRGBA);
-    register_test("A-tB0201", new Test_RGBAtoCMYK);
+	register_test("A-tB0200", new Test_CMYKtoRGBA);
+	register_test("A-tB0201", new Test_RGBAtoCMYK);
     register_test("A-tB0202", new Test_HSLtoRGBA);
     register_test("A-tB0203", new Test_RGBAtoHSL);
     register_test("A-tB0204", new Test_RGBADoubletoRGBA);
