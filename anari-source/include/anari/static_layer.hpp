@@ -7,51 +7,71 @@
  */
 
 /* LICENSE
-* Copyright (C) 2020 MousePaw Media.
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Copyright (C) 2020 MousePaw Media.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #ifndef ANARI_StaticLayer_HPP
 #define ANARI_StaticLayer_HPP
 
-#include "colors.hpp"
 #include "pawlib/flex_array.hpp"
+
+#include "colors.hpp"
 #include "geometry.hpp"
 
 class StaticLayer
 {
 private:
+	/// The color of the outline.
+	Color stroke_color;
+	/// The color for the fill.
+	Color fill_color;
 
-    Color object_color;
-    FlexArray<Coordinate> transformation_points;
-    FlexArray<Coordinate> object_points;
+	/// The geometric data for the static layer.
+	Curve curve;
 
 public:
-    StaticLayer(/* args */); // Defaults Registration Points to 0,0
-    StaticLayer(float red, float green, float blue, float alpha); // Sets registration Points
-    ~StaticLayer();
+	/** Default Constructor
+	 */
+	StaticLayer();  // Defaults Registration Points to 0,0
+	StaticLayer(float red,
+				float green,
+				float blue,
+				float alpha);  // Sets registration Points
+	~StaticLayer();
 
-    //functions related to child classes
-    Color& get_color();
-    FlexArray<Coordinate> get_transformation_points();
-    FlexArray<Coordinate> get_object_points();
+	/* TODO: Would it be worth having an Attribute class that
+	 * stores Stroke Color, Fill color, and anything else that
+	 * we add to Attributes later? (This can be done in a later
+	 * Differential).
+	 */
 
-};//
-/*
-[x1y1, x1y2, x1y3]
-*/
+	/** Get stroke color
+	 * \return the color of the stroke
+	 */
+	const Color& get_stroke_color() const noexcept;
 
+	/** Get Fill Color
+	 * \return color of the fill
+	 */
+	const Color& get_fill_color() const noexcept;
+
+	/** Returns the curve stored in this static layer.
+	 * \return curve object
+	 */
+	const Curve& get_geometry() const noexcept;
+};
 
 #endif
