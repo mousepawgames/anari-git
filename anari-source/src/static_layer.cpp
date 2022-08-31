@@ -1,16 +1,17 @@
 #include "anari/static_layer.hpp"
 // White Object
-StaticLayer::StaticLayer(/* args */)
-{
-}
+StaticLayer::StaticLayer(/* args */) {}
 
 StaticLayer::~StaticLayer() {}
 
-Color& StaticLayer::get_color() { return object_color; }
-
-FlexArray<Coordinate> StaticLayer::get_transformation_points()
+const Color& StaticLayer::get_stroke_color() const noexcept
 {
-	return transformation_points;
+	return this->stroke_color;
 }
 
-FlexArray<Coordinate> StaticLayer::get_object_points() { return object_points; }
+const Color& StaticLayer::get_fill_color() const noexcept
+{
+	return this->fill_color;
+}
+
+const Curve& StaticLayer::get_geometry() const noexcept { return this->curve; }
