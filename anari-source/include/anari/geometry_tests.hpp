@@ -1,67 +1,61 @@
 #ifndef ANARI_GEOMETRY_TESTS_HPP
 #define ANARI_GEOMETRY_TESTS_HPP
 
-#include "pawlib/goldilocks.hpp"
 #include "anari/geometry.hpp"
+#include "pawlib/goldilocks.hpp"
 #include "Eigen/Core"
 
 class Test_ResolutionConstructor : public Test
 {
-    testdoc_t get_title()
-    {
-        return "Resolution Constructor";
-    }
+	testdoc_t get_title() { return "Resolution Constructor"; }
 
-    testdoc_t get_docs()
-    {
-        return "Create a new Resolution object from integers.";
-    }
+	testdoc_t get_docs()
+	{
+		return "Create a new Resolution object from integers.";
+	}
 
-    // bool pre()
+	// bool pre()
 
-    // bool prefail()
+	// bool prefail()
 
-    // bool janitor()
+	// bool janitor()
 
-    bool run()
-    {
-        Resolution res = Resolution(640, 480);
-        PL_ASSERT_EQUAL(res.width, 640);
-        PL_ASSERT_EQUAL(res.height, 480);
-        return true;
-    }
+	bool run()
+	{
+		Resolution res = Resolution(640, 480);
+		PL_ASSERT_EQUAL(res.width, 640);
+		PL_ASSERT_EQUAL(res.height, 480);
+		return true;
+	}
 
-    // bool post()
+	// bool post()
 
-    // bool postmortem()
+	// bool postmortem()
 };
 
 class Test_ResolutionCopy : public Test
 {
-    testdoc_t get_title()
-    {
-        return "Resolution Copy Assignment and Constructor";
-    }
-    testdoc_t get_docs()
-    {
-        return "Copy another Resolution object";
-    }
+	testdoc_t get_title()
+	{
+		return "Resolution Copy Assignment and Constructor";
+	}
+	testdoc_t get_docs() { return "Copy another Resolution object"; }
 
-    bool run()
-    {
-        Resolution res(640, 480);
-        /// Copy constructor check
-        Resolution copy = res;
-        PL_ASSERT_EQUAL(copy.width, res.width);
-        PL_ASSERT_EQUAL(copy.height, res.height);
+	bool run()
+	{
+		Resolution res(640, 480);
+		/// Copy constructor check
+		Resolution copy = res;
+		PL_ASSERT_EQUAL(copy.width, res.width);
+		PL_ASSERT_EQUAL(copy.height, res.height);
 
-        /// Copy assignment check
-        Resolution def;
-        copy = def;
-        PL_ASSERT_EQUAL(copy.width, 600);
-        PL_ASSERT_EQUAL(copy.height, 800);
-        return true;
-    }
+		/// Copy assignment check
+		Resolution def;
+		copy = def;
+		PL_ASSERT_EQUAL(copy.width, 600);
+		PL_ASSERT_EQUAL(copy.height, 800);
+		return true;
+	}
 };
 
 class Test_CurveConstructor : public Test
@@ -160,12 +154,9 @@ class Test_CurveAddSegment : public Test
 
 class TestSuite_Curve : public TestSuite
 {
-    testdoc_t get_title()
-    {
-        return "Curve Tests";
-    }
+	testdoc_t get_title() { return "Curve Tests"; }
 
-    void load_tests();
+	void load_tests();
 };
 
 class TestSuite_Resolution : public TestSuite

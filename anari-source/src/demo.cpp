@@ -48,10 +48,12 @@ void Demo::colors_demo()
     HSL z;
     z.hue = 210.0;
     z.saturation = 50.0;
-    z.luminace = 7.8;
+    z.luminance = 7.8;
     Color obj;
     x = obj.from_hsl(z);
+	/* Need to replace with Iosqueak
     ioc << IOFormatTextFG::red << x.red << IOCtrl::endl;
     ioc << IOFormatTextFG::green <<x.green << IOCtrl::endl;
     ioc << IOFormatTextFG::blue <<x.blue << IOCtrl::endl;
+	*/
 }

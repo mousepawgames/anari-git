@@ -14,13 +14,13 @@
 
     "[c]": {
         "editor.detectIndentation": false,
-        "editor.insertSpaces": true,
+        "editor.insertSpaces": false,
         "editor.tabSize": 4,
     },
 
     "[cpp]": {
         "editor.detectIndentation": false,
-        "editor.insertSpaces": true,
+        "editor.insertSpaces": false,
         "editor.tabSize": 4,
     },
 

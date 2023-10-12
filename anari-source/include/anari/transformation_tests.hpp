@@ -1,134 +1,99 @@
-#ifndef ANARI_TRANSFORMATION_TESTS_HPP
-#define ANARI_TRANSFORMATION_TESTS_HPP
+#ifndef TRANSFORMATION_REFACTORED_TESTS
+#define TRANSFORMATION_REFACTORED_TESTS
 
-#include "pawlib/goldilocks.hpp"
-#include "anari/transformation.hpp"
 #include "Eigen/Core"
 
-class TransformationEmptyConstructorTester : public Test
+#include "anari/transformation.hpp"
+#include "pawlib/goldilocks.hpp"
+
+using namespace Eigen;
+
+class TransformationConstructorTest : public Test
 {
-    public:
-        testdoc_t get_title()
-        {
-            return "Transformation Empty Constructor";
-        }
+public:
+	testdoc_t get_title() { return "Transformation Constructor Test"; }
 
-        testdoc_t get_docs()
-        {
-            return "Create a new Transformation object and test the constructor.";
-        }
+	testdoc_t get_docs()
+	{
+		return "Create a Transformation object and test all values.";
+	}
 
-        bool run()
-        {
-            // Create a new array with all values set to zero
-            Transformation transform = Transformation();
-            // Loop through each row
-            for ( int i = 0; i < DIMENSION; ++i)
-            {
-                // Loop through each column
-                for ( int j = 0; j < DIMENSION; ++j)
-                {
-                    // Check to see if the value is set to zero
-                    PL_ASSERT_EQUAL(transform.the_matrix(i, j), 0);
-                }
-            }
-            return true;
-        }
+	bool run()
+	{
+		// Create a new transformation object
+		Transformation matrix(3, 3);
+		// Loop through each row
+		for (int i = 0; i < matrix.num_rows; ++i) {
+			// Loop through each column
+			for (int j = 0; j < matrix.num_cols; ++j) {
+				// Check to see if the value is set to zero
+				PL_ASSERT_EQUAL(matrix.dynamic_matrix(i, j), 0);
+			}
+		}
+		return true;
+	}
 };
 
-class LinearTransformationTester : public Test
+class TransformationMatrixConstructorTest : public Test
 {
-    public:
-        testdoc_t get_title()
-        {
-            return "Linear Transformation Tester";
-        }
+public:
+	testdoc_t get_title() { return "Transformation Matrix Constructor Test"; }
 
-        testdoc_t get_docs()
-        {
-            return "Create a new Transformation object with a Matrix3d and test do_transformation.";
-        }
+	testdoc_t get_docs()
+	{
+		return "Create a Transformation object from a matrix.";
+	}
 
-        bool run()
-        {
-            // Create a new test matrix to test a linear transformation
-            Matrix3d test_matrix;
-            // Create a new input matrix for a new Transformation object
-            Matrix3d input_matrix;
-            for (int i = 0; i < DIMENSION; i++)
-            {
-                for (int j = 0; j < DIMENSION; j++)
-                {
-                    // Set all values to the value one
-                    test_matrix(i, j) = 1;
-                    input_matrix(i, j) = 1;
-                }
+	bool run()
+	{
+		Matrix3f matrix;
+		// cppcheck-suppress constStatement
+		matrix << 1, 1, 1, 1, 1, 1, 1, 1, 1;
+		Transformation tr_matrix(matrix);
 
-            }
-            Transformation transform = Transformation(input_matrix);
-            transform.do_transformation(test_matrix);
-            for (int i = 0; i < DIMENSION; i++)
-            {
-                for (int j = 0; j < DIMENSION; j++)
-                {
-                    // Assuming the do_transformation method performed correctly, all values should be two
-                    PL_ASSERT_EQUAL(transform.the_matrix(i,j), 2);
-                }
+		PL_ASSERT_EQUAL(tr_matrix.num_cols, matrix.cols());
+		PL_ASSERT_EQUAL(tr_matrix.num_cols, matrix.rows());
 
-            }
-            return true;
-        }
+		// Loop through each row
+		for (int i = 0; i < tr_matrix.num_rows; ++i) {
+			// Loop through each column
+			for (int j = 0; j < tr_matrix.num_cols; ++j) {
+				// Check to see if the values
+				PL_ASSERT_EQUAL(tr_matrix.dynamic_matrix(i, j), matrix(i, j));
+			}
+		}
+		return true;
+	}
 };
 
-class TransformationConstructorTester : public Test
+class TransformationTransformMatrixTest : public Test
 {
-    public:
-        testdoc_t get_title()
-        {
-            return "Transformation Matrix3d Constructor";
-        }
+public:
+	testdoc_t get_title()
+	{
+		return "Transformation Matrix Transformation Test";
+	}
 
-        testdoc_t get_docs()
-        {
-            return "Create a new Transformation object with a Matrix3d and test the constructor.";
-        }
+	testdoc_t get_docs() { return "Transform two matrices together"; }
 
-        bool run()
-        {
-            // Create a new test matrix
-            Matrix3d test_matrix;
+	bool run()
+	{
+		Matrix3i matrix;
+		// cppcheck-suppress constStatement
+		matrix << 1, 2, 3, 4, 5, 6, 7, 8, 9;
 
-            for (int i = 0; i < DIMENSION; i++)
-            {
-                for (int j = 0; j < DIMENSION; j++)
-                {
-                    // Random calculation of row# + col#
-                    test_matrix(i, j) = i + j;
-                }
+		// Matrix multiplied by an identity matrix is equal to the original
+		Matrix3i matrix2;
+		// cppcheck-suppress constStatement
+		matrix2 << 1, 0, 0, 0, 1, 0, 0, 0, 1;
+		Transformation tr_matrix(matrix);
+		tr_matrix.do_transformation(matrix2);
 
-            }
-            Transformation transform = Transformation(test_matrix);
-            for (int i = 0; i < DIMENSION; i++)
-            {
-                for (int j = 0; j < DIMENSION; j++)
-                {
-                    // Test to see if value inside index is calculated correctly from calculation above
-                    PL_ASSERT_EQUAL(transform.the_matrix(i,j), test_matrix(i, j));
-                }
-
-            }
-            return true;
-        }
-};
-
-class TestSuite_Transformation : public TestSuite
-{
-    public:
-        testdoc_t get_title()
-        {
-            return "Transformation Tests";
-        }
-
-        void load_tests();
-};
+		for (int i = 0; i < tr_matrix.num_rows; ++i) {
+			for (int j = 0; j < tr_matrix.num_cols; ++j) {
+				PL_ASSERT_EQUAL(tr_matrix.dynamic_matrix(i, j), matrix(i, j));
+			}
+		}
+	}
+}
 #endif

@@ -155,35 +155,34 @@ class Curve
 
 class Resolution
 {
-    public:
-        int width, height;
+public:
+	int width, height;
 
-        /// Default constructor
-        Resolution()
-        : width(600), height(800) {}
+	/// Default constructor
+	Resolution() : width(600), height(800) {}
 
-        /** Constructor that validates input
-         * \param width
-         * \param height
-         */
-        explicit Resolution(const int width, const int height)
-        {
-            this->width = width > 0 ? width : 600;
-            this->height = height > 0 ? height : 800;
-        }
-        /// Copy constructor
-        Resolution(const Resolution& rhs)
-        {
-            this->width = rhs.width;
-            this->height = rhs.height;
-        }
-        /// Copy assingment operator
-        Resolution& operator=(const Resolution& rhs)
-        {
-            this->width = rhs.width;
-            this->height = rhs.height;
-            return *this;
-        }
+	/** Constructor that validates input
+	 * \param width
+	 * \param height
+	 */
+	explicit Resolution(const int width, const int height)
+	{
+		this->width = width > 0 ? width : 600;
+		this->height = height > 0 ? height : 800;
+	}
+	/// Copy constructor
+	Resolution(const Resolution& rhs)
+	{
+		this->width = rhs.width;
+		this->height = rhs.height;
+	}
+	/// Copy assingment operator
+	Resolution& operator=(const Resolution& rhs)
+	{
+		this->width = rhs.width;
+		this->height = rhs.height;
+		return *this;
+	}
 };
 
 #endif

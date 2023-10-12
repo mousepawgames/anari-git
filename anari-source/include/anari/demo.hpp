@@ -1,10 +1,10 @@
 /** Anari Demo File
-  * Version: 0.2
-  *
-  * Dummy "Hello World" with Cairo to test compiling and linking.
-  *
-  * Author(s): Jason C. McDonald
-  */
+ * Version: 0.2
+ *
+ * Dummy "Hello World" with Cairo to test compiling and linking.
+ *
+ * Author(s): Jason C. McDonald
+ */
 
 /* LICENSE
  * Copyright (c) 2019 MousePaw Media.
@@ -44,24 +44,21 @@
 #ifndef ANARI_DEMO_HPP
 #define ANARI_DEMO_HPP
 
+#include <SDL2/SDL.h>
 #include <cairo/cairo.h>
 
-#include <SDL2/SDL.h>
-
-#include "anari/hardcoded.hpp"
-#include "anari/geometry.hpp"
-#include "anari/uniform_renderer.hpp"
-#include "anari/test_renderer.hpp"
-
-#include "pawlib/iochannel.hpp"
-
 #include "anari/colors.hpp"
+#include "anari/geometry.hpp"
+#include "anari/hardcoded.hpp"
+#include "anari/test_renderer.hpp"
+#include "anari/uniform_renderer.hpp"
+
 
 class Demo
 {
-    public:
-        static void colors_demo();
-        static int renderDemo();
+public:
+	static void colors_demo();
+	static int renderDemo();
 };
 
 #endif

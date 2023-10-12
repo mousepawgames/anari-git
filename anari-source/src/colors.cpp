@@ -64,9 +64,9 @@ HSL Color::to_hsl(RGBA rgbacolor) noexcept
     // Calculating difference between Maximum and Minimum Values as
     // it is required by the conversion formulas
     float delta = maxvalue-minvalue;
-    // Calculating Luminace
+    // Calculating luminance
     // L = (Cmax + Cmin) / 2
-    hslcolor.luminace = MathUtils::roundtoone(((minvalue+maxvalue)/2)*100);
+    hslcolor.luminance = MathUtils::roundtoone(((minvalue+maxvalue)/2)*100);
     // Calculating saturation as it depends on minimum and maximum value
     // if maximum and minimum are equal i_e delta equal to zero
     // eqFloat as from Mathutils as it is not possible to compare float directly
@@ -77,7 +77,7 @@ HSL Color::to_hsl(RGBA rgbacolor) noexcept
     // if there is a difference
     else
     {
-        hslcolor.saturation = ((delta/(1-std::abs((2*hslcolor.luminace))-1))*100);
+        hslcolor.saturation = ((delta/(1-std::abs((2*hslcolor.luminance))-1))*100);
         hslcolor.saturation = MathUtils::roundtoone(abs(round(hslcolor.saturation*100)));
     }
 
@@ -103,12 +103,12 @@ RGBA Color::from_hsl(HSL hslcolor) noexcept
     // https://dystopiancode.blogspot.com/2012/06/hsv-rgb-conversion-algorithms-in-c.html
     RGBA rgbacolor;
     // Dividing by 100 as the representation is in percentage and the functions deals with values in between 0 and 1
-    hslcolor.luminace = hslcolor.luminace / 100;
+    hslcolor.luminance = hslcolor.luminance / 100;
     hslcolor.saturation = hslcolor.saturation / 100;
     // C = (1 - |2L - 1|) × S
-    float chroma = (1-(abs((2*hslcolor.luminace)-1))) * hslcolor.saturation;
+    float chroma = (1-(abs((2*hslcolor.luminance)-1))) * hslcolor.saturation;
     // RGB component with the smallest value
-    float minColor = hslcolor.luminace - (chroma/2);
+    float minColor = hslcolor.luminance - (chroma/2);
     // Intermediary value used in conversation
     float x = chroma*(1 - abs(fmod((hslcolor.hue / 60), 2.0) - 1 ));
 
