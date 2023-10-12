@@ -26,7 +26,7 @@
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
 
-#include "pawlib/flex_array.hpp"
+#include "nimbly/flexarray.hpp"
 #include "Eigen/Core"
 
 struct Coordinate

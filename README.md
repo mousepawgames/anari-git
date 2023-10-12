@@ -15,7 +15,7 @@ See the [official project page][1].
 
 ## Dependencies
 
-Anari depends on CPGF, Eigen, and PawLIB.
+Anari depends on CPGF, Eigen, IOSqueak, Nimbly, onestring, arctic-tern, goldilocks.
 
 ## Building
 

@@ -51,7 +51,7 @@ void Demo::colors_demo()
     z.luminace = 7.8;
     Color obj;
     x = obj.from_hsl(z);
-    ioc << IOFormatTextFG::red << x.red << IOCtrl::endl;
-    ioc << IOFormatTextFG::green <<x.green << IOCtrl::endl;
-    ioc << IOFormatTextFG::blue <<x.blue << IOCtrl::endl;
+    channel << IOFormatTextFG::red << x.red << IOCtrl::endl;
+    channel << IOFormatTextFG::green <<x.green << IOCtrl::endl;
+    channel << IOFormatTextFG::blue <<x.blue << IOCtrl::endl;
 }

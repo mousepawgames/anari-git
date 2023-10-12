@@ -27,7 +27,7 @@
 #define ANARI_StaticLayer_HPP
 
 #include "colors.hpp"
-#include "pawlib/flex_array.hpp"
+#include "nimbly/flexarray.hpp"
 #include "geometry.hpp"
 
 class StaticLayer

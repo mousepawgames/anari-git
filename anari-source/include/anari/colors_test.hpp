@@ -26,8 +26,10 @@
 #define ANARI_COLORS_TEST_HPP
 
 #include "colors.hpp"
-#include "pawlib/goldilocks.hpp"
-#include "pawlib/goldilocks_assertions.hpp"
+#include "goldilocks/test.hpp"
+#include "goldilocks/assertions.hpp"
+#include "goldilocks/suite.hpp"
+#include "goldilocks/types.hpp"
 
 // A-tB0200
 class Test_CMYKtoRGBA : public Test

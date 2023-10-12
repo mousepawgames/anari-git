@@ -41,8 +41,10 @@
  * on how to contribute to our projects.
  */
 
-#include "pawlib/goldilocks_shell.hpp"
-#include "pawlib/iochannel.hpp"
+#include "goldilocks/shell.hpp"
+#include "iosqueak/channel.hpp"
+#include "iosqueak/ioctrl.hpp"
+#include "iosqueak/ioformat.hpp"
 #include "anari/demo.hpp"
 
 #include "anari/colors_test.hpp"
@@ -66,7 +68,7 @@ void test_code()
 int main(int argc, char* argv[])
 {
     //Set up signal handling.
-    ioc.configure_echo(IOEchoMode::cout);
+    channel.configure_echo(IOEchoMode::cout);
 
     GoldilocksShell* shell = new GoldilocksShell(">> ");
     //shell->register_suite<TestSuite_Basic>("A-sB00");
@@ -83,7 +85,7 @@ int main(int argc, char* argv[])
     }
     else
     {
-        ioc << IOFormatTextAttr::bold
+        channel << IOFormatTextAttr::bold
             << IOFormatTextFG::blue
             << "===== Anari Tester =====\n"
             << IOCtrl::endl;

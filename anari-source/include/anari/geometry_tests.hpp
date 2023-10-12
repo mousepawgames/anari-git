@@ -1,7 +1,10 @@
 #ifndef ANARI_GEOMETRY_TESTS_HPP
 #define ANARI_GEOMETRY_TESTS_HPP
 
-#include "pawlib/goldilocks.hpp"
+#include "goldilocks/test.hpp"
+#include "goldilocks/assertions.hpp"
+#include "goldilocks/suite.hpp"
+#include "goldilocks/types.hpp"
 #include "anari/geometry.hpp"
 #include "Eigen/Core"
 

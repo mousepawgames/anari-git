@@ -53,7 +53,10 @@
 #include "anari/uniform_renderer.hpp"
 #include "anari/test_renderer.hpp"
 
-#include "pawlib/iochannel.hpp"
+#include "iosqueak/channel.hpp"
+#include "iosqueak/channel.hpp"
+#include "iosqueak/ioctrl.hpp"
+#include "iosqueak/ioformat.hpp"
 
 #include "anari/colors.hpp"
 

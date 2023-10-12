@@ -14,8 +14,8 @@ Clang (3.4 or later).
 
 ## Building and Linking Dependencies
 
-Anari relies on CPGF, Eigen, and PawLIB. The default behavior of the build
-system is to look for MousePaw Media's `libdeps/` and `pawlib/` repositories,
+Anari relies on CPGF, Eigen, and Goldilocks, Iosqueak, Arctic-tern, OneString, Nimbly. The default behavior of the build
+system is to look for MousePaw Media's `libdeps/`, `goldilocks\`, `iosqueak\`,`arctic-tern\` , `onestring\` and  `nimbly\` repositories,
 cloned parallel to this repository's main folder. Simply run `$ make ready` in
 each of those repositories (optionally, you can run `$ make cpgf && make eigen`
 in `libdeps/`) before building this one. (This is our default for company

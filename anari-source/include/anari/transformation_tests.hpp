@@ -1,7 +1,9 @@
 #ifndef ANARI_TRANSFORMATION_TESTS_HPP
 #define ANARI_TRANSFORMATION_TESTS_HPP
 
-#include "pawlib/goldilocks.hpp"
+#include "goldilocks/test.hpp"
+#include "goldilocks/assertions.hpp"
+#include "goldilocks/suite.hpp"
 #include "anari/transformation.hpp"
 #include "Eigen/Core"
 
