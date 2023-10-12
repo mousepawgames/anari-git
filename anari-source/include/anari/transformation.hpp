@@ -64,8 +64,8 @@ class Transformation
         }
 
         /// Copy Constructor
-        explicit Transformation(const Transformation& cpy)
-        : the_matrix(cpy.the_matrix)
+        explicit Transformation(const Transformation& transformation)
+        : the_matrix(transformation.the_matrix)
         {}
 
         /// Copy Assignment
@@ -86,11 +86,12 @@ class Transformation
          * \param transform_matrix: The matrix to perform a linear transformation with
          * \return the result of the linear transformation
          */
-        Matrix3d do_transformation(const Matrix3d& transform_matrix)
+        Matrix3d transform_matrix(const Matrix3d& transform_matrix)
         {
             the_matrix = the_matrix + transform_matrix;
             return the_matrix;
         }
+
 };
 
 #endif

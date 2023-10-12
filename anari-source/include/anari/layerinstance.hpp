@@ -68,9 +68,13 @@ public:
         this->transform.the_matrix = new_matrix;
     }
 
+
+    /** Perform a linear transformation with another 3x3 matrix
+         * \param matrix: The matrix to perform a linear transformation with
+         */
     void do_transformation(Matrix3d matrix)
     {
-        this->transform.do_transformation(matrix);
+        this->transform.transform_matrix(matrix);
 
         // Do something else with the transformed matrix in transform
     }

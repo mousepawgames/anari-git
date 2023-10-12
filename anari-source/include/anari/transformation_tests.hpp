@@ -66,7 +66,7 @@ class LinearTransformationTester : public Test
 
             }
             Transformation transform = Transformation(input_matrix);
-            transform.do_transformation(test_matrix);
+            transform.transform_matrix(test_matrix);
             for (int i = 0; i < DIMENSION; i++)
             {
                 for (int j = 0; j < DIMENSION; j++)

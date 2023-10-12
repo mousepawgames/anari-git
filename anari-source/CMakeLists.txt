@@ -150,6 +150,7 @@ add_library(${TARGET_NAME} STATIC
     include/anari/layerinstance.hpp
     include/anari/layerinstance_tests.hpp
     include/anari/math.hpp
+    include/anari/matrix_transform.hpp
     include/anari/renderer.hpp
     include/anari/static_layer.hpp
     include/anari/static_layer.hpp
